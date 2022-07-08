@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>임시 사이트 이름</title>
+    <title>{{site_name}}</title>
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous"> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -20,7 +20,7 @@
                         <i class="fa fa-suitcase" aria-hidden="true"></i>
                     </div>
                     <div class="sidebar-brand-text mx-3">
-                        <span>Travel</span>
+                        <span>{{site_name}}</span>
                     </div>
                 </a>
                 <hr class="sidebar-divider my-0">
