@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, Markup
+from flask import Flask, render_template, request, Markup, redirect
 from chatbot import *
 from database import *
+import time
 
 # Flask 객체 인스턴스 생성
 app = Flask(__name__)
@@ -53,7 +54,7 @@ def other():
 
 # 완성 페이지에 넣지 않을 페이지
 @app.route('/_charts', methods=['GET'])
-def charts():
+def _charts():
     return render_template('main_layout.html', site_name="Tripvial", content="charts.html")
 
 # 완성 페이지에 넣지 않을 페이지
@@ -73,6 +74,10 @@ def register():
 def forgot_password():
     return render_template('main_layout.html', site_name="Tripvial", content="!forgot-password.html")
 
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+    return render_template('main_layout.html', site_name="Tripvial", content="dashboard.html")
+
 # 완성 페이지에 넣지 않을 페이지
 @app.route('/404', methods=['GET'])
 def notfound():
@@ -82,6 +87,30 @@ def notfound():
 @app.route('/blank', methods=['GET'])
 def blank():
     return render_template('main_layout.html', site_name="Tripvial", content="blank.html")
+
+@app.route('/charts', methods=['GET'])
+def charts():
+    return render_template('main_layout.html', site_name="Tripvial", content="mcharts.html")
+
+@app.route('/concept', methods=['GET'])
+def concept():
+    return render_template('main_layout.html', site_name="Tripvial", content="mconcept.html")
+
+@app.route('/noticeboard', methods=['GET'])
+def noticeboard():
+    return render_template('main_layout.html', site_name="Tripvial", content="mnoticeboard.html")
+    
+@app.route('/region', methods=['GET'])
+def region():
+    return render_template('main_layout.html', site_name="Tripvial", content="mregion.html")
+    
+@app.route('/search', methods=['GET'])
+def search():
+    return render_template('main_layout.html', site_name="Tripvial", content="msearch.html")
+    
+@app.route('/votes', methods=['GET'])
+def votes():
+    return render_template('main_layout.html', site_name="Tripvial", content="mvotes.html")
 
 # App Start
 if __name__=="__main__":

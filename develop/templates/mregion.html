@@ -1,0 +1,30 @@
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <!-- <h1 class="h3 mb-4 text-gray-800">Blank Page</h1> -->
+    <div class="row">
+
+        <!-- Content Column -->
+        <div class="col-lg-4 mb-4 bg-dark" style="height:600px; ">
+    
+        </div>
+        <div class="col-lg-4 mb-4 bg-info" style="height:600px; ">
+    
+        </div>
+        <div class="col-lg-4 mb-4 bg-warning" style="height:600px; ">
+    
+        </div>
+    
+    </div>
+    
+</div>
+<!-- /.container-fluid -->
+
+<script>
+    lists = document.getElementsByClassName('nav-item')
+    for(item of lists){
+        item.setAttribute("class", "nav-item")
+    }
+    lists[2].setAttribute("class", "nav-item active")
+</script>

@@ -1,0 +1,33 @@
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <!-- <h1 class="h3 mb-4 text-gray-800">Blank Page</h1> -->
+    <div class="row">
+
+        <!-- Content Column -->
+        <div class="col-lg-4 mb-4 bg-dark" style="height:600px; ">
+
+        </div>
+        <div class="col-lg-8 mb-4 bg-info" style="height:600px; ">
+
+        </div>
+    </div>
+    <!-- <iframe
+        src="./sub.html"
+        name="프레임 이름"
+        width="500px"
+        height="500px"
+        sandbox="allow-scripts allow-popups">
+    iframe를 지원하지 않는 브라우저인 경우 대체정보를 제공  
+    </iframe> -->
+</div>
+<!-- /.container-fluid -->
+
+<script>
+    lists = document.getElementsByClassName('nav-item')
+    for(item of lists){
+        item.setAttribute("class", "nav-item")
+    }
+    lists[1].setAttribute("class", "nav-item active")
+</script>
