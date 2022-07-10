@@ -88,3 +88,25 @@ def detect_intent(text):
         print("Detected intent confidence:", response.query_result.intent_detection_confidence)
         print("Fulfillment text:", response.query_result.fulfillment_text)
     return response
+
+from google.cloud import dialogflow_v2beta1 as dialogflow
+DIALOGFLOW_PROJECT_ID = 'who-am-i-afhy'
+DIALOGFLOW_LANGUAGE_CODE = 'ko-KR'
+GOOGLE_APPLICATION_CREDENTIALS = 'who-am-i-afhy-fbacb61c9b97'
+SESSION_ID = '1'
+
+# 인증 정보 경로 설정
+def oauth():
+    credential_path = r"...\who-am-i-afhy-7af8d105cf22.json"
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
+
+def detect_intent(text):
+    session_client = dialogflow.SessionsClient()
+    session = session_client.session_path(DIALOGFLOW_PROJECT_ID, SESSION_ID)
+    text_input = dialogflow.types.TextInput(
+        text=text, language_code=DIALOGFLOW_LANGUAGE_CODE
+    )
+    query_input = dialogflow.types.QueryInput(text=text_input)
+    try:    
+        response = session_client.detect_intent(session=session, query_input=query_input)
+
