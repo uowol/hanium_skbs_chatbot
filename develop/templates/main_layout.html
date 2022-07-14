@@ -240,6 +240,7 @@
                     </button>
 
                     <!-- Topbar Search -->
+                    {% if false %}
                     <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
@@ -252,10 +253,11 @@
                             </div>
                         </div>
                     </form>
+                    {% endif %}
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-
+                        {% if current_user.is_authenticated %}
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                         <li class="nav-item dropdown no-arrow d-sm-none">
                             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
@@ -427,7 +429,11 @@
                                 </a>
                             </div>
                         </li>
-
+                        {% elif content != "login.html" %}
+                        <li class="nav-item no-arrow">
+                            <a href="/login" class="nav-link" style="color: black;">로그인하기</a>
+                        </li>
+                        {% endif %}
                     </ul>
 
                 </nav>
@@ -475,7 +481,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="/login">Logout</a>
+                    <a class="btn btn-primary" href="/logout">Logout</a>
                 </div>
             </div>
         </div>

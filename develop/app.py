@@ -1,10 +1,14 @@
 from flask import Flask, render_template, request, Markup, redirect
+from login import *
 from chatbot import *
 from database import *
 import time
 
 # Flask 객체 인스턴스 생성
 app = Flask(__name__)
+
+# Flask Login Manager
+lm.init_app(app)
 
 # MongoDB
 db, collection = connect_database()
@@ -68,6 +72,33 @@ def tables():
 def login():
     return render_template('main_layout.html', site_name=SITE_NAME, content="login.html")
 
+@app.route('/login/get_info', methods=['GET', 'POST'])
+def login_get_info():
+    user_id = request.form.get('inputEmail')
+    user_pw = request.form.get('inputPassword')
+
+    if user_id is None or user_pw is None:
+        return redirect('/relogin')
+
+    # 사용자가 입력한 정보가 회원가입된 사용자인지 확인
+    user_info = User.get_user_info(user_id, user_pw)
+
+    if user_info['result'] != 'fail' and user_info['count'] != 0:
+        login_info = User(user_id=user_info['data'][0]['user_id'])  # 사용자 객체 생성
+        login_user(login_info)                                      # 사용자 객체를 session에 저장
+        return redirect('/')
+    else:
+        return redirect('/relogin')
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    logout_user()                                                   # 사용자 객체를 session에서 제거
+    return redirect('/')
+
+@app.route('/relogin')
+def relogin():
+    return render_template('main_layout.html', site_name=SITE_NAME, content="login.html", retry=True)
+
 @app.route('/register', methods=['GET'])
 def register():
     return render_template('main_layout.html', site_name=SITE_NAME, content="register.html")
@@ -123,4 +154,6 @@ if __name__=="__main__":
     # chatting_logs = []
     oauth()    # 사용자 정보 인증
     # app.run(debug=True)
-    app.run(host="127.0.0.1", port="3000", debug=True)
+    app.secret_key = '여행 de Gaja'
+    app.config['SESSION_TYPE'] = 'filesystem'
+    app.run(host="127.0.0.1", port="5000", debug=True)

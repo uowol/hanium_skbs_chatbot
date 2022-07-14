@@ -52,6 +52,16 @@
     --bs-body-bg: #fff;
 }
 
+#LoginBtn a{
+    color: #f2f2f2;
+    text-decoration:none;
+}
+
+#LoginBtn a:hover {
+   color: blue;
+   text-decoration: underline;
+}
+
 body {
     height: 100%;
 }
