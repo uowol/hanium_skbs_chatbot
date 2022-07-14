@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Markup, redirect
+from flask import Flask, render_template, request, Markup, redirect, flash
 from login import *
 from chatbot import *
 from database import *
@@ -103,9 +103,46 @@ def relogin():
 def register():
     return render_template('main_layout.html', site_name=SITE_NAME, content="register.html")
 
+@app.route('/register/add_user', methods=['GET', 'POST'])
+def register_add_user():
+    user_nick = request.form.get('nickname')
+    user_id = request.form.get('inputEmail')
+    user_pw = request.form.get('inputPassword')
+    user_repw = request.form.get('repeatPassword')
+
+    user_info = User.get_user_info(user_id)
+    if user_info['count'] != 0:
+        print("중복")
+        return redirect('/register')
+
+    try:
+        insert(collection=collection, data_list=[{
+            "user_nick": user_nick,
+            "user_id": user_id,
+            "user_pw": user_pw,
+        }])
+    except e:
+        print(e)
+
+    return redirect('/')
+
 @app.route('/forgot-password', methods=['GET'])
 def forgot_password():
     return render_template('main_layout.html', site_name=SITE_NAME, content="forgot-password.html")
+
+@app.route('/forgot-password/find_user', methods=['GET', 'POST'])
+def forgot_password_find_user():
+    user_id = request.form.get('inputEmail')
+
+    # 사용자가 입력한 정보가 회원가입된 사용자인지 확인
+    user_info = User.get_user_info(user_id)
+
+    return render_template(
+        'main_layout.html',
+        site_name=SITE_NAME, 
+        content='forgot-password.html', 
+        user_info = user_info
+    )
 
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
