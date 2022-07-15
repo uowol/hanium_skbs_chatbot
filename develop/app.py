@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, Markup, redirect, flash
 from login import *
 from chatbot import *
 from database import *
+from myfunctions import *
 import time
 
 # Flask 객체 인스턴스 생성
@@ -120,6 +121,7 @@ def register_add_user():
             "user_nick": user_nick,
             "user_id": user_id,
             "user_pw": user_pw,
+            "user_thumbnail": "temp.jpg"
         }])
     except e:
         print(e)
@@ -165,11 +167,36 @@ def charts():
 @app.route('/concept', methods=['GET'])
 def concept():
     return render_template('main_layout.html', site_name=SITE_NAME, content="contents/concept.html")
-
+    
 @app.route('/noticeboard', methods=['GET'])
 def noticeboard():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/noticeboard.html")
-    
+    return redirect("/noticeboard/free")
+
+@app.route('/noticeboard/write', methods=['GET'])
+def noticeboard_write():
+    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/noticeboard_write.html",
+        table_contents=get_table_contents("free"), tag="free")
+
+@app.route('/noticeboard/free', methods=['GET'])
+def noticeboard_free():
+    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/noticeboard.html",
+        table_contents=get_table_contents("free"), tag="free")
+        
+@app.route('/noticeboard/free/<int:i>', methods=['GET'])
+def noticeboard_free_content(i):
+    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/noticeboard_content.html",
+        title=str(i)+"번째 게시물", noticeboard_content=str(i)+"번째 본문")
+
+@app.route('/noticeboard/review', methods=['GET'])
+def noticeboard_review():
+    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/noticeboard.html",
+        table_contents=[], tag="review")
+
+@app.route('/noticeboard/tip', methods=['GET'])
+def noticeboard_tip():
+    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/noticeboard.html",
+        table_contents=[], tag="tip")
+
 @app.route('/region', methods=['GET'])
 def region():
     return render_template('main_layout.html', site_name=SITE_NAME, content="contents/region.html")
