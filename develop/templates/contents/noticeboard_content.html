@@ -1,0 +1,40 @@
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <a href="#" onclick="history.back()" class="mr-1">
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    돌아가기
+                </a>
+            </h6>
+        </div>
+        <div class="card-body">
+            <!-- Page Heading -->
+            <!-- 리스트 객체 -->
+            제목 : {{title}}
+            <hr>
+            {{noticeboard_content}}
+            <div class="text-center">
+                <a onclick="alert('미구현')" href="#" class="btn btn-success btn-icon-split btn-sm">
+                    <span class="icon text-white-50">
+                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                    </span>
+                    <span class="text">추천하기</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<!-- /.container-fluid -->
+<script>
+
+    lists = document.getElementsByClassName('nav-item')
+    for (item of lists) {
+        item.setAttribute("class", "nav-item")
+    }
+    lists[5].setAttribute("class", "nav-item active")
+</script>

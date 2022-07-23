@@ -1,0 +1,89 @@
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <div id="toolbar">
+        <a href="#" class="btn btn-success btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-check"></i>
+            </span>
+            <span class="text">평균 체류시간</span>
+        </a>
+
+
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">DataTables</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="table" data-toggle="table" data-search="true" data-filter-control="true" data-show-export="true"
+                    data-click-to-select="true" data-toolbar="#toolbar" class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th data-field="where" data-filter-control="input" data-sortable="true">여행지</th>
+                            <th data-field="address" data-filter-control="select" data-sortable="true">주소</th>
+                            <th data-field="region" data-filter-control="select" data-sortable="true">지역</th>
+                            <th data-field="time" data-sortable="true">평균 체류시간</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>서촌마을</td>
+                            <td>서울특별시 종로구</td>
+                            <td>서울</td>
+                            <td>1시간 19분</td>
+                        </tr>
+                        <tr>
+                            <td>서촌마을</td>
+                            <td>서울특별시 종로구</td>
+                            <td>서울</td>
+                            <td>1시간 19분</td>
+                        </tr>
+                        <tr>
+                            <td>서촌마을</td>
+                            <td>서울특별시 종로구</td>
+                            <td>서울</td>
+                            <td>1시간 19분</td>
+                        </tr>
+                        <tr>
+                            <td>서촌마을</td>
+                            <td>서울특별시 종로구</td>
+                            <td>서울</td>
+                            <td>1시간 19분</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+<script>
+    lists = document.getElementsByClassName('nav-item')
+    for (item of lists) {
+        item.setAttribute("class", "nav-item")
+    }
+    lists[6].setAttribute("class", "nav-item active")
+
+    //exporte les données sélectionnées
+    var $table = $('#table');
+    $(function () {
+        $('#toolbar').find('select').change(function () {
+            $table.bootstrapTable('refreshOptions', {
+                exportDataType: $(this).val()
+            });
+        });
+    })
+
+    var trBoldBlue = $("table");
+
+    $(trBoldBlue).on("click", "tr", function () {
+        $(this).toggleClass("bold-blue");
+    });
+</script>
