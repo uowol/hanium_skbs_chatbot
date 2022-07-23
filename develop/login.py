@@ -2,7 +2,7 @@ from flask import redirect
 from flask_login import LoginManager, login_user, logout_user, UserMixin, login_required, current_user
 from database import *
 
-db, collection = connect_database()
+db = connect_database("skbs")
 lm = LoginManager()
 
 # 사용자 정보를 조회

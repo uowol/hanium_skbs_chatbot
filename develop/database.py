@@ -1,10 +1,14 @@
 import pymongo
 
-# mongo database 연결
-def connect_database():
-    connect_to = pymongo.MongoClient("localhost", 27017)
-    mdb = connect_to.user_info_db
-    return mdb, mdb.user_info
+# database 연결
+def connect_database(db):
+    connect_to = pymongo.MongoClient("mongodb+srv://uowon:sk1346@cluster0.zvgmaaw.mongodb.net/test")
+    mdb = connect_to[db]
+    return mdb
+
+# collection 연결
+def use(db, collection):
+    return db[collection]
 
 def insert(collection, data_list):
     collection.insert_many(data_list)
