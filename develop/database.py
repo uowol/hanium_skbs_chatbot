@@ -1,10 +1,14 @@
 import pymongo
+from bson.json_util import dumps
 
 # database 연결
 def connect_database(db):
-    connect_to = pymongo.MongoClient("mongodb+srv://uowon:sk1346@cluster0.zvgmaaw.mongodb.net/test")
+    connect_to = pymongo.MongoClient("mongodb://localhost:27017/")
     mdb = connect_to[db]
     return mdb
+
+def parse_json(data):
+    return dumps(data)
 
 # collection 연결
 def use(db, collection):
@@ -15,6 +19,10 @@ def insert(collection, data_list):
 
 def find(collection, options = {}):
     searched = collection.find(options)
+    return searched
+
+def find_one(collection, options = {}):
+    searched = collection.find_one(options)
     return searched
 
 def update(collection, options = {}):

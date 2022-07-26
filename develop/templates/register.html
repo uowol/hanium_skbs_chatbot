@@ -15,11 +15,11 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user" action="/register/add_user" method="post">
+                            <form class="user" action="/register/callback" method="post">
                                 <div class="form-group row">
                                     <div class="col-sm-12 mb-3 mb-sm-0">
-                                        <input required type="text" class="form-control form-control-user" name="nickname" 
-                                            id="nickname" placeholder="Nickname">
+                                        <input required type="text" class="form-control form-control-user" name="inputNick" 
+                                            id="inputNick" placeholder="Nickname">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -41,6 +41,12 @@
                                             name="repeatPassword" id="repeatPassword" placeholder="Repeat Password">
                                     </div>
                                 </div>
+                                {% if retry %}
+                                <p style="
+                                    color: red;
+                                    font-size: small;
+                                ">비밀번호가 서로 다릅니다. 다시 시도해주세요.</p>
+                                {% endif %}
                                 <input onclick="checkPW()" type="submit" value="Register Account" class="btn btn-primary btn-user btn-block">
                             </form>
                             <hr>
