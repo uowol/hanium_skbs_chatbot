@@ -5,14 +5,17 @@ from database import *
 # Flask 객체 인스턴스 생성
 app = Flask(__name__)
 
-SITE_NAME = "GAZAIT"
-USER_ID = None
+params = {
+    "site_name": "GAZAIT",
+    "user_id": None,
+    "user_nick": None
+}
 
 def checklogin():
     islogin = False
-    print(f"user_id: {USER_ID}")
+    print(f"user_id: {params['user_id']}")
     try:
-        res = get(f"http://127.0.0.1:5001/islogin?user_id={USER_ID}")
+        res = get(f"http://127.0.0.1:5001/islogin?user_id={params['user_id']}")
         if res.status_code == 200:
             res = res.json()
             islogin = res['content']
@@ -24,16 +27,16 @@ def checklogin():
 @app.route('/', methods=['GET'])
 def index():
     if request.method == "GET":
-        return render_template('main_layout.html', site_name=SITE_NAME, content="contents/main.html", islogin=checklogin())
+        return render_template('main_layout.html', params=params, content="contents/main.html", islogin=checklogin())
 
 #%% Login
 @app.route('/login', methods=['GET'])
 def login():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="login.html")
+    return render_template('main_layout.html', params=params, content="login.html")
 
 @app.route('/login/callback', methods=["POST"])
 def loginCallback():
-    global USER_ID
+    global params
 
     user_id = request.form.get('inputEmail')
     user_pw = request.form.get('inputPassword')
@@ -46,31 +49,32 @@ def loginCallback():
     if res.status_code == 200:
         res = res.json()
         if not res['result']: return redirect('/relogin')
-        USER_ID = res['content']
+        params['user_id'] = res['content']['id']
+        params['user_nick'] = res['content']['nick']
         return redirect('/')
     else:
         return redirect('/relogin')
 
 @app.route('/logout', methods=["GET"])
 def logout():
-    global USER_ID
-    res = get(f"http://127.0.0.1:5001/logout-handler?user_id={USER_ID}")
+    global params
+    res = get(f"http://127.0.0.1:5001/logout-handler?user_id={params['user_id']}")
     if res.status_code == 200:
         res = res.json()
-    USER_ID = ''
+    params['user_id'] = None
     return redirect('/')
 
 @app.route('/relogin')
 def relogin():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="login.html", retry=True)
+    return render_template('main_layout.html', params=params, content="login.html", retry=True)
 
 @app.route('/register', methods=['GET'])
 def register():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="register.html")
+    return render_template('main_layout.html', params=params, content="register.html")
 
 @app.route('/reregister')
 def reregister():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="register.html", retry=True)
+    return render_template('main_layout.html', params=params, content="register.html", retry=True)
 
 @app.route('/register/callback', methods=["POST"])
 def registerCallback():
@@ -89,7 +93,6 @@ def registerCallback():
     }
     res = post("http://127.0.0.1:5001/add-user", data=parse_json(params))
     if res.status_code == 200:
-        # print(res.json())
         if not res.json()['result']: return redirect('/reregister')
         return redirect('/login')
     else:
@@ -97,21 +100,21 @@ def registerCallback():
 
 @app.route('/forgot-password', methods=['GET'])
 def forgot_password():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="forgot-password.html")
+    return render_template('main_layout.html', params=params, content="forgot-password.html")
 
 # @app.route('/dashboard', methods=['GET'])
 # def dashboard():
-#     return render_template('main_layout.html', site_name=SITE_NAME, content="contents/dashboard.html")
+#     return render_template('main_layout.html', params=params, content="contents/dashboard.html")
 
 #%% Chart
 @app.route('/charts', methods=['GET'])
 def charts():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/charts.html", islogin=checklogin())
+    return render_template('main_layout.html', params=params, content="contents/charts.html", islogin=checklogin())
 
 #%% Concept
 @app.route('/concept', methods=['GET'])
 def concept():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/concept.html", islogin=checklogin())
+    return render_template('main_layout.html', params=params, content="contents/concept.html", islogin=checklogin())
     
 #%% Noticeboard
 @app.route('/noticeboard', methods=['GET'])
@@ -121,51 +124,51 @@ def noticeboard():
 # 게시판 서버로 보낼 것
 @app.route('/noticeboard/write', methods=['GET'])
 def noticeboard_write():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/noticeboard_write.html",
+    return render_template('main_layout.html', params=params, content="contents/noticeboard_write.html",
         table_contents=get_table_contents("free"), tag="free")
 
 # 게시판 서버로 보낼 것
 @app.route('/noticeboard/free', methods=['GET'])
 def noticeboard_free():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/noticeboard.html",
+    return render_template('main_layout.html', params=params, content="contents/noticeboard.html",
         table_contents=get_table_contents("free"), tag="free")
         
 # 게시판 서버로 보낼 것
 @app.route('/noticeboard/free/<int:i>', methods=['GET'])
 def noticeboard_free_content(i):
-    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/noticeboard_content.html",
+    return render_template('main_layout.html', params=params, content="contents/noticeboard_content.html",
         title=str(i)+"번째 게시물", noticeboard_content=str(i)+"번째 본문")
 
 # 게시판 서버로 보낼 것
 @app.route('/noticeboard/review', methods=['GET'])
 def noticeboard_review():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/noticeboard.html",
+    return render_template('main_layout.html', params=params, content="contents/noticeboard.html",
         table_contents=[], tag="review")
 
 # 게시판 서버로 보낼 것
 @app.route('/noticeboard/tip', methods=['GET'])
 def noticeboard_tip():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/noticeboard.html",
+    return render_template('main_layout.html', params=params, content="contents/noticeboard.html",
         table_contents=[], tag="tip")
 
 #%% Region
 @app.route('/region', methods=['GET'])
 def region():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/region.html", islogin=checklogin())
+    return render_template('main_layout.html', params=params, content="contents/region.html", islogin=checklogin())
     
 #%% Search
 @app.route('/search', methods=['GET'])
 def search():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="contents/search.html", islogin=checklogin())
+    return render_template('main_layout.html', params=params, content="contents/search.html", islogin=checklogin())
     
 # @app.route('/votes', methods=['GET'])
 # def votes():
-#     return render_template('main_layout.html', site_name=SITE_NAME, content="contents/votes.html")
+#     return render_template('main_layout.html', params=params, content="contents/votes.html")
 
 #%% Chatbot
 @app.route('/chatbot', methods=['GET'])
 def chatbot():
-    return render_template('main_layout.html', site_name=SITE_NAME, content="blank.html", islogin=checklogin())
+    return render_template('main_layout.html', params=params, content="blank.html", islogin=checklogin())
 
 #%% App Start
 if __name__=="__main__":

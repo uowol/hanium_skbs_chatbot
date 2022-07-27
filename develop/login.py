@@ -119,11 +119,14 @@ def login():
         # !!! - not working
         login_user(login_info)                                      # 사용자 객체를 session에 저장
         # print(f"islogin: {login_info.is_authenticated}")
-        # print(f"user: {User.get_user_info(login_info.get_id())}")
+        # print(f"user: {user_info['data']}")
         # USER = login_info
         return {
             "result": True,
-            "content": login_info.get_id()
+            "content": {
+                "id": user_info['data'][0]['user_id'],
+                "nick": user_info['data'][0]['user_nick']
+            }
         }
 
     else:
