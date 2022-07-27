@@ -18,6 +18,7 @@ SITE_NAME = "GAZAIT"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    print(User.get_user_info(current_user.get_id()))
     if request.method == "GET":
         return render_template('main_layout.html', site_name=SITE_NAME, content="contents/main.html")
         # return render_template('index.html', chat_logs=Markup("".join(chatting_logs)).unescape())
@@ -83,6 +84,7 @@ def login_get_info():
 
     # 사용자가 입력한 정보가 회원가입된 사용자인지 확인
     user_info = User.get_user_info(user_id, user_pw)
+    print(user_info)
 
     if user_info['result'] != 'fail' and user_info['count'] != 0:
         login_info = User(user_id=user_info['data'][0]['user_id'])  # 사용자 객체 생성

@@ -1,2 +1,2 @@
-python browsing.py
+python app.py
 PAUSE

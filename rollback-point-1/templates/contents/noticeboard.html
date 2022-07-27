@@ -1,0 +1,73 @@
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-1">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">게시판</a>
+                <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button> -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            {% if tag == "free" %}
+                            <a class="nav-link active" href="/noticeboard/free">자유</a>
+                            {% else %}
+                            <a class="nav-link" href="/noticeboard/free">자유</a>
+                            {% endif %}
+                        </li>
+                        <li class="nav-item">
+                            {% if tag == "review" %}
+                            <a class="nav-link active" href="/noticeboard/review">리뷰</a>
+                            {% else %}
+                            <a class="nav-link" href="/noticeboard/review">리뷰</a>
+                            {% endif %}
+                        </li>
+                        <li class="nav-item">
+                            {% if tag == "tip" %}
+                            <a class="nav-link active" href="/noticeboard/tip">팁</a>
+                            {% else %}
+                            <a class="nav-link" href="/noticeboard/tip">팁</a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                    <span class="navbar-text">
+                        <a href="/noticeboard/write" class="nav-link">새 글쓰기</a>
+                    </span>
+
+                </div>
+            </nav>
+        </div>
+        <div class="card-body">
+            <!-- Page Heading -->
+            <!-- 리스트 객체 -->
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-center">제목</th>
+                        <th scope="col" class="text-center">글쓴이</th>
+                        <th scope="col" class="text-center">작성일</th>
+                        <th scope="col" class="text-center">조회수</th>
+                        <th scope="col" class="text-center">추천수</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {{table_contents | safe}}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>
+<!-- /.container-fluid -->
+<script>
+    lists = document.getElementsByClassName('nav-item')
+    for (item of lists) {
+        item.setAttribute("class", "nav-item")
+    }
+    lists[5].setAttribute("class", "nav-item active")
+</script>

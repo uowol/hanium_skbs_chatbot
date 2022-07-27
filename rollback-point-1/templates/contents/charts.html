@@ -1,0 +1,49 @@
+<!-- mcharts.html -->
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <!-- <h1 class="h3 mb-4 text-gray-800">Blank Page</h1> -->
+    <div class="row">
+
+        <!-- Content Column -->
+        <div class="col-lg-6 mb-2">
+            <div class="card shadow mb-2">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">전국 관광객 현황</h6>
+                </div>
+                <div class="card-body text-center">
+                    <img src="/static/img/map.png" alt="map" height="600px">
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-2">
+            <div class="card shadow mb-2">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">관광 지표</h6>
+                </div>
+                <div class="card-body text-center">
+                    <img src="/static/img/chart1.png" alt="chart1" height="600px">
+                </div>
+            </div>
+        </div>    
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">관광활동 유형별 인기지역</h6>
+        </div>
+        <div class="card-body text-center">
+            <img src="/static/img/chart2.png" alt="chart2" width="100%">
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+<script>
+    lists = document.getElementsByClassName('nav-item')
+    for(item of lists){
+        item.setAttribute("class", "nav-item")
+    }
+    lists[2].setAttribute("class", "nav-item active")
+</script>
