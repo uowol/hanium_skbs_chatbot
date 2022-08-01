@@ -1,3 +1,6 @@
+from bson.json_util import dumps
+import json
+
 def get_table_contents(tag):
     contents = ""
     for i in range(10):
@@ -30,4 +33,14 @@ def get_table_contents(tag):
         contents = contents + content
     return contents
     
+def _result(status, body):
+    return {
+        'status': status,
+        'body': body
+    }
     
+def parse_json(data):
+    return dumps(data)
+
+def load_json(json_string):
+    return json.loads(json_string)

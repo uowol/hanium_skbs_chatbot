@@ -1,2 +1,0 @@
-python login.py
-PAUSE

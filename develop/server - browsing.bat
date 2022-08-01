@@ -1,2 +1,2 @@
-python browsing.py
+python server-browsing.py
 PAUSE
