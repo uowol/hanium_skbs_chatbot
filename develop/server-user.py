@@ -8,7 +8,7 @@ db = connect_database("skbs")
 collection = use(db, "user")
 
 # 유저 찾기
-@app.route('/find_user', methods=['GET'])
+@app.route('/user', methods=['GET'])
 def find_user():
     parameter_dict = request.args.to_dict()
     result = dict()
@@ -29,7 +29,7 @@ def find_user():
         print(f"find_user/result: {result}")
         return _result(status, result)
 
-@app.route('/add-user', methods=['POST'])
+@app.route('/user', methods=['POST'])
 def addUser():
     """
         needs
@@ -52,11 +52,11 @@ def addUser():
             "user_thumbnail": "temp.jpg"
         }])
     except:
-        return _result(0, "오류가 발생하였습니다.")
+        return _result(STATUS_FAIL, "오류가 발생하였습니다.")
 
-    return _result(1, "회원가입이 정상적으로 처리되었습니다.")
+    return _result(STATUS_SUCCESS, "회원가입이 정상적으로 처리되었습니다.")
 
-@app.route('/delete-user', methods=['POST'])
+@app.route('/user', methods=['DELETE'])
 def delUser():
     if True:
         return {
@@ -67,13 +67,13 @@ def delUser():
         "content": "유저 탈퇴가 정상적으로 처리되었습니다."
     }
 
-@app.route('/show-user-list', methods=['GET'])
+@app.route('/user-list', methods=['GET'])
 def showUserList():
     res = list(find(collection, {}))
-    return _result(1, parse_json(res))
+    return _result(STATUS_SUCCESS, parse_json(res))
 
 # App Start
 if __name__=="__main__":
     app.secret_key = '여행 de Gaja'
     # app.config['SESSION_TYPE'] = 'filesystem'
-    app.run(host="127.0.0.1", port="5001", debug=True)
+    app.run(host="127.0.0.1", port=PORT_USER, debug=True)

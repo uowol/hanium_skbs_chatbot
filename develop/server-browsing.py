@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, Markup, redirect, flash, sess
 from flask_login import LoginManager, login_user, logout_user, UserMixin, login_required, current_user
 from requests import get, post 
 from mmethods import _result, parse_json, load_json
-
+from mconsts import *
 
 # Flask 객체 인스턴스 생성
 app = Flask(__name__)
@@ -48,7 +48,7 @@ class User(UserMixin):
         print(f"get_user_info/user_id: {user_id}")
         user_info = None
         try:
-            res = get(f"http://127.0.0.1:5001/find_user?user_id={user_id}")
+            res = get(f"http://127.0.0.1:5001/user?user_id={user_id}")
             if res.status_code == 200:  # 서버와 통신
                 res = res.json()['body']
                 if res['count'] == 1:   # 유저 정보가 존재
@@ -62,7 +62,7 @@ class User(UserMixin):
 def login():
     return render_template('main_layout.html', params=params, content="login.html")
 
-@app.route('/login/callback', methods=["POST"])
+@app.route('/login', methods=["POST"])
 def loginCallback():
     global params
 
@@ -73,7 +73,7 @@ def loginCallback():
     user_info = User.get_user_info(user_id)
     
     if user_info:
-        if user_info['user_pw'] != user_pw: return redirect('/relogin')
+        if user_info['user_pw'] != user_pw: return redirect('/login/error')
         login_info = User(user_id=user_info['user_id']) # 사용자 객체 생성
         login_user(login_info)                          # 사용자 객체를 session에 저장
         session['user_id'] = user_id
@@ -81,7 +81,7 @@ def loginCallback():
 
         return redirect('/')
     else:
-        return redirect('/relogin')
+        return redirect('/login/error')
 
 @app.route('/logout', methods=["GET"])
 def logout():
@@ -90,59 +90,59 @@ def logout():
     session['user_nick'] = None
     return redirect('/')
 
-@app.route('/relogin')
-def relogin():
+@app.route('/login/error')
+def login_error():
     return render_template('main_layout.html', params=params, content="login.html", retry=True)
 
 @app.route('/register', methods=['GET'])
 def register():
     return render_template('main_layout.html', params=params, content="register.html")
 
-@app.route('/reregister')
-def reregister():
+@app.route('/register/error')
+def register_error():
     return render_template('main_layout.html', params=params, content="register.html", retry=True)
 
-@app.route('/register/callback', methods=["POST"])
-def registerCallback():
+@app.route('/register', methods=["POST"])
+def register_callback():
     user_id = request.form.get('inputEmail')
     user_nick = request.form.get('inputNick')
     user_pw = request.form.get('inputPassword')
     user_rp = request.form.get('repeatPassword')
 
-    print(f"register/callback/user_id: {user_id}")
+    print(f"register_callback/user_id: {user_id}")
     if user_pw != user_rp:
-        return redirect('/reregister')
+        return redirect('/register/error')
 
     user_info = User.get_user_info(user_id)
     if user_info:
-        return redirect('/reregister')
+        return redirect('/register/error')
 
     params = {
         "user_id": user_id,
         "user_nick": user_nick,
         "user_pw": user_pw,
     }
-    res = post("http://127.0.0.1:5001/add-user", data=parse_json(params))
+    res = post("http://127.0.0.1:5001/user", data=parse_json(params))
     if res.status_code == 200:
-        print(f"register/callback/res: {res.json()}")
-        if not res.json()['status']: return redirect('/reregister')
+        print(f"register_callback/res: {res.json()}")
+        if res.json()['status'] == STATUS_FAIL: return redirect('/register/error')
         return redirect('/login')
     else:
-        return redirect('/reregister')
+        return redirect('/register/error')
 
 @app.route('/forgot-password', methods=['GET'])
 def forgot_password():
     return render_template('main_layout.html', params=params, content="forgot-password.html", user_info = -1)
 
-@app.route('/forgot-password/find_user', methods=['GET', 'POST'])
+@app.route('/forgot-password/find-user', methods=['GET', 'POST'])
 def forgot_password_find_user():
     user_id = request.form.get('inputEmail')
-    print(f"forgot-password/find_user/user_id: {user_id}")
+    print(f"forgot_password_find_user/user_id: {user_id}")
 
     # 사용자가 입력한 정보가 회원가입된 사용자인지 확인
     user_info = User.get_user_info(user_id)
     if user_info:
-        print(f"forgot-password/find_user/user_pw: {user_info['user_pw']}")
+        print(f"forgot_password_find_user/user_pw: {user_info['user_pw']}")
 
     return render_template(
         'main_layout.html',
@@ -150,25 +150,26 @@ def forgot_password_find_user():
         params=params,
         user_info = user_info
     )
-    
+
+#%% Dashboard    
 # @app.route('/dashboard', methods=['GET'])
 # def dashboard():
 #     return render_template('main_layout.html', params=params, content="contents/dashboard.html")
 
-# #%% Chart
-# @app.route('/charts', methods=['GET'])
-# def charts():
-#     return render_template('main_layout.html', params=params, content="contents/charts.html")
+#%% Chart
+@app.route('/charts', methods=['GET'])
+def charts():
+    return render_template('main_layout.html', params=params, content="contents/charts.html")
 
-# #%% Concept
-# @app.route('/concept', methods=['GET'])
-# def concept():
-#     return render_template('main_layout.html', params=params, content="contents/concept.html")
+#%% Concept
+@app.route('/concept', methods=['GET'])
+def concept():
+    return render_template('main_layout.html', params=params, content="contents/concept.html")
     
-# #%% Noticeboard
-# @app.route('/noticeboard', methods=['GET'])
-# def noticeboard():
-#     return redirect("/noticeboard/free")
+#%% Noticeboard
+@app.route('/noticeboard', methods=['GET'])
+def noticeboard():
+    return redirect("/noticeboard/free")
 
 # # 게시판 서버로 보낼 것
 # @app.route('/noticeboard/write', methods=['GET'])
@@ -225,4 +226,4 @@ if __name__=="__main__":
     # app.run(debug=True)
     app.secret_key = '여행 de Gaja'
     # app.config['SESSION_TYPE'] = 'filesystem'
-    app.run(host="127.0.0.1", port="5000", debug=True)
+    app.run(host="127.0.0.1", port=PORT_BROWSING, debug=True)
