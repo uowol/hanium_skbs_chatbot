@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta charset="UTF-8">
-    <title>{{site_name}}</title>
+    <title>{{params['site_name']}}</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
@@ -48,7 +48,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fa fa-suitcase" aria-hidden="true"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">{{site_name}}</div>
+                <div class="sidebar-brand-text mx-3">{{params['site_name']}}</div>
             </a>
 
             <!-- Nav Item - Chatbot -->
@@ -63,12 +63,12 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
+            <!-- <li class="nav-item active">
                 <a href="/dashboard" class="nav-link">
                     <i class="fa fa-id-card" aria-hidden="true"></i>
                     <span>Dashboard</span>
                 </a>
-            </li>
+            </li> -->
 
             <!-- Divider -->
             <!-- <hr class="sidebar-divider my-0"> -->
@@ -114,12 +114,12 @@
             </li>
 
             <!-- Nav Item - Votes -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a href="/votes" class="nav-link">
                     <i class="fas fa-vote-yea    "></i>
                     <span>Votes</span>
                 </a>
-            </li>
+            </li> -->
 
             <!-- Divider
             <hr class="sidebar-divider"> -->
@@ -218,7 +218,7 @@
             <!-- Sidebar Message -->
             <div class="sidebar-card d-none d-lg-flex">
                 <img class="sidebar-card-illustration mb-2" src="/static/img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>{{site_name}}</strong> is fun, cool and sexy.</p>
+                <p class="text-center mb-2"><strong>{{params['site_name']}}</strong> is fun, cool and sexy.</p>
                 <!-- <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro"></a> -->
             </div>
 
@@ -281,7 +281,7 @@
                             </div>
                         </li> -->
 
-                        {% if current_user.is_authenticated %}
+                        {% if params['current_user'].is_authenticated %}
                         <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
@@ -403,7 +403,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                                    Kim Chanwoo
+                                    {{session['user_nick']}}
                                 </span>
                                 <img src="/static/avatars/1.jpg" class="img-profile rounded-circle" alt="">
                             </a>
