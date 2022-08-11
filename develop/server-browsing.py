@@ -10,15 +10,23 @@ lm = LoginManager()
 lm.init_app(app)
 
 params = {
-    "site_name": "GAZAIT",
+    "site_name": "GAZA-GO",
     "session": session,
     "current_user": current_user
 }
 
+@app.route('/init', methods=['GET'])
+def init_chat_list():
+    session['chat_list'] = ''
+    return redirect('/')
+
+
 @app.route('/', methods=['GET'])
 def index():
-    if request.method == "GET":
-        return render_template('main_layout.html', params=params, chatbot_talk="메인 페이지입니다.", content="contents/main.html")
+    # 다른 모든 route에 추가해야 할 것으로 예상
+    if not 'chat_list' in session:
+        return redirect('/init')
+    return render_template('main_layout.html', params=params, chatbot_talk="메인 페이지입니다.", content="contents/main.html")
 
 #%% Login
 
@@ -216,10 +224,63 @@ def noticeboard():
 # #     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/votes.html")
 
 #%% Chatbot
-@app.route('/chatbot', methods=['GET'])
-def chatbot():
-    return render_template('main_layout.html', params=params, chatbot_talk="", content="chatbot.html")
+# date_time = "23 Jan 2:05 pm"
+# name_bot = "bot"
+# name_user = "bot"
+# def chat_question(text):
+#     try:
+#         if session['user_nick'] != '':
+#             name = session['user_nick']
+#         else:
+#             name = "anonymous"
+#     except:
+#         name = "anonymous"
 
+#     return f"""<div class="d-flex justify-content-between">
+#                     <p class="small mb-1 text-muted">{date_time}</p>
+#                     <p class="small mb-1">{name}</p>
+#                 </div>
+#                 <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+#                     <div>
+#                         <p class="small p-2 me-3 mb-3 text-white rounded-3 bg-warning">{text}</p>
+#                     </div>
+#                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
+#                         alt="avatar 1" style="width: 45px; height: 100%;">
+#                 </div>"""
+
+# def chat_answer(text):
+#     return f"""<div class="d-flex justify-content-between">
+#                     <p class="small mb-1">{name_bot}</p>
+#                     <p class="small mb-1 text-muted">{date_time}</p>
+#                 </div>
+#                 <div class="d-flex flex-row justify-content-start">
+#                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5-bg.webp"
+#                         alt="avatar 1" style="width: 45px; height: 100%;">
+#                     <div>
+#                         <p class="small p-2 ms-3 mb-3 rounded-3" style="background-color: #f5f6f7;">{text}</p>
+#                     </div>
+#                 </div>"""
+
+# @app.route('/chatbot', methods=['GET'])
+# def chatbot():
+#     return render_template('main_layout.html', params=params, chatbot_talk="", content="chatbot.html")
+    
+@app.route('/chatbot', methods=['POST'])
+def chatbot_callback():
+    session['chat_list'] = request.json['chat_list']
+    
+    # chatbot db 다루는 part
+    last_chat = request.json['last_chat']
+    print(f"chatbot_callback/last_chat: {last_chat}")
+    
+
+    return _result(STATUS_SUCCESS, session['chat_list'])
+    
+@app.route('/chatbot', methods=['DELETE'])
+def chatbot_delete():
+    session.pop('chat_list')
+    return _result(STATUS_SUCCESS, '')
+    
 #%% App Start
 if __name__=="__main__":
     # oauth()    # 사용자 정보 인증
