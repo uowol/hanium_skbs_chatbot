@@ -267,14 +267,14 @@ def noticeboard():
     
 @app.route('/chatbot', methods=['POST'])
 def chatbot_callback():
-    session['chat_list'] = request.json['chat_list']
-    
     # chatbot db 다루는 part
-    last_chat = request.json['last_chat']
-    print(f"chatbot_callback/last_chat: {last_chat}")
-    
+    session['chat_list'] = request.json['chat_list']
+    print(f"chatbot_callback/chat_list: updated")
 
-    return _result(STATUS_SUCCESS, session['chat_list'])
+    last_chat = request.json['last_chat']
+    print(f"chatbot_callback/last_chat: {last_chat}")    
+
+    return _result(STATUS_SUCCESS, '')
     
 @app.route('/chatbot', methods=['DELETE'])
 def chatbot_delete():

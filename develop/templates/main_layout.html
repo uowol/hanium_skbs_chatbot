@@ -520,7 +520,7 @@
                                         <input id="inputChat" name="inputChat"
                                             type="text" class="form-control" placeholder="Type message"
                                             aria-label="Recipient's username" aria-describedby="button-addon2" style="height:40.8px;" />
-                                        <input class="btn btn-warning" onclick="add_chat(inputChat.value); inputChat.value=''" type="submit" id="button-addon2" value="보내기" style="padding-top: .55rem;">
+                                        <input class="btn btn-warning" onclick="send_chat(inputChat.value); inputChat.value=''" type="submit" id="button-addon2" value="보내기" style="padding-top: .55rem;">
                                     </div>
                                 </div>
 
@@ -612,8 +612,9 @@
                         <p class="small mb-1 text-muted">{1}</p>
                     </div>
                     <div class="d-flex flex-row justify-content-start">
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5-bg.webp"
-                            alt="avatar 1" style="width: 45px; height: 100%;">
+                        <div style="width: 45px;background-color: #f6c23e;border-radius: 50%;height: 45px;display: flex;align-items: center;justify-content: center;">
+                            <i class="fas fa-robot fa-2x" style="color: white; padding-bottom:5px"></i>
+                        </div>
                         <div>
                             <p class="small p-2 ms-3 mb-3 rounded-3" style="background-color: #f5f6f7;">{2}</p>
                         </div>
@@ -639,26 +640,35 @@
                 }
             });
         }
-        function add_chat(text){
+        function send_chat(text){
             if(text == "") return false;
             // chat_text = request.form.get('inputChat')
             chat_list += chat_question(text)
             divChat.innerHTML = chat_list
 
-            fetch("http://127.0.0.1:5000/chatbot", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    "chat_list": chat_list,
-                    "last_chat": text
-                })
-            }).then((response) => {
-                console.log(response.json())
+            // 답변 받아오기
+            fetch("http://127.0.0.1:5002/answer?question="+text)
+            .then((response) => response.json())
+            .then((data) => {
+                // console.log(data)
+                answer = data['body']
+                chat_list += chat_answer(answer)
+                divChat.innerHTML = chat_list
                 divChat.scrollTop = divChat.scrollHeight
+                
+                // 현재까지의 채팅 세션에 저장하기
+                fetch("http://127.0.0.1:5000/chatbot", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        "chat_list": chat_list,
+                        "last_chat": text
+                    })
+                })
             });
-            // send_post("http://127.0.0.1:5002/chat", {"chat_list": chat_list})
+
         }
     </script>
 
