@@ -2,7 +2,7 @@ import pymongo
 
 # database 연결
 def connect_database(db):
-    connect_to = pymongo.MongoClient("mongodb+srv://uowon:sk1346@cluster0.zvgmaaw.mongodb.net/test")
+    connect_to = pymongo.MongoClient("mongodb://wkdso0804:<bewhy0691>@cluster0.2ix2w.mongodb.net/?retryWrites=true&w=majority")
     mdb = connect_to[db]
     return mdb
 

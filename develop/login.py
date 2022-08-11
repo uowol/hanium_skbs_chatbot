@@ -1,8 +1,9 @@
+from distutils.log import error
 from flask import redirect
 from flask_login import LoginManager, login_user, logout_user, UserMixin, login_required, current_user
 from database import *
 
-db = connect_database("skbs")
+db = connect_database("Main")
 lm = LoginManager()
 
 # 사용자 정보를 조회
@@ -42,8 +43,8 @@ class User(UserMixin):
             result['result'] = "success"
             result['data'] = list(find(collection, option))
             result['count'] = len(result['data'])
-        except e:
+        except error:
             result['result'] = 'fail'
-            result['data'] = e
+            result['data'] = error
         finally:
             return result

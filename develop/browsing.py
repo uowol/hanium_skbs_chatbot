@@ -12,7 +12,7 @@ app = Flask(__name__)
 lm.init_app(app)
 
 # MongoDB
-db = connect_database("skbs")
+db = connect_database("Main")
 
 SITE_NAME = "GAZAIT"
 
