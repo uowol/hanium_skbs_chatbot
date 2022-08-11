@@ -1,0 +1,51 @@
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <!-- <h1 class="h3 mb-4 text-gray-800">Blank Page</h1> -->
+    <div class="row">
+
+        <!-- Content Column -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow mb-2">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">관심있는 지역을 선택해주세요.</h6>
+                </div>
+                <div class="card-body text-center">
+                    <img src="/static/img/map2.png" alt="map2" width="100%">
+                </div>
+            </div>    
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow mb-2">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">관심있는 시/군/구를 선택해주세요.</h6>
+                </div>
+                <div class="card-body text-center">
+                    <img src="/static/img/chart3.png" alt="chart3" width="100%">
+                </div>
+            </div>    
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow mb-2">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">선택하신 지역의 관광지 목록입니다.</h6>
+                </div>
+                <div class="card-body text-center">
+                    <img src="/static/img/chart4.png" alt="chart4" width="100%">
+                </div>
+            </div>    
+        </div>
+    
+    </div>
+    
+</div>
+<!-- /.container-fluid -->
+
+<script>
+    lists = document.getElementsByClassName('nav-item')
+    for(item of lists){
+        item.setAttribute("class", "nav-item")
+    }
+    lists[3].setAttribute("class", "nav-item active")
+</script>
