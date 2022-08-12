@@ -267,7 +267,7 @@ def noticeboard():
     
 @app.route('/chatbot', methods=['POST'])
 def chatbot_callback():
-    # chatbot db 다루는 part
+    # chatbot session 에 채팅 상황 저장
     session['chat_list'] = request.json['chat_list']
     print(f"chatbot_callback/chat_list: updated")
 
@@ -278,7 +278,9 @@ def chatbot_callback():
     
 @app.route('/chatbot', methods=['DELETE'])
 def chatbot_delete():
+    # chatbot 채팅 상황 제거
     session.pop('chat_list')
+    print(f"chatbot_delete/chat_list: deleted")
     return _result(STATUS_SUCCESS, '')
     
 #%% App Start
