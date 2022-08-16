@@ -165,9 +165,9 @@ def forgot_password_find_user():
 #     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/dashboard.html")
 
 #%% Chart
-@app.route('/charts', methods=['GET'])
-def charts():
-    return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/charts.html")
+# @app.route('/charts', methods=['GET'])
+# def charts():
+#     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/charts.html")
 
 #%% Concept
 @app.route('/concept', methods=['GET'])
@@ -179,25 +179,39 @@ def concept():
 def noticeboard():
     return redirect("/noticeboard/free")
 
-# # 게시판 서버로 보낼 것
-# @app.route('/noticeboard/write', methods=['GET'])
-# def noticeboard_write():
-#     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard_write.html",
-#         table_contents=get_table_contents("free"), tag="free")
+# 게시판 서버로 보낼 것
+@app.route('/noticeboard/write', methods=['GET'])
+def noticeboard_write():
+    return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard_write.html",
+        tag="free")
 
-# # 게시판 서버로 보낼 것
-# @app.route('/noticeboard/free', methods=['GET'])
-# def noticeboard_free():
-#     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard.html",
-#         table_contents=get_table_contents("free"), tag="free")
+@app.route('/noticeboard/write', methods=['POST'])
+def noticeboard_callback():
+
+    # 글 쓰기: 게시판 서버와 통신
+
+    return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard_write.html",
+        table_contents=[], tag="free")
+
+# 게시판 서버로 보낼 것
+@app.route('/noticeboard/free', methods=['GET'])
+def noticeboard_free():
+
+    # 게시판 서버로부터 데이터 받아오기
+
+    return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard.html",
+        table_contents=[], tag="free")
         
-# # 게시판 서버로 보낼 것
-# @app.route('/noticeboard/free/<int:i>', methods=['GET'])
-# def noticeboard_free_content(i):
-#     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard_content.html",
-#         title=str(i)+"번째 게시물", noticeboard_content=str(i)+"번째 본문")
+# 게시판 서버로 보낼 것
+@app.route('/noticeboard/free/<int:i>', methods=['GET'])
+def noticeboard_free_content(i):
 
-# # 게시판 서버로 보낼 것
+    # 게시판 서버로부터 데이터 받아오기
+    
+    return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard_content.html",
+        title=str(i)+"번째 게시물", noticeboard_content=str(i)+"번째 본문")
+
+# 게시판 서버로 보낼 것
 # @app.route('/noticeboard/review', methods=['GET'])
 # def noticeboard_review():
 #     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard.html",
@@ -209,15 +223,15 @@ def noticeboard():
 #     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard.html",
 #         table_contents=[], tag="tip")
 
-# #%% Region
-# @app.route('/region', methods=['GET'])
-# def region():
-#     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/region.html")
+#%% Region
+@app.route('/region', methods=['GET'])
+def region():
+    return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/region.html")
     
-# #%% Search
-# @app.route('/search', methods=['GET'])
-# def search():
-#     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/search.html")
+#%% Search
+@app.route('/search', methods=['GET'])
+def search():
+    return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/search.html")
     
 # # @app.route('/votes', methods=['GET'])
 # # def votes():

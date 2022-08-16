@@ -65,9 +65,16 @@
 </div>
 <!-- /.container-fluid -->
 <script>
+    content = 'notice board'
+    index = 0
+    i = 0
     lists = document.getElementsByClassName('nav-item')
-    for (item of lists) {
+    for(item of lists){
         item.setAttribute("class", "nav-item")
+        if(item.innerText.trim().toLowerCase() == content){
+            index = i
+        }
+        i++
     }
-    lists[5].setAttribute("class", "nav-item active")
+    lists[index].setAttribute("class", "nav-item active")
 </script>
