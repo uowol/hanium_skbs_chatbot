@@ -159,6 +159,11 @@ def forgot_password_find_user():
         user_info = user_info
     )
 
+#%% blank
+@app.route('/blank', methods=['GET'])
+def blank():
+    return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/blank.html")
+
 #%% Dashboard    
 # @app.route('/dashboard', methods=['GET'])
 # def dashboard():
