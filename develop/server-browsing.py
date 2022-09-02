@@ -237,7 +237,7 @@ def region():
 @app.route('/search', methods=['GET'])
 def search():
     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/search.html")
-    
+        
 # # @app.route('/votes', methods=['GET'])
 # # def votes():
 # #     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/votes.html")

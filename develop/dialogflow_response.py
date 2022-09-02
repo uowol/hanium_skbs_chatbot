@@ -29,11 +29,11 @@ def DetectIntent(text):
 
 # text에 대하여 응답을 변환하는 함수. 이것의 타입이 str이면 그대로 출력하고 dict면 DB와 연동해서 출력하는 느낌으로.
 def Res_Verify(text):
-    response = str(DetectIntent(text).query_result.fulfillment_text)
+    response = DetectIntent(text).query_result.fulfillment_text
     res_list = response.split('/')
 
     if res_list[0] == '없음':
-        return res_list[1]
+        return res_list[1], 'empty'
 
     elif res_list[0] == '추천':
         for i in range(len(res_list)):
@@ -49,7 +49,7 @@ def Res_Verify(text):
             '테마': res_list[5],
             '동반 유형': res_list[6]
         }
-        return res_dict
+        return res_dict, 'recommend'
 
 # print(Res_Verify('안녕'))
 # print(Res_Verify('충북에 2개월 동안 여자친구랑 갈만한 여행지 추천해 줘'))
