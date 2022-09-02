@@ -29,14 +29,6 @@ def save_log():
 
     return _result(STATUS_SUCCESS, '')
 
-# dialog flow 와 소통 - 의도 분류
-# def detect_intent():
-#     intent = None
-
-#     # detect intent 모듈
-    
-#     return intent;
-
 # 의도에 따른 답변 리턴
 @app.route('/answer', methods=["GET"])
 def answer():
