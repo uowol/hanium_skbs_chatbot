@@ -51,5 +51,5 @@ def Res_Verify(text):
         }
         return res_dict
 
-print(Res_Verify('안녕'))
-print(Res_Verify('충주시에 2개월 동안 여자친구랑 갈만한 여행지 추천해 줘'))
+# print(Res_Verify('안녕'))
+# print(Res_Verify('충북에 2개월 동안 여자친구랑 갈만한 여행지 추천해 줘'))

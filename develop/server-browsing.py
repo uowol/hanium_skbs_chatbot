@@ -10,7 +10,7 @@ lm = LoginManager()
 lm.init_app(app)
 
 params = {
-    "site_name": "GAZA-GO",
+    "site_name": "Tour-List",
     "session": session,
     "current_user": current_user
 }
