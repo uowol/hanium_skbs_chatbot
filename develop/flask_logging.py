@@ -17,15 +17,15 @@ else:
 logger = logging.getLogger("mylogger")
 
 # 포매터를 만든다
-fomatter = logging.Formatter("[%(levelname)s|%(filename)s:%(lineno)s] %(asctime)s > %(message)s")
+formatter = logging.Formatter("[%(levelname)s|%(filename)s:%(lineno)s] %(asctime)s > %(message)s")
 
 # 스트림과 파일로 로그를 출력하는 핸들러를 각각 만든다.
 fileHandler = logging.FileHandler(filename)
 streamHandler = logging.StreamHandler()
 
 # 각 핸들러에 포매터를 지정한다.
-fileHandler.setFormatter(fomatter)
-streamHandler.setFormatter(fomatter)
+fileHandler.setFormatter(formatter)
+streamHandler.setFormatter(formatter)
 
 # 로거 인스턴스에 스트림 핸들러와 파일핸들러를 붙인다.
 logger.addHandler(fileHandler)
