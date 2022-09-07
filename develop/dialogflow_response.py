@@ -1,5 +1,5 @@
 import os
-credential_path = r"C:\Users\alllh\Desktop\한이음 공모전\trip-recommend-chatbot-9lcf-abc299a72150.json"
+credential_path = r"C:\Users\alllh\Desktop\한이음 공모전\trip-recommend-chatbot-9lcf-4861abc2d005.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 from google.cloud import dialogflow_v2beta1 as dialogflow
@@ -50,6 +50,7 @@ def Res_Verify(text):
             '동반 유형': res_list[6]
         }
         return res_dict, 'recommend'
+    return "잘 모르겠어요. 다시 질문해주세요. ", 'empty'
 
 # print(Res_Verify('안녕'))
 # print(Res_Verify('충북에 2개월 동안 여자친구랑 갈만한 여행지 추천해 줘'))

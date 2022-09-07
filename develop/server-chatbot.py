@@ -35,6 +35,8 @@ def save_log():
 def answer_on_follow():
     # if not response: return _result(STATUS_FAIL, '')
 
+    # 
+
     req = request.args.to_dict()
     intent = req['intent']
     args = req['args']
@@ -62,7 +64,7 @@ def answer_on_follow():
         # 위 정보로 관광지 데이터베이스 필터링, 개수 반환 #
         cnt = 1987
 
-        answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>\
+        answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
             더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
             |btn]결과<br>확인하기@location.href='/search?{query.replace('_','&').replace('_','&')}'\
             |btn]지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
@@ -78,12 +80,14 @@ def answer():
     req = request.args.to_dict()
     question = req['question']
     print("answer/question: "+question)
+    #
 
     response, intent = Res_Verify(question)
     print("answer/(response, intent): "+str(response)+','+intent)
+    # 
 
     if intent == 'empty':
-        answer = "<text>" + response
+        answer = "text]" + response
         return _result(STATUS_SUCCESS, answer);
     if intent == 'recommend':
         due = response['기간']
@@ -102,7 +106,7 @@ def answer():
         # 위 정보로 관광지 데이터베이스 필터링, 개수 반환 #
         cnt = 1987
 
-        answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>\
+        answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
             더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
             |btn]결과<br>확인하기@location.href='/search?{query.replace('_','&')}'\
             |btn]지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\

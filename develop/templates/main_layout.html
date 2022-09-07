@@ -575,7 +575,6 @@
             }
             return res
         }
-
         chat_list = `{{session['chat_list']|safe}}`
         date_time = "23 Jan 2:05 pm"
         name_bot = "bot"
@@ -658,25 +657,23 @@
                 }
             });
         }
+
+        // 서버와 통신 파트
         function send_chat(text){
             if(text == "" || text == undefined) return false;
-            // chat_text = request.form.get('inputChat')
-            chat_list += chat_question(text)
-            divChat.innerHTML = chat_list
+            
+            chat_list += chat_question(text)    // 사용자 질문 말풍선 추가
+            divChat.innerHTML = chat_list       // 화면에 띄움
 
             // 답변 받아오기
-            // console.log("main_layout/send_chat: (question) "+text)
-            
             fetch("http://127.0.0.1:5002/answer?question="+text)
             .then((response) => response.json())
             .then((data) => {
                 let answer = data['body'].split('|')
                 for(let i in answer){
                     answer[i] = answer[i].trim()
-                    // console.log(answer[i])
                     let tag     = answer[i].split(']')[0]
                     let content = answer[i].split(']')[1] 
-                    // console.log('tag, content: '+tag+', '+content)
 
                     // 텍스트의 경우
                     if(tag == "text"){
@@ -718,7 +715,7 @@
         function send_followed_chat(intent, ...args){
             chat_list += chat_answer(args[0]+':+'+args[1])
             divChat.innerHTML = chat_list
-            console.log(args)
+            // console.log(args)
 
             // 답변 받아오기
             fetch("http://127.0.0.1:5002/answer/follow?intent="+intent+"&args="+args)
@@ -727,10 +724,8 @@
                 let answer = data['body'].split('|')
                 for(let i in answer){
                     answer[i] = answer[i].trim()
-                    // console.log(answer[i])
                     let tag     = answer[i].split(']')[0]
                     let content = answer[i].split(']')[1] 
-                    // console.log('tag, content: '+tag+', '+content)
 
                     // 텍스트의 경우
                     if(tag == "text"){
