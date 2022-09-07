@@ -3,9 +3,9 @@ import logging
 
 
 # 환경변수를 읽어서 로깅 레벨과 로그를 남길 파일의 경로를 변수에 저장한다
-if os.environ["FLASK_ENV"] == "local":
+if os.environ["FLASK_ENV"] == "development":
     loggerLevel = logging.DEBUG
-    filename = "./logs/localServer.log"
+    filename = "./logs/developServer.log"
 elif os.environ["FLASK_ENV"] == "test":
     loggerLevel = logging.DEBUG
     filename = "./logs/testServer.log"
