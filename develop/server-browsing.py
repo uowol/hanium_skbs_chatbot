@@ -45,7 +45,7 @@ def detail():
     #     "landmark": landmark
     # }
 
-    # res = post("http://127.0.0.1:5004/landmarks", data=parse_json(params))
+    # res = post("http://0.0.0.0:5004/landmarks", data=parse_json(params))
 
     # if res.status_code == 200:
     #     print(f"register_callback/res: {res.json()}")
@@ -85,7 +85,7 @@ class User(UserMixin):
         print(f"get_user_info/user_id: {user_id}")
         user_info = None
         try:
-            res = get(f"http://127.0.0.1:5001/user?user_id={user_id}")
+            res = get(f"http://0.0.0.0:5001/user?user_id={user_id}")
             if res.status_code == 200:  # 서버와 통신
                 res = res.json()['body']
                 if res['count'] == 1:   # 유저 정보가 존재
@@ -159,7 +159,7 @@ def register_callback():
         "user_nick": user_nick,
         "user_pw": user_pw,
     }
-    res = post("http://127.0.0.1:5001/user", data=parse_json(params))
+    res = post("http://0.0.0.0:5001/user", data=parse_json(params))
     if res.status_code == 200:
         print(f"register_callback/res: {res.json()}")
         if res.json()['status'] == STATUS_FAIL: return redirect('/register/error')

@@ -52,4 +52,4 @@ def write(num):
 if __name__=="__main__":
     app.secret_key = '여행 de Gaja'
     # app.config['SESSION_TYPE'] = 'filesystem'
-    app.run(host="127.0.0.1", port=PORT_NOTICEBOARD, debug=True)
+    app.run(host="0.0.0.0", port=PORT_NOTICEBOARD, debug=True)
