@@ -647,7 +647,7 @@
         }
         function cancel_chatting(){
             hide_chatting()
-            fetch("http://127.0.0.1:5000/chatbot", {
+            fetch("http://0.0.0.0:5000/chatbot", {
                 method: "DELETE"
             }).then((response) => {
                 console.log(response.json())
@@ -666,7 +666,7 @@
             divChat.innerHTML = chat_list       // 화면에 띄움
 
             // 답변 받아오기
-            fetch("http://127.0.0.1:5002/answer?question="+text)
+            fetch("http://0.0.0.0:5002/answer?question="+text)
             .then((response) => response.json())
             .then((data) => {
                 let answer = data['body'].split('|')
@@ -699,7 +699,7 @@
                 divChat.scrollTop = divChat.scrollHeight
                 
                 // 현재까지의 채팅 세션에 저장하기
-                fetch("http://127.0.0.1:5000/chatbot", {
+                fetch("http://0.0.0.0:5000/chatbot", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -718,7 +718,7 @@
             // console.log(args)
 
             // 답변 받아오기
-            fetch("http://127.0.0.1:5002/answer/follow?intent="+intent+"&args="+args)
+            fetch("http://0.0.0.0:5002/answer/follow?intent="+intent+"&args="+args)
             .then((response) => response.json())
             .then((data) => {
                 let answer = data['body'].split('|')
@@ -751,7 +751,7 @@
                 divChat.scrollTop = divChat.scrollHeight
                 
                 // 현재까지의 채팅 세션에 저장하기
-                fetch("http://127.0.0.1:5000/chatbot", {
+                fetch("http://0.0.0.0:5000/chatbot", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -802,7 +802,7 @@
             divChat.scrollTop = divChat.scrollHeight
             
             // 현재까지의 채팅 세션에 저장하기
-            fetch("http://127.0.0.1:5000/chatbot", {
+            fetch("http://0.0.0.0:5000/chatbot", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
