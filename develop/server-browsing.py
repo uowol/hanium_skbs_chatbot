@@ -28,6 +28,35 @@ def index():
         return redirect('/init')
     return render_template('main_layout.html', params=params, chatbot_talk="메인 페이지입니다.", content="contents/main.html")
 
+#%% Detail
+@app.route('/detail', methods=['GET'])
+def detail():
+    req = request.args.to_dict()
+    landmark = None
+
+    if 'landmark' in req : landmark = req['landmark']
+
+    print(f"detail/landmark: {landmark}")
+
+
+    # 대충 여행지 DB 상호작용하는 서버에게 요청보내고 받은 여행지 데이터를 활용하여 관련 정보 시각화하기
+
+    # params = {
+    #     "landmark": landmark
+    # }
+
+    # res = post("http://127.0.0.1:5004/landmarks", data=parse_json(params))
+
+    # if res.status_code == 200:
+    #     print(f"register_callback/res: {res.json()}")
+    #     if res.json()['status'] == STATUS_FAIL: return redirect('/register/error')
+    #     return redirect('/login')
+    # else:
+    #     return redirect('/register/error')
+
+    return render_template('main_layout.html', params=params, chatbot_talk="여행지 세부 정보 페이지입니다.", content="contents/detail.html")
+
+
 #%% Login
 
 # 사용자 정보를 조회
