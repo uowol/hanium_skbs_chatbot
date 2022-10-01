@@ -10,11 +10,12 @@
             <h6 class="m-0 font-weight-bold text-primary">여행지 세부 정보</h6>
         </div>
         <div class="card-body row">
-            <div class="card shadow mb-4 col-sm-3">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">여행지 세부 정보</h6>
-                </div>
-            </div>
+            <iframe 
+                src="https://datalab.visitkorea.or.kr/datalab/portal/loc/getTourDataFormView.do?contId=127167#content"
+                style="display:block; width:100vw; height: 100vh"
+            ></iframe>
+            <small class="m-1 text-right">출처: 한국관광 데이터랩</small>
+
         </div>
     </div>
 
@@ -25,19 +26,4 @@
         item.setAttribute("class", "nav-item")
     }
 
-    //exporte les données sélectionnées
-    var $table = $('#table');
-    $(function () {
-        $('#toolbar').find('select').change(function () {
-            $table.bootstrapTable('refreshOptions', {
-                exportDataType: $(this).val()
-            });
-        });
-    })
-
-    var trBoldBlue = $("table");
-
-    $(trBoldBlue).on("click", "tr", function () {
-        $(this).toggleClass("bold-blue");
-    });
 </script>

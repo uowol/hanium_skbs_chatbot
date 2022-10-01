@@ -9,16 +9,22 @@ from dialogflow_response import *
 from flask_cors import CORS, cross_origin
 # from flask_session import Session
 
+
+connect_to = '127.0.0.1'
+
+
 app = Flask(__name__)
 app.secret_key = '여행 de Gaja'
 CORS(app)
 # Session(app)
 
-db = connect_database("skbs")
-col_landmark    = use(db, "test-landmark")
+
+db          = connect_database("skbs")
+col_dest    = use(db, "test-dest")
+
 
 # 여행지 정보 전부 가져오기
-@app.route('/landmark', methods=["GET"])
+@app.route('/dest', methods=["GET"])
 def answer():
     print("answer/(response, intent): "+str(response)+','+intent)
     return _result(STATUS_SUCCESS, answer);
@@ -26,4 +32,4 @@ def answer():
 # App Start
 if __name__=="__main__":
     # app.config['SESSION_TYPE'] = 'filesystem'
-    app.run(host="0.0.0.0", port=PORT_DETAIL, debug=True)
+    app.run(host=connect_to, port=PORT_DETAIL, debug=True)
