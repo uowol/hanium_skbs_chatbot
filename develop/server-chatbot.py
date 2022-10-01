@@ -9,14 +9,20 @@ from dialogflow_response import *
 from flask_cors import CORS, cross_origin
 # from flask_session import Session
 
+
+connect_to = '127.0.0.1'
+
+
 app = Flask(__name__)
 app.secret_key = '여행 de Gaja'
 CORS(app)
 # Session(app)
 
+
 db = connect_database("skbs")
 col_chatbot     = use(db, "test-chatbot")
-col_landmark    = use(db, "test-landmark")
+col_dest        = use(db, "test-dest")
+
 
 # 대화 내용 저장: 내용 / 시간 / 유저 nick(익명일 수도)
 @app.route('/chat', methods=["POST"])
@@ -121,4 +127,4 @@ def answer():
 # App Start
 if __name__=="__main__":
     # app.config['SESSION_TYPE'] = 'filesystem'
-    app.run(host="127.0.0.1", port=PORT_CHATBOT, debug=True)
+    app.run(host=f"{connect_to}", port=PORT_CHATBOT, debug=True)
