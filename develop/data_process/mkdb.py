@@ -40,7 +40,7 @@ for region in region_names:
     region_dict.setdefault(x[0], [])
     region_dict[x[0]].append(' '.join(x[1:]))
 
-with open('output/region_dict.csv','w') as f:
+with open('output/region_dict.csv','w', encoding='utf8') as f:
     w = csv.writer(f)
     w.writerow(region_dict.keys())
     w.writerow(region_dict.values())
@@ -61,12 +61,12 @@ for region, region_details in region_dict.items():
         dest_dict.setdefault(region_detail, [])
         dest_dict[region_detail] = data_df3.관광지명[(~data_df3.관광지명.isna())&(data_df3.지역==region_detail)].to_list()
 
-with open('output/dest_dict.csv','w') as f:
+with open('output/dest_dict.csv','w', encoding='utf8') as f:
     w = csv.writer(f)
     w.writerow(dest_dict.keys())
     w.writerow(dest_dict.values())
 
 # %%
-df = pd.read_csv('output/dest_dict.csv', encoding='CP949')
+df = pd.read_csv('output/dest_dict.csv')
 df
 # %%

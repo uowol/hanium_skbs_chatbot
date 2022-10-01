@@ -27,13 +27,13 @@ col_region_test     = use(db, "region_test")
 # 지역 리스트 가져오기
 @app.route('/region', methods=["GET"])
 def get_region_list():
-    df = pd.read_csv('../data_process/output/region_dict.csv', encoding='CP949')
+    df = pd.read_csv('../data_process/output/region_dict.csv')
     answer = df.to_dict()
     return _result(STATUS_SUCCESS, answer);
 
 @app.route('/dest', methods=["GET"])
 def get_dest_list():
-    df = pd.read_csv('../data_process/output/dest_dict.csv', encoding='CP949')
+    df = pd.read_csv('../data_process/output/dest_dict.csv')
     answer = df.to_dict()
     return _result(STATUS_SUCCESS, answer);
 
