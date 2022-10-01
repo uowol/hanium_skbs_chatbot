@@ -560,6 +560,13 @@
         </div>
     </div>
     <script>
+        chat_list = `{{session['chat_list']|safe}}`
+        date_time = "23 Jan 2:05 pm"
+        name_bot = "bot"
+        connect_to = '127.0.0.1'
+
+
+        // js functions
         String.prototype.format = function() {
             var formatted = this;
             for( var arg in arguments ) {
@@ -575,9 +582,12 @@
             }
             return res
         }
-        chat_list = `{{session['chat_list']|safe}}`
-        date_time = "23 Jan 2:05 pm"
-        name_bot = "bot"
+        window.onkeydown = (e) => {
+            // if (e.key != 'Escape') return false;
+            hide_chatting();
+        };
+
+
         // name_user = "bot"
         function chat_question(text){
             try{
@@ -647,7 +657,7 @@
         }
         function cancel_chatting(){
             hide_chatting()
-            fetch("http://127.0.0.1:5000/chatbot", {
+            fetch("http://"+connect_to+":5000/chatbot", {
                 method: "DELETE"
             }).then((response) => {
                 console.log(response.json())
@@ -658,6 +668,7 @@
             });
         }
 
+
         // 서버와 통신 파트
         function send_chat(text){
             if(text == "" || text == undefined) return false;
@@ -666,7 +677,7 @@
             divChat.innerHTML = chat_list       // 화면에 띄움
 
             // 답변 받아오기
-            fetch("http://127.0.0.1:5002/answer?question="+text)
+            fetch("http://"+connect_to+":5002/answer?question="+text)
             .then((response) => response.json())
             .then((data) => {
                 let answer = data['body'].split('|')
@@ -699,7 +710,7 @@
                 divChat.scrollTop = divChat.scrollHeight
                 
                 // 현재까지의 채팅 세션에 저장하기
-                fetch("http://127.0.0.1:5000/chatbot", {
+                fetch("http://"+connect_to+":5000/chatbot", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -718,7 +729,7 @@
             // console.log(args)
 
             // 답변 받아오기
-            fetch("http://127.0.0.1:5002/answer/follow?intent="+intent+"&args="+args)
+            fetch("http://"+connect_to+":5002/answer/follow?intent="+intent+"&args="+args)
             .then((response) => response.json())
             .then((data) => {
                 let answer = data['body'].split('|')
@@ -751,7 +762,7 @@
                 divChat.scrollTop = divChat.scrollHeight
                 
                 // 현재까지의 채팅 세션에 저장하기
-                fetch("http://127.0.0.1:5000/chatbot", {
+                fetch("http://"+connect_to+":5000/chatbot", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -802,7 +813,7 @@
             divChat.scrollTop = divChat.scrollHeight
             
             // 현재까지의 채팅 세션에 저장하기
-            fetch("http://127.0.0.1:5000/chatbot", {
+            fetch("http://"+connect_to+":5000/chatbot", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

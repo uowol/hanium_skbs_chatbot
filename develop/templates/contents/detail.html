@@ -1,0 +1,29 @@
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">여행지 세부 정보</h6>
+        </div>
+        <div class="card-body row">
+            <iframe 
+                src="https://datalab.visitkorea.or.kr/datalab/portal/loc/getTourDataFormView.do?contId=127167#content"
+                style="display:block; width:100vw; height: 100vh"
+            ></iframe>
+            <small class="m-1 text-right">출처: 한국관광 데이터랩</small>
+
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+<script>
+    for(item of lists){
+        item.setAttribute("class", "nav-item")
+    }
+
+</script>
