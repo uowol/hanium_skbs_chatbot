@@ -26,8 +26,8 @@ data_df2 = pd.DataFrame(data_list)
 
 # %%
 data_df3 = pd.read_csv(
-    r"C:\Users\alllh\Documents\카카오톡 받은 파일\지역 전체.csv"
-)
+    r"C:\Users\alllh\Documents\카카오톡 받은 파일\지역 전체.csv",
+).iloc[:,1:]
 
 # %%
 import csv
@@ -69,74 +69,132 @@ with open('output/dest_dict.csv','w', encoding='utf8') as f:
 #%% 테마별
 # attr_list = list(set(data_df3["관광지명"].dropna()))
 # attr_list
-theme_list = [
-    '사원',
-    '캠핑',
-    '숙소',
-    '편의시설',
-    '골프',
-    '바다',
-    '계곡',
-    '스키',
-    '박물관'
-]
 df = data_df3.copy()
-df['theme'] = '미정'
-df
+df['theme'] = [[] for _ in range(len(df))]
+df_list = set()
 
 #%%
 filter_dest_name = ~df.관광지명.isna()
-# temple_list = []
-# for attr in attr_list:
-#     if sum((attr[-1] == "사", len(attr) == 3)) == 2:
-#         temple_list.append(attr)
+
 filter_temple = df.관광지명.apply(lambda x:(str(x).endswith('사')) & (len(str(x)) == 3))
-df.theme[filter_temple&filter_dest_name] = '사원'
-df
+df.theme[filter_temple&filter_dest_name].apply(lambda x: x.append('사원'))
 #%%
-camping_list = []
-for attr in attr_list:
-    if "캠핑" in attr:
-        camping_list.append(attr)
-camping_list = [t for t in camping_list if "/" in t and "예정" not in t and "리스트" not in t and "11번가" not in t]
-
+df_list.add('캠핑')
+filter_camp = df.관광지명.apply(lambda x:
+    ('캠핑' in str(x))
+    & ("/" not in str(x)) 
+    & ('예정' not in str(x))
+    & ('리스트' not in str(x))
+    & ('11번가' not in str(x))
+)
+df.theme[filter_camp&filter_dest_name].apply(lambda x: x.append('캠핑'))
+df.theme
 #%%
-sukso_list = []
-for attr in attr_list:
-    if sum(("호텔" in attr, "모텔" in attr, "스테이" in attr,"펜션" in attr)) == 1:
-        sukso_list.append(attr)
+df_list.add('숙소')
+filter_sukso = df.관광지명.apply(lambda x:
+    ("호텔" in str(x)) 
+    | ('모텔' in str(x))
+    | ('스테이' in str(x))
+    | ('펜션' in str(x))
+    | ('쏠비치' in str(x)) 
+    | ('리조트' in str(x)) 
+)
+df.theme[filter_sukso&filter_dest_name].apply(lambda x: x.append('숙소'))
+df.theme
+#%%
+df_list.add('섬')
+filter_island = df.관광지명.apply(lambda x:
+    (str(x).endswith('섬')) 
+    | (str(x).endswith('도'))
+)
+df.theme[filter_island&filter_dest_name].apply(lambda x: x.append('섬'))
+df.theme
+#%%
+df_list.add('편의시설')
+filter_fac = df.관광지명.apply(lambda x:
+    ("편의점" in str(x)) 
+    | ('마트' in str(x))
+    | ('노브랜드' in str(x))
+    | ('마켓' in str(x))
+    | ('다이소' in str(x))
+    | ('세븐일레븐' in str(x))
+    | ('cu' in str(x))
+)
+df.theme[filter_fac&filter_dest_name].apply(lambda x: x.append('편의시설'))
+df.theme
+#%%
+df_list.add('골프')
+filter_golf = df.관광지명.apply(lambda x:
+    ("골프" in str(x)) 
+    | ('CC' in str(x))
+    | ('GC' in str(x))
+    | ('gc' in str(x))
+    | ('cc' in str(x))
+)
+df.theme[filter_golf&filter_dest_name].apply(lambda x: x.append('골프'))
+df.theme
+#%%
+df_list.add('바다')
+filter_sea = df.관광지명.apply(lambda x:
+    ("해수욕장" in str(x)) 
+    | ('해변' in str(x))
+    | ('항' in str(x))
+    | ('선착장' in str(x))
+    | ('해안' in str(x))
+    | ('쏠비치' in str(x))
+    & ('장점' not in str(x))
+    & ('변점' not in str(x))
+    & ('항점' not in str(x))
+    & ('영장' not in str(x))
+    & ('호텔' not in str(x))
+    & ('터미널' not in str(x))
+    & ('/' not in str(x))
+    & ('동점' not in str(x))
+    & ('예정' not in str(x))
+    & ('골프' not in str(x))
+    & ('자점' not in str(x))
+    & ('노브랜드' not in str(x))
+)
+df.theme[filter_sea&filter_dest_name].apply(lambda x: x.append('바다'))
+df.theme
+#%%
+df_list.add('계곡')
+filter_gyegok = df.관광지명.apply(lambda x:
+    ("계곡" in str(x)) 
+    & ("/" not in str(x)) 
+    & ('계곡길' not in str(x))
+)
+df.theme[filter_gyegok&filter_dest_name].apply(lambda x: x.append('계곡'))
+df.theme
+#%%
+df_list.add('스키')
+filter_ski = df.관광지명.apply(lambda x:
+    ("스키" in str(x)) 
+    & ('샵' not in str(x))
+    & ('호텔' not in str(x))
+    & ('폐장' not in str(x))
+)
+df.theme[filter_ski&filter_dest_name].apply(lambda x: x.append('스키'))
+df.theme
+#%%
+df_list.add('박물관')
+filter_museum = df.관광지명.apply(lambda x:
+    ("박물관" in str(x)) 
+    & ('예정' not in str(x))
+)
+df.theme[filter_museum&filter_dest_name].apply(lambda x: x.append('박물관'))
+#%%
+df_list.add('시장')
+filter_sijang = df.관광지명.apply(lambda x:
+    ("시장" in str(x)) 
+)
+df.theme[filter_sijang&filter_dest_name].apply(lambda x: x.append('시장'))
+#%%
+# theme_list = list(df.theme.unique())
+df_list, df.theme
+# %%
+df.to_csv('output/data_theme_plus.csv', index=False)
+# %%
+df.관광지명[df.theme.apply(len)==0].dropna()
 
-fac_list = []
-for attr in attr_list:
-    if sum(("편의점" in attr, "마트" in attr, "노브랜드" in attr,"마켓" in attr,"다이소" in attr,"세븐일레븐" in attr,"cu" in attr)) == 1:
-        fac_list.append(attr)
-
-golf_list = []
-for attr in attr_list:
-    if sum(("골프" in attr, "CC" in attr, "GC" in attr,"gc" in attr, "cc" in attr,)) == 1:
-        golf_list.append(attr)
-
-sea_list = []
-for attr in attr_list:
-    if sum(("해수욕장" in attr, "해변" in attr, "항" in attr, "선착장" in attr, "해안" in attr)) == 1:
-        if sum(("장점" not in attr, "변점" not in attr,"항점" not in attr,"영장" not in attr,"호텔" not in attr,"터미널" not in attr,"/" not in attr,"동점" not in attr,"예정" not in attr,"골프" not in attr,"자점" not in attr,"노브랜드" not in attr)) == 12:
-            sea_list.append(attr)
-
-gyegok_list = []
-for attr in attr_list:
-    if "계곡" in attr:
-        if sum(("/" not in attr, "호텔" not in attr, "계곡길" not in attr)) == 3 :
-            gyegok_list.append(attr)
-
-ski_list = []
-for attr in attr_list:
-    if "스키" in attr:
-        if sum(("샵" not in attr, "호텔" not in attr, "폐장" not in attr)) == 3:
-            ski_list.append(attr)
-
-museum_list = []
-for attr in attr_list:
-    if "박물관" in attr:
-        if "예정" not in attr:
-            museum_list.append(attr)
 # %%
