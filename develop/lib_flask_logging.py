@@ -17,7 +17,7 @@ else:
 logger = logging.getLogger("mylogger")
 
 # 포매터를 만든다
-formatter = logging.Formatter("[%(levelname)s|%(filename)s:%(lineno)s] %(asctime)s > %(message)s")
+formatter = logging.Formatter("%(message)s")
 
 # 스트림과 파일로 로그를 출력하는 핸들러를 각각 만든다.
 fileHandler = logging.FileHandler(filename)
