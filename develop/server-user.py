@@ -1,6 +1,6 @@
-from database import *
-from mmethods import _result, parse_json, load_json
-from mconsts import *
+from lib_database import *
+from global_methods import _result, parse_json, load_json
+from global_consts import *
 from flask import Flask, request, redirect, jsonify
 from flask_cors import CORS
 
