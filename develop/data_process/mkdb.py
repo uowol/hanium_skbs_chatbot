@@ -45,7 +45,7 @@ with open('output/region_dict.csv','w', encoding='utf8') as f:
     w.writerow(region_dict.keys())
     w.writerow(region_dict.values())
 
-#%%
+#%% 관광지별
 
 # <todo>
 # source
@@ -66,7 +66,77 @@ with open('output/dest_dict.csv','w', encoding='utf8') as f:
     w.writerow(dest_dict.keys())
     w.writerow(dest_dict.values())
 
-# %%
-df = pd.read_csv('output/dest_dict.csv')
+#%% 테마별
+# attr_list = list(set(data_df3["관광지명"].dropna()))
+# attr_list
+theme_list = [
+    '사원',
+    '캠핑',
+    '숙소',
+    '편의시설',
+    '골프',
+    '바다',
+    '계곡',
+    '스키',
+    '박물관'
+]
+df = data_df3.copy()
+df['theme'] = '미정'
 df
+
+#%%
+filter_dest_name = ~df.관광지명.isna()
+# temple_list = []
+# for attr in attr_list:
+#     if sum((attr[-1] == "사", len(attr) == 3)) == 2:
+#         temple_list.append(attr)
+filter_temple = df.관광지명.apply(lambda x:(str(x).endswith('사')) & (len(str(x)) == 3))
+df.theme[filter_temple&filter_dest_name] = '사원'
+df
+#%%
+camping_list = []
+for attr in attr_list:
+    if "캠핑" in attr:
+        camping_list.append(attr)
+camping_list = [t for t in camping_list if "/" in t and "예정" not in t and "리스트" not in t and "11번가" not in t]
+
+#%%
+sukso_list = []
+for attr in attr_list:
+    if sum(("호텔" in attr, "모텔" in attr, "스테이" in attr,"펜션" in attr)) == 1:
+        sukso_list.append(attr)
+
+fac_list = []
+for attr in attr_list:
+    if sum(("편의점" in attr, "마트" in attr, "노브랜드" in attr,"마켓" in attr,"다이소" in attr,"세븐일레븐" in attr,"cu" in attr)) == 1:
+        fac_list.append(attr)
+
+golf_list = []
+for attr in attr_list:
+    if sum(("골프" in attr, "CC" in attr, "GC" in attr,"gc" in attr, "cc" in attr,)) == 1:
+        golf_list.append(attr)
+
+sea_list = []
+for attr in attr_list:
+    if sum(("해수욕장" in attr, "해변" in attr, "항" in attr, "선착장" in attr, "해안" in attr)) == 1:
+        if sum(("장점" not in attr, "변점" not in attr,"항점" not in attr,"영장" not in attr,"호텔" not in attr,"터미널" not in attr,"/" not in attr,"동점" not in attr,"예정" not in attr,"골프" not in attr,"자점" not in attr,"노브랜드" not in attr)) == 12:
+            sea_list.append(attr)
+
+gyegok_list = []
+for attr in attr_list:
+    if "계곡" in attr:
+        if sum(("/" not in attr, "호텔" not in attr, "계곡길" not in attr)) == 3 :
+            gyegok_list.append(attr)
+
+ski_list = []
+for attr in attr_list:
+    if "스키" in attr:
+        if sum(("샵" not in attr, "호텔" not in attr, "폐장" not in attr)) == 3:
+            ski_list.append(attr)
+
+museum_list = []
+for attr in attr_list:
+    if "박물관" in attr:
+        if "예정" not in attr:
+            museum_list.append(attr)
 # %%
