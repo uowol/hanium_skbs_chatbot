@@ -5,5 +5,5 @@ PORT_BROWSING       = 5000
 PORT_USER           = 5001
 PORT_CHATBOT        = 5002
 PORT_NOTICEBOARD    = 5003
-PORT_DETAIL         = 5004
+PORT_DEST           = 5004
 
