@@ -583,8 +583,7 @@
             return res
         }
         window.onkeydown = (e) => {
-            // if (e.key != 'Escape') return false;
-            hide_chatting();
+            if (e.key == 'Escape') hide_chatting();
         };
 
 

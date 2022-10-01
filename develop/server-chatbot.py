@@ -1,13 +1,12 @@
 import re
-from database import *
-from mmethods import _result, parse_json, load_json
-from mconsts import *
+from lib_database import *
+from lib_dialogflow_response import *
+from global_methods import _result, parse_json, load_json
+from global_consts import *
 from flask import Flask, request, redirect, jsonify, session
-from dialogflow_response import *
 
 # 세션 다루는 파트, 나중에 업데이트 할 때 유용하게 사용할 것으로 보임.
 from flask_cors import CORS, cross_origin
-
 # from flask_session import Session
 
 
