@@ -4,11 +4,15 @@ from mmethods import _result, parse_json, load_json
 from mconsts import *
 from flask import Flask, request, redirect, jsonify
 
+
+connect_to = '127.0.0.1'
+dataset = []
+
+
 app = Flask(__name__)
 db = connect_database("skbs")
 collection = use(db, "post")
 
-dataset = []
 
 
 def init_dataset_list():
@@ -60,4 +64,4 @@ def write(num):
 if __name__ == "__main__":
     app.secret_key = "여행 de Gaja"
     # app.config['SESSION_TYPE'] = 'filesystem'
-    app.run(host="127.0.0.1", port=PORT_NOTICEBOARD, debug=True)
+    app.run(host=connect_to, port=PORT_NOTICEBOARD, debug=True)

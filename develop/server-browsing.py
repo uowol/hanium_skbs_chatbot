@@ -1,25 +1,27 @@
 from flask import Flask, render_template, request, Markup, redirect, flash, session, jsonify
-from flask_login import (
-    LoginManager,
-    login_user,
-    logout_user,
-    UserMixin,
-    login_required,
-    current_user,
-)
-from requests import get, post
+from flask_login import LoginManager, login_user, logout_user, UserMixin, login_required, current_user
+from requests import get, post 
+from flask_cors import CORS
 from mmethods import _result, parse_json, load_json
 from mconsts import *
 
+
+connect_to = '127.0.0.1'
+params = {
+    "site_name": "Tour-List",
+    "session": session,
+    "current_user": current_user
+}
+
+
 # Flask 객체 인스턴스 생성
 app = Flask(__name__)
+CORS(app)
 lm = LoginManager()
 lm.init_app(app)
 
-params = {"site_name": "Tour-List", "session": session, "current_user": current_user}
 
-
-@app.route("/init", methods=["GET"])
+@app.route('/init', methods=['GET'])
 def init_chat_list():
     session["chat_list"] = ""
     return redirect("/")
@@ -35,8 +37,37 @@ def index():
     )
 
 
-#%% Login
 
+#%% Detail
+@app.route('/detail', methods=['GET'])
+def detail():
+    req = request.args.to_dict()
+    dest = None
+
+    if 'dest' in req : dest = req['dest']
+
+    print(f"detail/dest: {dest}")
+
+
+    # 대충 여행지 DB 상호작용하는 서버에게 요청보내고 받은 여행지 데이터를 활용하여 관련 정보 시각화하기
+
+    # params = {
+    #     "dest": dest
+    # }
+
+    # res = post("http://0.0.0.0:5004/dests", data=parse_json(params))
+
+    # if res.status_code == 200:
+    #     print(f"register_callback/res: {res.json()}")
+    #     if res.json()['status'] == STATUS_FAIL: return redirect('/register/error')
+    #     return redirect('/login')
+    # else:
+    #     return redirect('/register/error')
+
+    return render_template('main_layout.html', params=params, chatbot_talk="여행지 세부 정보 페이지입니다.", content="contents/detail.html")
+
+
+#%% Login
 # 사용자 정보를 조회
 @lm.user_loader
 def user_loader(user_id):
@@ -65,7 +96,7 @@ class User(UserMixin):
         print(f"get_user_info/user_id: {user_id}")
         user_info = None
         try:
-            res = get(f"http://127.0.0.1:5001/user?user_id={user_id}")
+            res = get(f"http://{connect_to}:5001/user?user_id={user_id}")
             if res.status_code == 200:  # 서버와 통신
                 res = res.json()["body"]
                 if res["count"] == 1:  # 유저 정보가 존재
@@ -155,7 +186,7 @@ def register_callback():
         "user_nick": user_nick,
         "user_pw": user_pw,
     }
-    res = post("http://127.0.0.1:5001/user", data=parse_json(params))
+    res = post(f"http://{connect_to}:5001/user", data=parse_json(params))
     if res.status_code == 200:
         print(f"register_callback/res: {res.json()}")
         if res.json()["status"] == STATUS_FAIL:
@@ -309,11 +340,8 @@ def region():
 #%% Search
 @app.route("/search", methods=["GET"])
 def search():
-    return render_template(
-        "main_layout.html", params=params, chatbot_talk="", content="contents/search.html"
-    )
-
-
+    return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/search.html")
+        
 # # @app.route('/votes', methods=['GET'])
 # # def votes():
 # #     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/votes.html")
@@ -387,4 +415,4 @@ if __name__ == "__main__":
     # app.run(debug=True)
     app.secret_key = "여행 de Gaja"
     # app.config['SESSION_TYPE'] = 'filesystem'
-    app.run(host="127.0.0.1", port=PORT_BROWSING, debug=True)
+    app.run(host=f"{connect_to}", port=PORT_BROWSING, debug=True)
