@@ -1,33 +1,37 @@
-import os
 import logging
 
 
-# 환경변수를 읽어서 로깅 레벨과 로그를 남길 파일의 경로를 변수에 저장한다
-if os.environ["FLASK_ENV"] == "development":
-    loggerLevel = logging.DEBUG
-    filename = "./logs/developServer.log"
-elif os.environ["FLASK_ENV"] == "test":
-    loggerLevel = logging.DEBUG
-    filename = "./logs/testServer.log"
-else:
-    loggerLevel = logging.INFO
-    filename = "./logs/server.log"
+class MyLogger:
+    def __init__(self, name):
+        self.log = logging.getLogger(name)
+        self.formatter = logging.Formatter("%(message)s")
+        self.levels = {
+            "DEBUG": logging.DEBUG,
+            "INFO": logging.INFO,
+            "WARNING": logging.WARNING,
+            "ERROR": logging.ERROR,
+            "CRITICAL": logging.CRITICAL,
+        }
 
-# 로거 인스턴스를 만든다
-logger = logging.getLogger("mylogger")
+    def stream_handler(self, level):
+        streamHandler = logging.StreamHandler()
+        streamHandler.setFormatter(self.formatter)
+        self.log.addHandler(streamHandler)
+        return self.log
 
-# 포매터를 만든다
-formatter = logging.Formatter("%(message)s")
+    def file_handler(self, file_name):
+        fileHandler = logging.FileHandler(file_name)
+        fileHandler.setFormatter(self.formatter)
+        self.log.addHandler(fileHandler)
+        return self.log
 
-# 스트림과 파일로 로그를 출력하는 핸들러를 각각 만든다.
-fileHandler = logging.FileHandler(filename)
-streamHandler = logging.StreamHandler()
 
-# 각 핸들러에 포매터를 지정한다.
-fileHandler.setFormatter(formatter)
-streamHandler.setFormatter(formatter)
+user_say_logger = MyLogger("user_say")
+user_say_logger.stream_handler("INFO")
+user_say_logger.file_handler("./logs/user_say.log")
+user_say_logger.log.setLevel(logging.INFO)
 
-# 로거 인스턴스에 스트림 핸들러와 파일핸들러를 붙인다.
-logger.addHandler(fileHandler)
-logger.addHandler(streamHandler)
-logger.setLevel(loggerLevel)
+res_logger = MyLogger("response")
+res_logger.stream_handler("INFO")
+res_logger.file_handler("./logs/response.log")
+res_logger.log.setLevel(logging.INFO)
