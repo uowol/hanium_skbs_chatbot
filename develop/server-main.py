@@ -4,6 +4,7 @@ from requests import get, post
 from flask_cors import CORS
 from global_methods import _result, parse_json, load_json
 from global_consts import *
+import pandas as pd
 
 
 connect_to = '127.0.0.1'
@@ -259,17 +260,24 @@ def mk_card_view(src, title, context, href):
 # 여기서 해당 서버로 요청을 보내 데이터 불러오고 사이트를 띄운다. 끗 깔끔
 @app.route("/concept", methods=["GET"])
 def concept():
+    list_view = ''
     try:
         res = get(f"http://{connect_to}:{PORT_DEST}/theme")  # 통으로 데이터 받고 여기서 처리? 너무 더러워져서 해당 서버에서 처리하는걸로
         if res.status_code == 200:  # 서버와 통신
-            theme = res.json()['body']
-
-            print(theme)
+            df = pd.DataFrame.from_dict(res.json()['body'])
+            for i in range(len(df)):
+                list_view += mk_card_view(
+                    df.iloc[i].img_src,
+                    df.iloc[i].title,
+                    df.iloc[i].content,
+                    '#'
+                )
     except:
         print(f"error: concept()")
     
     return render_template(
-        "main_layout.html", params=params, chatbot_talk="", content="contents/concept.html"
+        "main_layout.html", params=params, chatbot_talk="", content="contents/concept.html",
+        list_view = list_view
     )
 
 

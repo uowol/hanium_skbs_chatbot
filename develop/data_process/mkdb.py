@@ -205,8 +205,7 @@ pd.DataFrame(theme_list).to_csv(
 )
 df.to_csv('output/data_theme_plus.csv', index=False)
 # %%
-theme_set.to_json('output/theme_unique_values.json')
-# pd.read_json('output/theme_unique_values.json')
+# theme_set.to_json('output/theme_unique_values.json')
 # from global_methods import load_json
 # load_json('output/theme_unique_values.json')
 # import json
@@ -217,6 +216,9 @@ theme_set.to_json('output/theme_unique_values.json')
 
 # %%
 # df.관광지명[df.theme.apply(len)==0].dropna()
-# import pandas as pd
+import pandas as pd
+theme = pd.read_csv('output/theme.csv')
 # df = pd.read_csv("output/data_theme_plus.csv")
 
+
+# %%
