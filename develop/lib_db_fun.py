@@ -2,8 +2,7 @@ import os
 import csv
 import pandas as pd
 import pymongo
-
-from res_convert import *
+from lib_dialogflow_response import *
 
 # database 연결
 def connect_database(db):
@@ -96,6 +95,11 @@ def to_dflist(data):
         df_list.append(pd.DataFrame(data[i]))
     return df_list
 
+def df_join(data):
+    df = pd.concat(data, ignore_index=True)
+    return df
+
+
 #원하는 db에 여행지 정보 저장
 #path는 데이터 파일들 존재 경로
 #collection은 저장될 collection
@@ -133,24 +137,24 @@ def spot_save(path, collection, spot):
     # db에 넣기  #
     ##############
 
-db = connect_database("trip")
-by_spot = use(db, "by_spot")
-by_region = use(db, "by_region")
+#db = connect_database("trip")
+#by_spot = use(db, "by_spot")
+#by_region = use(db, "by_region")
 
-# 관광지별 데이터 저장
-path = r"C:\Users\삼성\Desktop\재성\한이음 챗봇\데이터\관광지별"
-os.chdir(path)
-filelist = os.listdir(path)
-for file in filelist:
-    spot_save(path+"\\"+file, by_spot, file)
+# # 관광지별 데이터 저장
+# path = r"C:\Users\삼성\Desktop\재성\한이음 챗봇\데이터\관광지별"
+# os.chdir(path)
+# filelist = os.listdir(path)
+# for file in filelist:
+#     spot_save(path+"\\"+file, by_spot, file)
 
 
-# 지역별 데이터 저장
-path = r"C:\Users\삼성\Desktop\재성\한이음 챗봇\데이터\지역별"
-os.chdir(path)
-filelist = os.listdir(path)
-for file in filelist:
-    spot_save(path+"\\"+file, by_region, file)
+# # 지역별 데이터 저장
+# path = r"C:\Users\삼성\Desktop\재성\한이음 챗봇\데이터\지역별"
+# os.chdir(path)
+# filelist = os.listdir(path)
+# for file in filelist:
+#     spot_save(path+"\\"+file, by_region, file)
 
 
 
@@ -188,9 +192,9 @@ def recommend_with(df, text):
     for i in range(20):
         temp.append(sub_df.loc[sub_df["지역"]==list(recommend_df['지역'])[i]].head(3))
     
-    my_answer = pd.concat(temp, ignore_index = True)
+    answer_df = pd.concat(temp, ignore_index = True)
     
-    return my_answer
+    return answer_df
 
 
 ## 지역에 따른 여행지 추천
@@ -210,8 +214,8 @@ def recommend_region(df, text):
     elif t_type[0] != None and t_type[1] != None:
         region = t_type[0] + " " + t_type[1]
     
-    answer = sub_df.loc[sub_df['지역'] == region].reset_index(drop = True)
-    return answer
+    answer_df = sub_df.loc[sub_df['지역'] == region].reset_index(drop = True)
+    return answer_df
 
 ## 기간에 따라 여행지 추천
 def recommend_day(df, text):
@@ -240,7 +244,7 @@ def recommend_day(df, text):
     for region in region_list:
         temp_list.append(sub_df.loc[sub_df['지역'] == region])
     answer_df = pd.concat(temp_list, ignore_index = True).sort_values(by='외지인 검색 수' ,ascending=False).reset_index(drop = True).drop_duplicates(['관광지명'])
-    return answer_df.head(50)
+    return answer_df
 
 #테마 리스트 작성
 #추후 로깅을 통해 추가
