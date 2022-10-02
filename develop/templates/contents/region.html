@@ -123,7 +123,7 @@
         set_region(region_list[0])
     });
     
-    fetch("http://"+connect_to+":5004/dest", {
+    fetch("http://"+connect_to+":5004/region/dest", {
         method: "GET"
     })
     .then((response) => response.json())
