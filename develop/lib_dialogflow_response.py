@@ -1,6 +1,6 @@
 import os
 
-credential_path = r"C:\Users\alllh\Desktop\한이음 공모전\trip-recommend-chatbot-9lcf-4861abc2d005.json"
+credential_path = r"C:\Users\삼성\Desktop\재성\한이음 챗봇\trip-recommend-chatbot-9lcf-abc299a72150.json"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
 
 from google.cloud import dialogflow_v2beta1 as dialogflow
