@@ -7,6 +7,8 @@ DIALOGFLOW_LANGUAGE_CODE = 'ko-KR'
 GOOGLE_APPLICATION_CREDENTIALS = 'who-am-i-afhy-7af8d105cf22'
 SESSION_ID = '1'
 
+
+
 chatting_logs = []
 
 def create_chat(text):
@@ -29,7 +31,8 @@ def create_chat_reverse(text):
         
 # 인증 정보 경로 설정
 def oauth():
-    credential_path = r"C:\Users\alllh\OneDrive\바탕 화면\한이음 공모전\개발" + f"/{GOOGLE_APPLICATION_CREDENTIALS}.json"
+    #credential_path = r"C:\Users\alllh\OneDrive\바탕 화면\한이음 공모전\개발" + f"/{GOOGLE_APPLICATION_CREDENTIALS}.json"
+    credential_path = r"C:\Users\삼성\Desktop\재성\한이음 챗봇" + f"/{GOOGLE_APPLICATION_CREDENTIALS}.json"
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 

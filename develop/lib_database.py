@@ -3,7 +3,7 @@ import pymongo
 # database 연결
 def connect_database(db):
 
-    connect_to = pymongo.MongoClient("mongodb+srv://wkdso0804:bewhy0691@cluster0.2ix2w.mongodb.net/?retryWrites=true&w=majority")
+    connect_to = pymongo.MongoClient("mongodb://localhost:27017")
 
     mdb = connect_to[db]
     return mdb
