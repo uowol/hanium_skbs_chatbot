@@ -219,3 +219,4 @@ theme_set.to_json('output/theme_unique_values.json')
 # df.관광지명[df.theme.apply(len)==0].dropna()
 # import pandas as pd
 # df = pd.read_csv("output/data_theme_plus.csv")
+
