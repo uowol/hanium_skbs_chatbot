@@ -245,8 +245,29 @@ def blank():
 #     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/charts.html")
 
 #%% Concept
+def mk_card_view(src, title, context, href):
+    return f"""<div class="card shadow mr-3 mb-4" style="width: 18rem;padding-right:0; padding-left:0;">
+            <img class="card-img-top" src="{src}" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{title}</h5>
+                <p class="card-text">{context}</p>
+                <a href="{href}" class="btn btn-primary">Go</a>
+            </div>
+        </div>"""
+
+# 가장 정상으로 만든 부분인 것 같음
+# 여기서 해당 서버로 요청을 보내 데이터 불러오고 사이트를 띄운다. 끗 깔끔
 @app.route("/concept", methods=["GET"])
 def concept():
+    try:
+        res = get(f"http://{connect_to}:{PORT_DEST}/theme")  # 통으로 데이터 받고 여기서 처리? 너무 더러워져서 해당 서버에서 처리하는걸로
+        if res.status_code == 200:  # 서버와 통신
+            theme = res.json()['body']
+
+            print(theme)
+    except:
+        print(f"error: concept()")
+    
     return render_template(
         "main_layout.html", params=params, chatbot_talk="", content="contents/concept.html"
     )
