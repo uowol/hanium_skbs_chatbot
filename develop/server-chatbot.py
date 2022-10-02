@@ -1,9 +1,11 @@
 import re
 from lib_database import *
 from lib_dialogflow_response import *
+from lib_db_fun import *
 from global_methods import _result, parse_json, load_json
 from global_consts import *
 from flask import Flask, request, redirect, jsonify, session
+import pandas as pd
 
 # 세션 다루는 파트, 나중에 업데이트 할 때 유용하게 사용할 것으로 보임.
 from flask_cors import CORS, cross_origin
@@ -19,10 +21,14 @@ CORS(app)
 # Session(app)
 
 
-db = connect_database("skbs")
-col_chatbot     = use(db, "test-chatbot")
-col_dest        = use(db, "test-dest")
-
+#db = connect_database("skbs")
+#db = connect_database("trip")
+#col_chatbot     = use(db, "test-chatbot")
+#col_dest        = use(db, "test-dest")
+#region = use(db, "region")
+#df_temp = to_dflist(db_to_list(region))
+#df_region = df_join(df_temp)
+df_region = pd.read_csv(r"C:\Users\삼성\Desktop\재성\한이음 챗봇\데이터\합친파일\지역 전체.csv")
 
 # 대화 내용 저장: 내용 / 시간 / 유저 nick(익명일 수도)
 @app.route("/chat", methods=["POST"])
@@ -105,6 +111,10 @@ def answer():
         # gue = response['구']
         theme = response['테마']
 
+        if due != None and (type, region, region_detail, theme) == (None,None,None,None):
+            answer_df = recommend_day(df_region, question)
+            cnt = len(answer_df['관광지명'].unique())
+
         query = ''
         for key in response:
             if response[key] != None: query += f'{key}={response[key]}_'
@@ -112,7 +122,7 @@ def answer():
         # print(query)
 
         # 위 정보로 관광지 데이터베이스 필터링, 개수 반환 #
-        cnt = 1987
+        #cnt = 1987
 
         answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
             더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
