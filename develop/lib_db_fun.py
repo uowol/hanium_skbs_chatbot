@@ -220,7 +220,7 @@ def recommend_region(df, text):
 ## 기간에 따라 여행지 추천
 def recommend_day(df, text):
     res_dict = Res_Verify(text)
-    t_type = int(res_dict['기간'][0])
+    t_type = int(res_dict[0]['기간'][0])
     df_copy = df.copy()
     main_df = df_copy[['체류유형','지역']].dropna()
     sub_df = df_copy[['관광지명','주소','분류','지역', '외지인 검색 수']].dropna()

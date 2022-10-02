@@ -1,6 +1,6 @@
 import os
 
-credential_path = r"C:\Users\삼성\Desktop\재성\한이음 챗봇\trip-recommend-chatbot-9lcf-abc299a72150.json"
+credential_path = r"../trip-recommend-chatbot-9lcf-4861abc2d005.json"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
 
 from google.cloud import dialogflow_v2beta1 as dialogflow
@@ -39,15 +39,14 @@ def Res_Verify(text):
             if "None" in res_list[i]:
                 res_list[i] = None
             continue
-
+        print(res_list)
         res_dict = {
             "도": res_list[1],
             "시/군": res_list[2],
             "구": res_list[3],
             "기간": res_list[4],
             "테마": res_list[5],
-            "동반 유형": res_list[6],
-            "지역": (res_list[1] + " " + res_list[2] + " " + res_list[3]).replace("None", "").strip(),
+            "동반 유형": res_list[6]
         }
         return res_dict, "recommend"
     return "잘 모르겠어요. 다시 질문해주세요. ", "empty"
