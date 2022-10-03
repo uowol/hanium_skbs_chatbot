@@ -99,7 +99,7 @@ def answer():
     response, intent = Res_Verify(question)
     print("answer/(response, intent): "+str(response)+','+intent)
     # 
-
+    cnt = 1987
     if intent == 'empty':
         answer = "text]" + response
         return _result(STATUS_SUCCESS, answer);
@@ -110,11 +110,23 @@ def answer():
         region_detail = response['시/군'] if response['시/군'] != 'null' else response['구']
         # gue = response['구']
         theme = response['테마']
-
+        
         if due != None and (type, region, region_detail, theme) == (None,None,None,None):
             answer_df = recommend_day(df_region, question)
             cnt = len(answer_df['관광지명'].unique())
-
+            #answer_df.loc[answer_df[['관광지명','주소','분류']]]
+        elif type != None and (due, region, region_detail, theme) == (None,None,None,None):
+            answer_df = recommend_with(df_region, question)
+            cnt = len(answer_df['관광지명'].unique())
+        elif region != None or region_detail == None and (due, type, theme) == (None,None,None,None):
+            answer_df = recommend_region(df_region, question)
+            cnt = len(answer_df['관광지명'].unique())
+        elif theme != None or region_detail == None and (due, type, region, region_detail) == (None,None,None,None):
+            answer_df = recommend_th(df_region, question, th_dict)
+            cnt = len(answer_df['관광지명'].unique())
+        elif type != None and due != None and (region, region_detail, theme) == (None,None,None,None):
+            answer_df = recommend_region_day(df_region, question)
+            cnt = len(answer_df['관광지명'].unique())
         query = ''
         for key in response:
             if response[key] != None: query += f'{key}={response[key]}_'

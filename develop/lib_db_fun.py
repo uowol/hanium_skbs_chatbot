@@ -161,7 +161,7 @@ def spot_save(path, collection, spot):
 ##  동반유형에 따른 지역 추천
 def recommend_with(df, text):
     res_dict = Res_Verify(text)
-    t_type = res_dict['동반 유형']
+    t_type = res_dict[0]['동반 유형']
     df_copy = df.copy()
     header = df_copy.columns.values.tolist()
     dongban_df = df_copy[['동반유형_빈도수','여행유형/트렌드_빈도수','동반유형','동반유형 관련 키워드','여행유형/트렌드','여행유형/트렌드 관련 키워드','지역']].dropna(thresh = 6)
@@ -201,7 +201,7 @@ def recommend_with(df, text):
 
 def recommend_region(df, text):
     res_dict = Res_Verify(text)
-    t_type = [res_dict['도'], res_dict['시/군'], res_dict['구']]
+    t_type = [res_dict[0]['도'], res_dict[0]['시/군'], res_dict[0]['구']]
     df_copy = df.copy()
     sub_df = df_copy[['관광지명','주소','분류','지역', '외지인 검색 수']].dropna()
     sub_df = sub_df.loc[sub_df['분류'] != '교통시설']
@@ -220,7 +220,7 @@ def recommend_region(df, text):
 ## 기간에 따라 여행지 추천
 def recommend_day(df, text):
     res_dict = Res_Verify(text)
-    t_type = int(res_dict['기간'][0])
+    t_type = int(res_dict[0]['기간'][0])
     df_copy = df.copy()
     main_df = df_copy[['체류유형','지역']].dropna()
     sub_df = df_copy[['관광지명','주소','분류','지역', '외지인 검색 수']].dropna()
@@ -257,7 +257,7 @@ th_dict['바다']
 #다른 함수와 다르게 테마 딕셔너리가 필요
 def recommend_th(df, text, th):
     res_dict = Res_Verify(text)
-    t_type = res_dict['테마']
+    t_type = res_dict[0]['테마']
     df_copy = df.copy()
     header = df_copy.columns.values.tolist()
     dongban_df = df_copy[['여행유형/트렌드_빈도수','여행유형/트렌드','여행유형/트렌드 관련 키워드','지역']].dropna(thresh=4)
@@ -283,19 +283,20 @@ def recommend_th(df, text, th):
     camping_list = [t for t in camping_list if "/" not in t and "예정" not in t and "예정" not in t and "리스트" not in t and "11번가" not in t]
     
     df_list = []
+    
     if t_type in th_dict['스키']:
         for ski in ski_list:
-            df_list.append(sub_df.loc[df1['관광지명'] == ski])
+            df_list.append(sub_df.loc[sub_df['관광지명'] == ski])
         df_ = pd.concat(df_list, ignore_index=True)
         df_['외지인 검색 수'] = pd.to_numeric(df_['외지인 검색 수'])
     if t_type in th_dict['바다']:
         for sea in sea_list:
-            df_list.append(sub_df.loc[df1['관광지명'] == sea])
+            df_list.append(sub_df.loc[sub_df['관광지명'] == sea])
         df_ = pd.concat(df_list, ignore_index=True)
         df_['외지인 검색 수'] = pd.to_numeric(df_['외지인 검색 수'])
     if t_type in th_dict['캠핑']:
         for camping in camping_list:
-            df_list.append(sub_df.loc[df1['관광지명'] == camping])
+            df_list.append(sub_df.loc[sub_df['관광지명'] == camping])
         df_ = pd.concat(df_list, ignore_index=True)
         df_['외지인 검색 수'] = pd.to_numeric(df_['외지인 검색 수'])
 
@@ -312,7 +313,7 @@ def recommend_th(df, text, th):
 def recommend_region_day(df, text):
     df_copy = df.copy()
     res_dict = Res_Verify(text)
-    t_type_R = [res_dict['도'], res_dict['시/군'], res_dict['구']]
+    t_type_R = [res_dict[0]['도'], res_dict[0]['시/군'], res_dict[0]['구']]
     t_type_D = int(res_dict['기간'][0])
 
     main_df = df_copy[['체류유형','지역']].dropna()
@@ -352,7 +353,7 @@ def recommend_region_day(df, text):
         answer = sub_df[sub_df['지역'].str.contains(region)].reset_index(drop = True)
         is_good = "bad"
     
-    return answer ,is_good
+    return answer #,is_good
 
 
 # 지역 + 동반유형 여행지 추천
@@ -364,7 +365,7 @@ def recommend_region_with(df, text):
 
     res_dict = Res_Verify(text)
     t_type_W = res_dict['동반 유형']
-    t_type_R = [res_dict['도'], res_dict['시/군'], res_dict['구']]
+    t_type_R = [res_dict[0]['도'], res_dict[0]['시/군'], res_dict[0]['구']]
     if t_type_R[0] == None and t_type_R[1] != None:
         region = t_type_R[1]
     elif t_type_R[1] == None and t_type_R[0] != None:

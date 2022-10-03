@@ -46,8 +46,7 @@ def Res_Verify(text):
             "구": res_list[3],
             "기간": res_list[4],
             "테마": res_list[5],
-            "동반 유형": res_list[6],
-            "지역": (res_list[1] + " " + res_list[2] + " " + res_list[3]).replace("None", "").strip(),
+            "동반 유형": res_list[6]
         }
         return res_dict, "recommend"
     return "잘 모르겠어요. 다시 질문해주세요. ", "empty"
