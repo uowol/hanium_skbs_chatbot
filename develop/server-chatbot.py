@@ -11,9 +11,7 @@ import pandas as pd
 from flask_cors import CORS, cross_origin
 # from flask_session import Session
 
-
 connect_to = '127.0.0.1'
-
 
 app = Flask(__name__)
 app.secret_key = "여행 de Gaja"
@@ -28,20 +26,25 @@ CORS(app)
 #region = use(db, "region")
 #df_temp = to_dflist(db_to_list(region))
 #df_region = df_join(df_temp)
+
+
+##### 업데이트 할 내용
+# 데이터는 데이터베이스에 접근해서 가져오기
 df_region = pd.read_csv(r"C:\Users\alllh\Documents\카카오톡 받은 파일\지역 전체.csv")
 
-# 대화 내용 저장: 내용 / 시간 / 유저 nick(익명일 수도)
-@app.route("/chat", methods=["POST"])
-def save_chat():
 
-    return _result(STATUS_SUCCESS, "")
+# # 대화 내용 저장: 내용 / 시간 / 유저 nick(익명일 수도)
+# @app.route("/chat", methods=["POST"])
+# def save_chat():
+
+#     return _result(STATUS_SUCCESS, "")
 
 
-# 그 밖에 로그 저장
-@app.route("/log", methods=["POST"])
-def save_log():
+# # 그 밖에 로그 저장
+# @app.route("/log", methods=["POST"])
+# def save_log():
 
-    return _result(STATUS_SUCCESS, "")
+#     return _result(STATUS_SUCCESS, "")
 
 
 # 꼬리질문에 대한 답변 리턴
@@ -88,17 +91,31 @@ def answer_on_follow():
     return _result(STATUS_SUCCESS, answer)
 
 
+##### 가이드라인 : 챗봇 레이아웃을 구성하는 html 쿼리문을 아래 함수를 이용하여 작성할 수 있음.
+
+
+def convert_text(content): return f"text]{content}"
+def convert_button(content, callback): return f"btn]{content}@{callback}"
+def convert_bold(content): return f"<strong>{content}</strong>"
+def add_enter(): return "<br>"
+def replace_text(text, target, word): return text.replace(target, word)
+def add_separator(): return "|"
+def callback_API(address): return f"location.href={address}"
+def callback_followed_chat(target, query): 
+    return f"followed_chat('+{target}', 'recommend', '{target}', '{query}')"
+
+
 # 의도에 따른 답변 리턴
 @app.route("/answer", methods=["GET"])
 def answer():
     req = request.args.to_dict()
     question = req['question']
-    print("answer/question: "+question)
-    #
+    print("answer/question: "+question) # 질문이 무엇이었는지 출력
 
     response, intent = Res_Verify(question)
-    print("answer/(response, intent): "+str(response)+','+intent)
-    # 
+    print("answer/(response, intent): "+str(response)+','+intent) # 분류된 의도와 response를 출력 
+
+    ##### 가이드라인: 로그를 수집할 때 위 코드의 question, intent, response 변수를 사용할 수 있음.
 
     if intent == 'empty':
         answer = "text]" + response
@@ -131,6 +148,24 @@ def answer():
             |btn]지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
             |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
             |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
+
+        answer = convert_text(
+                "관련 관광지가"+convert_bold(cnt)+"개 있습니다."+add_enter()
+                +replace_text(query, '_', ', ')+add_enter()
+                +"더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요."
+            )+add_separator()+convert_button(
+                "결과"+add_enter()+"확인하기", 
+                callback_API(f"/search?{replace_text(query, '_', '&')}")
+            )+add_separator()+convert_button(
+                "지역"+add_enter()+"설정하기", 
+                callback_followed_chat("지역", query)
+            )+add_separator()+convert_button(
+                "동반유형"+add_enter()+"설정하기", 
+                callback_followed_chat("동반유형", query)
+            )+add_separator()+convert_button(
+                "테마"+add_enter()+"설정하기", 
+                callback_followed_chat("테마", query)
+            )
 
         return _result(STATUS_SUCCESS, answer);
     if intent == '더 추가할 것 있으면':

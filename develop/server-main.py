@@ -362,52 +362,6 @@ def region():
 @app.route("/search", methods=["GET"])
 def search():
     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/search.html")
-        
-# # @app.route('/votes', methods=['GET'])
-# # def votes():
-# #     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/votes.html")
-
-#%% Chatbot
-# date_time = "23 Jan 2:05 pm"
-# name_bot = "bot"
-# name_user = "bot"
-# def chat_question(text):
-#     try:
-#         if session['user_nick'] != '':
-#             name = session['user_nick']
-#         else:
-#             name = "anonymous"
-#     except:
-#         name = "anonymous"
-
-#     return f"""<div class="d-flex justify-content-between">
-#                     <p class="small mb-1 text-muted">{date_time}</p>
-#                     <p class="small mb-1">{name}</p>
-#                 </div>
-#                 <div class="d-flex flex-row justify-content-end mb-4 pt-1">
-#                     <div>
-#                         <p class="small p-2 me-3 mb-3 text-white rounded-3 bg-warning">{text}</p>
-#                     </div>
-#                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
-#                         alt="avatar 1" style="width: 45px; height: 100%;">
-#                 </div>"""
-
-# def chat_answer(text):
-#     return f"""<div class="d-flex justify-content-between">
-#                     <p class="small mb-1">{name_bot}</p>
-#                     <p class="small mb-1 text-muted">{date_time}</p>
-#                 </div>
-#                 <div class="d-flex flex-row justify-content-start">
-#                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5-bg.webp"
-#                         alt="avatar 1" style="width: 45px; height: 100%;">
-#                     <div>
-#                         <p class="small p-2 ms-3 mb-3 rounded-3" style="background-color: #f5f6f7;">{text}</p>
-#                     </div>
-#                 </div>"""
-
-# @app.route('/chatbot', methods=['GET'])
-# def chatbot():
-#     return render_template('main_layout.html', params=params, chatbot_talk="", content="chatbot.html")
 
 
 @app.route("/chatbot", methods=["POST"])
