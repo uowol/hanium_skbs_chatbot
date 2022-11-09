@@ -311,6 +311,15 @@ def noticeboard_callback():
 def noticeboard_free():
 
     # 게시판 서버로부터 데이터 받아오기
+    try:
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard")  # 통으로 데이터 받고 여기서 처리? 너무 더러워져서 해당 서버에서 처리하는걸로
+        if res.status_code == 200:  # 서버와 통신
+            data = res.json()['body']
+
+            print(data)
+    except:
+        print(f"error: concept()")
+
 
     return render_template(
         "main_layout.html",

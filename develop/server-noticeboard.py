@@ -2,6 +2,7 @@ from mimetypes import init
 from lib_database import *
 from global_methods import _result, parse_json, load_json
 from global_consts import *
+from flask_cors import CORS
 from flask import Flask, request, redirect, jsonify
 
 
@@ -10,9 +11,9 @@ dataset = []
 
 
 app = Flask(__name__)
+CORS(app)
 db = connect_database("skbs")
 collection = use(db, "post")
-
 
 
 def init_dataset_list():
@@ -39,7 +40,7 @@ def get_length():
 
 
 # 게시판 데이터 불러오기
-@app.route("/noticeboard-dataset", methods=["GET"])
+@app.route("/noticeboard", methods=["GET"])
 def get_dataset():
     if len(dataset) == 0:
         init_dataset_list()
@@ -47,15 +48,15 @@ def get_dataset():
 
 
 # 글 쓰기
-@app.route("/noticeboard-document", methods=["POST"])
+@app.route("/noticeboard", methods=["POST"])
 def write(title, content, image_list):
 
     return _result()
 
 
 # 글 읽기
-@app.route("/noticeboard-document/<int:num>", methods=["GET"])
-def write(num):
+@app.route("/noticeboard/<int:num>", methods=["GET"])
+def read(num):
 
     return _result()
 
