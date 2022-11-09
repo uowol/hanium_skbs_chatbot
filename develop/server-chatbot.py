@@ -2,10 +2,12 @@ import re
 from lib_database import *
 from lib_dialogflow_response import *
 from lib_db_fun import *
+from lib_flask_logging import user_say_logger, res_logger
 from global_methods import _result, parse_json, load_json
 from global_consts import *
 from flask import Flask, request, redirect, jsonify, session
 import pandas as pd
+from datetime import datetime
 
 # 세션 다루는 파트, 나중에 업데이트 할 때 유용하게 사용할 것으로 보임.
 from flask_cors import CORS, cross_origin
@@ -31,7 +33,7 @@ CORS(app)
 
 ##### 업데이트 할 내용
 # 데이터는 데이터베이스에 접근해서 가져오기
-df_region = pd.read_csv(r"C:\Users\alllh\Documents\카카오톡 받은 파일\지역 전체.csv")
+df_region = pd.read_csv(r"/Users/songjs/projects/myproject/hanium/지역 전체.csv")
 
 
 # # 대화 내용 저장: 내용 / 시간 / 유저 nick(익명일 수도)
@@ -155,6 +157,8 @@ def callback_followed_chat(target, query):
 def answer():
     req = request.args.to_dict()
     question = req["question"]
+    user_say_logger.log.info(f"[user_id][{datetime.now()}] > " + question)
+
     print("answer/question: " + question)  # 질문이 무엇이었는지 출력
 
     response, intent = Res_Verify(question)
@@ -194,6 +198,36 @@ def answer():
             |btn]지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
             |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
             |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
+
+        response["지역"] = ""
+        if response["도"] != None:
+            response["지역"] += response["도"] + " "
+        if response["시/군"] != None:
+            response["지역"] += response["시/군"]
+        res_logger.log.info(str(response).replace("'", '"'))
+
+        # answer = (
+        #     convert_text(
+        #         "관련 관광지가"
+        #         + convert_bold(cnt)
+        #         + "개 있습니다."
+        #         + add_enter()
+        #         + replace_text(query, "_", ", ")
+        #         + add_enter()
+        #         + "더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요."
+        #     )
+        #     + add_separator()
+        #     + convert_button(
+        #         "결과" + add_enter() + "확인하기",
+        #         callback_API(f"/search?{replace_text(query, '_', '&')}"),
+        #     )
+        #     + add_separator()
+        #     + convert_button("지역" + add_enter() + "설정하기", callback_followed_chat("지역", query))
+        #     + add_separator()
+        #     + convert_button("동반유형" + add_enter() + "설정하기", callback_followed_chat("동반유형", query))
+        #     + add_separator()
+        #     + convert_button("테마" + add_enter() + "설정하기", callback_followed_chat("테마", query))
+        # )
 
         return _result(STATUS_SUCCESS, answer)
     if intent == "더 추가할 것 있으면":
