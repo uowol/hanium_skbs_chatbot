@@ -369,8 +369,21 @@ def region():
 
 #%% Search
 @app.route("/search", methods=["GET"])
-def search():
-    return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/search.html")
+def init_search():
+    global dest_data
+    try:
+        res = get(f"http://{connect_to}:{PORT_DEST}/region/dest")
+        if res.status_code == 200:  # 서버와 통신
+            dest_data = res.json()['body']
+    except:
+        print(f"error: concept()")
+    return redirect("/search/1")
+
+
+@app.route("/search/<int:i>", methods=["GET"])
+def search(i):
+    
+    return render_template('main_layout.html', params=params, chatbot_talk="", data=dest_data, content="contents/search.html")
 
 
 @app.route("/chatbot", methods=["POST"])
