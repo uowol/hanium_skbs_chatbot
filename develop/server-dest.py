@@ -6,7 +6,6 @@ from global_consts import *
 from flask import Flask, request, redirect, jsonify, session
 import pandas as pd
 
-# 세션 다루는 파트, 나중에 업데이트 할 때 유용하게 사용할 것으로 보임.
 from flask_cors import CORS, cross_origin
 # from flask_session import Session
 
@@ -23,7 +22,10 @@ CORS(app)
 db                  = connect_database("skbs")
 col_region_test     = use(db, "region_test")
 
+
+##### 업데이트 할 내용
 # 지금은 csv로 가져오지만 db로 저장해서 사용하는게 통일성있긴 함.
+
 
 # 지역 dictionary 가져오기
 # 도
