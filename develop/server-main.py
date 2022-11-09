@@ -5,6 +5,7 @@ from flask_cors import CORS
 from global_methods import _result, parse_json, load_json
 from global_consts import *
 
+import pandas as pd
 
 connect_to = '127.0.0.1'
 params = {
@@ -370,11 +371,15 @@ def region():
 #%% Search
 @app.route("/search", methods=["GET"])
 def init_search():
-    global dest_data
+    global dest_data, dest_data_columns, dest_data_values
     try:
-        res = get(f"http://{connect_to}:{PORT_DEST}/region/dest")
+        res = get(f"http://{connect_to}:{PORT_DEST}/dest")
         if res.status_code == 200:  # 서버와 통신
             dest_data = res.json()['body']
+            df = pd.DataFrame.from_dict(dest_data)
+            dest_data_values = df.values.tolist()
+            dest_data_columns = df.columns.tolist()
+            # print(dest_data)
     except:
         print(f"error: concept()")
     return redirect("/search/1")
@@ -382,8 +387,10 @@ def init_search():
 
 @app.route("/search/<int:i>", methods=["GET"])
 def search(i):
-    
-    return render_template('main_layout.html', params=params, chatbot_talk="", data=dest_data, content="contents/search.html")
+
+    return render_template('main_layout.html', params=params, chatbot_talk="", 
+        data_values=dest_data_values,
+        data_columns=dest_data_columns, content="contents/search.html")
 
 
 @app.route("/chatbot", methods=["POST"])

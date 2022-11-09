@@ -1,6 +1,7 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+<meta id="data" data-values="{{data_values}}" data-columns="{{data_columns}}">
 
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -25,38 +26,23 @@
                     data-click-to-select="true" data-toolbar="#toolbar" class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th data-field="where" data-filter-control="input" data-sortable="true">여행지</th>
+                            {% for column in data_columns %}
+                            <th data-field="{{column}}" data-filter-control="input" data-sortable="true">{{column}}</th>
+                            {% endfor %}
+                            <!-- <th data-field="where" data-filter-control="input" data-sortable="true">지역</th>
                             <th data-field="address" data-filter-control="select" data-sortable="true">주소</th>
                             <th data-field="region" data-filter-control="select" data-sortable="true">지역</th>
-                            <th data-field="time" data-sortable="true">평균 체류시간</th>
+                            <th data-field="time" data-sortable="true">평균 체류시간</th> -->
                         </tr>
                     </thead>
                     <tbody id="container">
-                        {{data}}
+                        {% for items in data_values[:20] %}
                         <tr>
-                            <td>서촌마을</td>
-                            <td>서울특별시 종로구</td>
-                            <td>서울</td>
-                            <td>1시간 19분</td>
+                            {% for item in items %}
+                            <td>{{item}}</td>
+                            {% endfor %}
                         </tr>
-                        <tr>
-                            <td>서촌마을</td>
-                            <td>서울특별시 종로구</td>
-                            <td>서울</td>
-                            <td>1시간 19분</td>
-                        </tr>
-                        <tr>
-                            <td>서촌마을</td>
-                            <td>서울특별시 종로구</td>
-                            <td>서울</td>
-                            <td>1시간 19분</td>
-                        </tr>
-                        <tr>
-                            <td>서촌마을</td>
-                            <td>서울특별시 종로구</td>
-                            <td>서울</td>
-                            <td>1시간 19분</td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -65,7 +51,10 @@
 
 </div>
 <!-- /.container-fluid -->
-<script>
+<script>    
+    const data = $('#data').data();
+    const dvalues = JSON.parse(JSON.stringify(data.values))
+    
     content = 'search'
     index = 0
     i = 0

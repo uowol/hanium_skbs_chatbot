@@ -50,7 +50,7 @@ def get_theme_list():
 @app.route('/dest', methods=["GET"])
 def get_dest_list():
     df = pd.read_csv('../data_process/output/data_theme_plus.csv')
-    answer = df.to_dict()
+    answer = df[['지역', '시군구명', '평균 숙박일수', '체류유형', '관광지명', '주소', '합산 검색 수']].to_dict()
     return _result(STATUS_SUCCESS, answer);
 
 # 지역별 관광지 dictionary 가져오기
