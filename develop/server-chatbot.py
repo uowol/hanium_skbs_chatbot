@@ -50,10 +50,6 @@ df_region = pd.read_csv(r"C:\Users\alllh\Documents\카카오톡 받은 파일\�
 # 꼬리질문에 대한 답변 리턴
 @app.route('/answer/follow', methods=["GET"])
 def answer_on_follow():
-    # if not response: return _result(STATUS_FAIL, '')
-
-    # 
-
     req = request.args.to_dict()
     intent = req['intent']
     args = req['args']
@@ -88,6 +84,33 @@ def answer_on_follow():
             |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
             |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
 
+
+        if args[0] == '시/군':            
+            answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
+                더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
+                |btn]결과<br>확인하기@location.href='/search?{query.replace('_','&').replace('_','&')}'\
+                |btn]다른 지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
+                |btn]세부 지역<br>설정하기@followed_chat('+세부지역', 'recommend', '세부지역', '{query}')\
+                |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
+                |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
+
+        if args[0] == '동반유형':            
+            answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
+                더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
+                |btn]결과<br>확인하기@location.href='/search?{query.replace('_','&').replace('_','&')}'\
+                |btn]지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
+                |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
+                |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
+
+        if args[0] == '테마':            
+            answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
+                더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
+                |btn]결과<br>확인하기@location.href='/search?{query.replace('_','&').replace('_','&')}'\
+                |btn]지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
+                |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
+                |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
+
+        
     return _result(STATUS_SUCCESS, answer)
 
 
@@ -148,24 +171,6 @@ def answer():
             |btn]지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
             |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
             |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
-
-        answer = convert_text(
-                "관련 관광지가"+convert_bold(cnt)+"개 있습니다."+add_enter()
-                +replace_text(query, '_', ', ')+add_enter()
-                +"더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요."
-            )+add_separator()+convert_button(
-                "결과"+add_enter()+"확인하기", 
-                callback_API(f"/search?{replace_text(query, '_', '&')}")
-            )+add_separator()+convert_button(
-                "지역"+add_enter()+"설정하기", 
-                callback_followed_chat("지역", query)
-            )+add_separator()+convert_button(
-                "동반유형"+add_enter()+"설정하기", 
-                callback_followed_chat("동반유형", query)
-            )+add_separator()+convert_button(
-                "테마"+add_enter()+"설정하기", 
-                callback_followed_chat("테마", query)
-            )
 
         return _result(STATUS_SUCCESS, answer);
     if intent == '더 추가할 것 있으면':

@@ -788,6 +788,21 @@
                         chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
                     }
                 }
+                if (args[0] == '세부지역'){
+
+                    // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
+
+                    region = ''
+                    for(item of args[1].split("_")){
+                        if(item.split("=")[0] == '시/군')
+                            region = item.split('=')[1]
+                    }
+                    console.log(args[1], region)
+                    tmp_regions = [region+'_세부지역1', region+'_세부지역2']
+                    for(let region of tmp_regions){
+                        chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                    }
+                }
                 if (args[0] == '동반유형'){
 
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
