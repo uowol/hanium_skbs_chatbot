@@ -279,7 +279,7 @@ def noticeboard():
     return redirect("/noticeboard/free")
 
 
-# 게시판 서버로 보낼 것
+# 게시판 화면 보이기
 @app.route("/noticeboard/write", methods=["GET"])
 def noticeboard_write():
     return render_template(
@@ -291,60 +291,70 @@ def noticeboard_write():
     )
 
 
+# 게시물 작성하기
 @app.route("/noticeboard/write", methods=["POST"])
 def noticeboard_callback():
+    title = request.form.get("title")
+    contents = request.form.get("contents")
+    # image_list = request.form.get("inputPassword")
+    try:
+        query = {
+            "title": title,
+            "content": contents,
+            "image_list": []
+        }
+        res = post(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/free", data=parse_json(query))
+        if res.status_code == 200:  # 서버와 통신
+            print("/noticeboard/write: DONE")
+        else: print("/noticeboard/write: FAIL")
+    except: pass
 
-    # 글 쓰기: 게시판 서버와 통신
-
-    return render_template(
-        "main_layout.html",
-        params=params,
-        chatbot_talk="",
-        content="contents/noticeboard_write.html",
-        table_contents=[],
-        tag="free",
-    )
+    return redirect('/noticeboard')
 
 
-# 게시판 서버로 보낼 것
 @app.route("/noticeboard/free", methods=["GET"])
 def noticeboard_free():
-
-    # 게시판 서버로부터 데이터 받아오기
+    try:
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/free")
+        if res.status_code == 200:  # 서버와 통신
+            table_contents = load_json(res.json()['body'])
+    except: pass
 
     return render_template(
         "main_layout.html",
         params=params,
         chatbot_talk="",
         content="contents/noticeboard.html",
-        table_contents=[],
+        table_contents=table_contents,
         tag="free",
     )
 
 
-# 게시판 서버로 보낼 것
+# 게시물 내용 받아오기
 @app.route("/noticeboard/free/<int:i>", methods=["GET"])
 def noticeboard_free_content(i):
 
-    # 게시판 서버로부터 데이터 받아오기
+    try:
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/free/{i}")
+        if res.status_code == 200:  # 서버와 통신
+            post = load_json(res.json()['body'])
+    except: pass
 
     return render_template(
         "main_layout.html",
         params=params,
         chatbot_talk="",
         content="contents/noticeboard_content.html",
-        title=str(i) + "번째 게시물",
-        noticeboard_content=str(i) + "번째 본문",
+        post=post,
     )
 
 
-# 게시판 서버로 보낼 것
 # @app.route('/noticeboard/review', methods=['GET'])
 # def noticeboard_review():
 #     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard.html",
 #         table_contents=[], tag="review")
 
-# # 게시판 서버로 보낼 것
+#
 # @app.route('/noticeboard/tip', methods=['GET'])
 # def noticeboard_tip():
 #     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard.html",
@@ -386,8 +396,15 @@ def chatbot_delete():
 
 #%% App Start
 if __name__ == "__main__":
-    # oauth()    # 사용자 정보 인증
-    # app.run(debug=True)
     app.secret_key = "여행 de Gaja"
-    # app.config['SESSION_TYPE'] = 'filesystem'
+
+    try:
+        # 서버 시작 시 게시판 데이터 불러오기
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/init")  
+        if res.status_code == 200:  # 서버와 통신
+            theme = res.json()['body']
+            print("init-noticeboard: DONE")
+    except:
+        print(f"init-noticeboard: FALSE")
+
     app.run(host=f"{connect_to}", port=PORT_BROWSING, debug=True)

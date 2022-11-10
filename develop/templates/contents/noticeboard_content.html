@@ -4,7 +4,7 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">
-                <a href="#" onclick="history.back()" class="mr-1">
+                <a href="/noticeboard" class="mr-1">
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     돌아가기
                 </a>
@@ -13,9 +13,9 @@
         <div class="card-body">
             <!-- Page Heading -->
             <!-- 리스트 객체 -->
-            제목 : {{title}}
+            제목 : {{post.post_title}}
             <hr>
-            {{noticeboard_content}}
+            {{post.post_text}}
             <div class="text-center">
                 <a onclick="alert('미구현')" href="#" class="btn btn-success btn-icon-split btn-sm">
                     <span class="icon text-white-50">
