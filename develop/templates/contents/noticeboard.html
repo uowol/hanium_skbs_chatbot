@@ -1,3 +1,11 @@
+<script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+<style>
+.hidden{
+  display:none;
+  visibility:hidden;
+}
+</style>
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
@@ -42,35 +50,40 @@
         <div class="card-body">
             <!-- Page Heading -->
             <!-- 리스트 객체 -->
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col" class="text-center">제목</th>
-                        <th scope="col" class="text-center">글쓴이</th>
-                        <th scope="col" class="text-center">작성일</th>
-                        <th scope="col" class="text-center">조회수</th>
-                        <th scope="col" class="text-center">추천수</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- {{table_contents | safe}} -->
-
-                    <tr style="cursor:pointer;" onClick="location.href='#'">
-                        <td scope="col" class="text-left">여름철 수도권 피서지 랭킹 10위!</td>
-                        <td scope="col" class="text-center">김찬우</td>
-                        <td scope="col" class="text-center">2022/08/17</td>
-                        <td scope="col" class="text-center">122</td>
-                        <td scope="col" class="text-center">33</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="table" data-toggle="table" data-filter-control="true" data-show-export="true"
+                    data-click-to-select="true" data-toolbar="#toolbar" class="table-inverse table table-bordered table-hover" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th data-field="title" data-filter-control="input" class="text-center col-md-7">제목</th>
+                            <th data-field="author" data-filter-control="input" class="text-center col-md-2">글쓴이</th>
+                            <th data-field="time" data-sortable="true" class="text-center col-md-1">작성일</th>
+                            <th data-field="view" data-sortable="true" class="text-center col-md-1">조회수</th>
+                            <th data-field="rate" data-sortable="true" class="text-center col-md-1">추천수</th>
+                            <th data-class="hidden"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="container">
+                        {% for post in table_contents %}
+                        <tr class="table_content">
+                            <td class="text-left">{{post.post_title}}</td>
+                            <td class="text-center">{{post.post_user_nick}}</td>
+                            <td class="text-center">{{post.post_time}}</td>
+                            <td class="text-center">{{post.post_view}}</td>
+                            <td class="text-center">{{post.post_recommend}}</td>
+                            <td>{{post._id}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
 
 </div>
 <!-- /.container-fluid -->
-<script>
+<script>    
     content = 'notice board'
     index = 0
     i = 0
@@ -83,4 +96,27 @@
         i++
     }
     lists[index].setAttribute("class", "nav-item active")
+
+    //exporte les données sélectionnées
+    var $table = $('#table');
+    $(function () {
+        $('#toolbar').find('select').change(function () {
+            $table.bootstrapTable('refreshOptions', {
+                exportDataType: $(this).val()
+            });
+        });
+    })
+
+    $('#table').bootstrapTable({
+        pagination: true,
+        pageSize: 10, //your page size here
+    });
+
+    var td = $("table");
+
+    $(td).on("click", "td", function () {
+        let target = $(this).parent().children()[5].innerText
+        location.href = '/noticeboard/free/'+target
+    });
+
 </script>

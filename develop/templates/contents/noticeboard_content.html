@@ -4,7 +4,7 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">
-                <a href="#" onclick="history.back()" class="mr-1">
+                <a href="/noticeboard" class="mr-1">
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     돌아가기
                 </a>
@@ -13,11 +13,11 @@
         <div class="card-body">
             <!-- Page Heading -->
             <!-- 리스트 객체 -->
-            제목 : {{title}}
+            제목 : {{post.post_title}}
             <hr>
-            {{noticeboard_content}}
+            {{post.post_text}}
             <div class="text-center">
-                <a onclick="alert('미구현')" href="#" class="btn btn-success btn-icon-split btn-sm">
+                <a onclick="recommend({{post._id}})" href="#" class="btn btn-success btn-icon-split btn-sm">
                     <span class="icon text-white-50">
                         <i class="fa fa-thumbs-up" aria-hidden="true"></i>
                     </span>
@@ -31,6 +31,25 @@
 </div>
 <!-- /.container-fluid -->
 <script>
+    let address
+    function recommend(id){
+        address = "http://127.0.0.1:5003/noticeboard/free/"+id+"/recommend"
+        fetch(address, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                // "chat_list": chat_list,
+                // "last_chat": args[0]+':+'+args[1]
+            })
+        }).then((response) => response.json())
+        .then((data) => {
+            console.log(data)
+            if(data['status'] == 400) alert("로그인 후 이용하실 수 있습니다.")
+            else alert("이 글을 추천하셨습니다.")
+        })
+    }
 
     lists = document.getElementsByClassName('nav-item')
     for (item of lists) {
