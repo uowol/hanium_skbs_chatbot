@@ -1,7 +1,6 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
-<meta id="data" data-values="{{data_values}}" data-columns="{{data_columns}}">
 
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -27,7 +26,7 @@
                     <thead>
                         <tr>
                             {% for column in data_columns %}
-                            <th data-field="{{column}}" data-filter-control="input" data-sortable="true">{{column}}</th>
+                            <th data-field="{{column}}" data-filter-control="select" data-sortable="true">{{column}}</th>
                             {% endfor %}
                             <!-- <th data-field="where" data-filter-control="input" data-sortable="true">지역</th>
                             <th data-field="address" data-filter-control="select" data-sortable="true">주소</th>
@@ -36,7 +35,7 @@
                         </tr>
                     </thead>
                     <tbody id="container">
-                        {% for items in data_values[:20] %}
+                        {% for items in data_values %}
                         <tr>
                             {% for item in items %}
                             <td>{{item}}</td>
@@ -51,10 +50,12 @@
 
 </div>
 <!-- /.container-fluid -->
-<script>    
-    const data = $('#data').data();
-    const dvalues = JSON.parse(JSON.stringify(data.values))
-    
+<script>   
+    $('#table').bootstrapTable({
+        pagination: true,
+        pageSize: 5, //your page size here
+    });
+
     content = 'search'
     index = 0
     i = 0

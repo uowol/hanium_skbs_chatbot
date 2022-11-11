@@ -371,26 +371,38 @@ def region():
 #%% Search
 @app.route("/search", methods=["GET"])
 def init_search():
-    global dest_data, dest_data_columns, dest_data_values
-    try:
-        res = get(f"http://{connect_to}:{PORT_DEST}/dest")
-        if res.status_code == 200:  # 서버와 통신
-            dest_data = res.json()['body']
-            df = pd.DataFrame.from_dict(dest_data)
-            dest_data_values = df.values.tolist()
-            dest_data_columns = df.columns.tolist()
-            # print(dest_data)
-    except:
-        print(f"error: concept()")
+    global df
+    # try:
+    #     res = get(f"http://{connect_to}:{PORT_DEST}/dest")
+    #     if res.status_code == 200:  # 서버와 통신
+    #         dest_data = res.json()['body']
+    #         df = pd.DataFrame.from_dict(dest_data)
+    #         df1 = df[["관광지명", "주소", "분류", "합산 검색 수"]].drop_duplicates().dropna()
+    #         dest_data_values = df1.values.tolist()
+    #         dest_data_columns = df1.columns.tolist()
+    #         # print(dest_data)
+    # except:
+    #     print(f"error: concept()")
+
+    df = pd.read_csv('../data_process/output/data_theme_plus.csv')
+    req = request.args.to_dict()
+    if req['total'] == '1':
+        df = df[["관광지명", "주소", "분류", "합산 검색 수"]].drop_duplicates().dropna()
+    if req['total'] == '2':
+        df = df[["관광지명", "주소", "분류", "외지인 검색 수"]].drop_duplicates().dropna()
+    if req['total'] == '3':
+        df = df[["관광지명", "주소", "분류", "현지인 검색 수"]].drop_duplicates().dropna()
+
     return redirect("/search/1")
 
 
 @app.route("/search/<int:i>", methods=["GET"])
 def search(i):
-
+    dest_data_values = df.values.tolist()
+    dest_data_columns = df.columns.tolist()
     return render_template('main_layout.html', params=params, chatbot_talk="", 
-        data_values=dest_data_values,
-        data_columns=dest_data_columns, content="contents/search.html")
+        data_values=dest_data_values, data_columns=dest_data_columns,
+        content="contents/search.html")
 
 
 @app.route("/chatbot", methods=["POST"])
