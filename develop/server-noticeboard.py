@@ -55,16 +55,18 @@ def get_dataset():
 def write_free():
     global max_index
     params = load_json(request.get_data())
+    print(params)
     title = params['title']
     content = params['content']
     image_list = params['image_list']
+    user_nick = params['user_nick']
     try:
         insert(
             collection=db_posts,
             data_list=[
                 {
                     "_id": max_index+1,
-                    "post_user_nick": "김수한무",
+                    "post_user_nick": user_nick,
                     "post_title": title,
                     "post_text": content,
                     "post_image": image_list,
@@ -118,13 +120,14 @@ def write_review():
     title = params['title']
     content = params['content']
     image_list = params['image_list']
+    user_nick = params['user_nick'] if params['user_nick'] else "익명"
     try:
         insert(
             collection=db_posts,
             data_list=[
                 {
                     "_id": max_index+1,
-                    "post_user_nick": "김수한무",
+                    "post_user_nick": user_nick,
                     "post_title": title,
                     "post_text": content,
                     "post_image": image_list,
@@ -166,13 +169,14 @@ def write_tip():
     title = params['title']
     content = params['content']
     image_list = params['image_list']
+    user_nick = params['user_nick'] if params['user_nick'] else "익명"
     try:
         insert(
             collection=db_posts,
             data_list=[
                 {
                     "_id": max_index+1,
-                    "post_user_nick": "김수한무",
+                    "post_user_nick": user_nick,
                     "post_title": title,
                     "post_text": content,
                     "post_image": image_list,

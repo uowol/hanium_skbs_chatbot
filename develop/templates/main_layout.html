@@ -408,7 +408,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                <span id="user_nick" class="mr-2 d-none d-lg-inline text-gray-600 small">
                                     {{session['user_nick']}}
                                 </span>
                                 <img src="/static/avatars/1.jpg" class="img-profile rounded-circle" alt="">
@@ -797,7 +797,6 @@
                         if(item.split("=")[0] == '시/군')
                             _region = item.split('=')[1]
                     }
-                    console.log(args[1], _region)
                     tmp_regions = [_region+' 세부지역1', _region+' 세부지역2']
                     for(let region of tmp_regions){
                         chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
