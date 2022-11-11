@@ -349,16 +349,78 @@ def noticeboard_free_content(i):
     )
 
 
-# @app.route('/noticeboard/review', methods=['GET'])
-# def noticeboard_review():
-#     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard.html",
-#         table_contents=[], tag="review")
+@app.route("/noticeboard/review", methods=["GET"])
+def noticeboard_review():
+    try:
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/review")
+        if res.status_code == 200:  # 서버와 통신
+            table_contents = load_json(res.json()['body'])
+    except: pass
 
-#
-# @app.route('/noticeboard/tip', methods=['GET'])
-# def noticeboard_tip():
-#     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard.html",
-#         table_contents=[], tag="tip")
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="",
+        content="contents/noticeboard.html",
+        table_contents=table_contents,
+        tag="review",
+    )
+
+
+# 게시물 내용 받아오기
+@app.route("/noticeboard/review/<int:i>", methods=["GET"])
+def noticeboard_review_content(i):
+
+    try:
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/review/{i}")
+        if res.status_code == 200:  # 서버와 통신
+            post = load_json(res.json()['body'])
+    except: pass
+
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="",
+        content="contents/noticeboard_content.html",
+        post=post,
+    )
+
+
+@app.route("/noticeboard/tip", methods=["GET"])
+def noticeboard_tip():
+    try:
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/tip")
+        if res.status_code == 200:  # 서버와 통신
+            table_contents = load_json(res.json()['body'])
+    except: pass
+
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="",
+        content="contents/noticeboard.html",
+        table_contents=table_contents,
+        tag="tip",
+    )
+
+
+# 게시물 내용 받아오기
+@app.route("/noticeboard/tip/<int:i>", methods=["GET"])
+def noticeboard_tip_content(i):
+
+    try:
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/tip/{i}")
+        if res.status_code == 200:  # 서버와 통신
+            post = load_json(res.json()['body'])
+    except: pass
+
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="",
+        content="contents/noticeboard_content.html",
+        post=post,
+    )
 
 #%% Region
 @app.route("/region", methods=["GET"])
