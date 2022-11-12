@@ -471,7 +471,7 @@
     <!-- Chatbot Button-->
 
     <a class="rounded btn btn-warning flex-column align-items-center justify-content-center"
-        style="display:flex; width:100px; height:100px; position:fixed; left:20px; bottom: 20px;" 
+        style="display:flex; width:100px; height:100px; position:fixed; left:20px; bottom: 20px;"
         href="javascript:show_chatting();">
         <i class="fas fa-robot fa-2x"></i>
         chatbot
@@ -518,10 +518,12 @@
                             <form action='#' method='' onSubmit="return false;">
                                 <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
                                     <div class="input-group mb-0">
-                                        <input id="inputChat" name="inputChat"
-                                            type="text" class="form-control" placeholder="Type message"
-                                            aria-label="Recipient's username" aria-describedby="button-addon2" style="height:40.8px;" />
-                                        <input class="btn btn-warning" onclick="send_chat(inputChat.value); inputChat.value=''" type="submit" id="button-addon2" value="보내기" style="padding-top: .55rem;">
+                                        <input id="inputChat" name="inputChat" type="text" class="form-control"
+                                            placeholder="Type message" aria-label="Recipient's username"
+                                            aria-describedby="button-addon2" style="height:40.8px;" />
+                                        <input class="btn btn-warning"
+                                            onclick="send_chat(inputChat.value); inputChat.value=''" type="submit"
+                                            id="button-addon2" value="보내기" style="padding-top: .55rem;">
                                     </div>
                                 </div>
 
@@ -567,16 +569,16 @@
 
 
         // js functions
-        String.prototype.format = function() {
+        String.prototype.format = function () {
             var formatted = this;
-            for( var arg in arguments ) {
+            for (var arg in arguments) {
                 formatted = formatted.replace("{" + arg + "}", arguments[arg]);
             }
             return formatted;
         };
-        Object.prototype.toString = function() {
+        Object.prototype.toString = function () {
             res = ''
-            for(let key in this){
+            for (let key in this) {
                 res += key + ':' + this[key]
                 res += ', '
             }
@@ -588,15 +590,15 @@
 
 
         // name_user = "bot"
-        function chat_question(text){
-            try{
-                if("{{session['user_nick']}}" != ''){
+        function chat_question(text) {
+            try {
+                if ("{{session['user_nick']}}" != '') {
                     name = "{{session['user_nick']}}"
-                } else{
+                } else {
                     name = "anonymous"
                 }
             }
-            catch{
+            catch {
                 name = "anonymous"
             }
 
@@ -612,15 +614,15 @@
                             alt="avatar 1" style="width: 45px; height: 100%;">
                     </div>`.format("2022/08/11 08:23", name, text)
         }
-        function chat_answer(text){
-            try{
-                if("{{session['user_nick']}}" != ''){
+        function chat_answer(text) {
+            try {
+                if ("{{session['user_nick']}}" != '') {
                     name = "{{session['user_nick']}}"
-                } else{
+                } else {
                     name = "anonymous"
                 }
             }
-            catch{
+            catch {
                 name = "anonymous"
             }
 
@@ -637,26 +639,26 @@
                         </div>
                     </div>`.format("2022/08/11 08:23", name_bot, text)
         }
-        function input_image(src){
+        function input_image(src) {
             return `<image style="max-width:100%; height:auto;" src='{0}'/>`.format(src)
         }
-        function input_button(text, callback_method){
+        function input_button(text, callback_method) {
             return `<button class="btn btn-light rounded-3"
                             style="width:31%; height:33%; margin: 3px;"
                             onclick="{0}">
                             {1}</button>`.format(callback_method, text)
         }
-        function show_chatting(){
+        function show_chatting() {
             document.getElementById('chatbot-chatting').style.visibility = 'visible';
             divChat.scrollTop = divChat.scrollHeight
             inputChat.focus()
         }
-        function hide_chatting(){
+        function hide_chatting() {
             document.getElementById('chatbot-chatting').style.visibility = 'hidden';
         }
-        function cancel_chatting(){
+        function cancel_chatting() {
             hide_chatting()
-            fetch("http://"+connect_to+":5000/chatbot", {
+            fetch("http://" + connect_to + ":5000/chatbot", {
                 method: "DELETE"
             }).then((response) => {
                 console.log(response.json())
@@ -669,155 +671,309 @@
 
 
         // 서버와 통신 파트
-        function send_chat(text){
-            if(text == "" || text == undefined) return false;
-            
+        function send_chat(text) {
+            if (text == "" || text == undefined) return false;
+
             chat_list += chat_question(text)    // 사용자 질문 말풍선 추가
             divChat.innerHTML = chat_list       // 화면에 띄움
 
             // 답변 받아오기
-            fetch("http://"+connect_to+":5002/answer?question="+text)
-            .then((response) => response.json())
-            .then((data) => {
-                let answer = data['body'].split('|')
-                for(let i in answer){
-                    answer[i] = answer[i].trim()
-                    let tag     = answer[i].split(']')[0]
-                    let content = answer[i].split(']')[1] 
+            fetch("http://" + connect_to + ":5002/answer?question=" + text)
+                .then((response) => response.json())
+                .then((data) => {
+                    let answer = data['body'].split('|')
+                    for (let i in answer) {
+                        answer[i] = answer[i].trim()
+                        let tag = answer[i].split(']')[0]
+                        let content = answer[i].split(']')[1]
 
-                    // 텍스트의 경우
-                    if(tag == "text"){
-                        chat_list += chat_answer(content)
-                    }
+                        // 텍스트의 경우
+                        if (tag == "text") {
+                            chat_list += chat_answer(content)
+                        }
 
-                    // 이미지가 첨부되었을 경우
-                    if(tag == "img"){
-                        // 이미지 추가
-                        chat_list += chat_answer(input_image("https://www.filmsnewsfeed.com/images/article/pokemon-why-pikachu-never-evolved-main.webp"))
-                    }
+                        // 이미지가 첨부되었을 경우
+                        if (tag == "img") {
+                            // 이미지 추가
+                            chat_list += chat_answer(input_image("https://www.filmsnewsfeed.com/images/article/pokemon-why-pikachu-never-evolved-main.webp"))
+                        }
 
-                    // 버튼이 첨부되었을 경우
-                    if(tag == "btn"){
-                        // 선택지 추가
-                        text = content.split('@')[0]
-                        callback_method = content.split('@')[1]
-                        chat_list += input_button(text, callback_method)
+                        // 버튼이 첨부되었을 경우
+                        if (tag == "btn") {
+                            // 선택지 추가
+                            text = content.split('@')[0]
+                            callback_method = content.split('@')[1]
+                            chat_list += input_button(text, callback_method)
+                        }
+
                     }
-                    
-                } 
-                divChat.innerHTML = chat_list
-                divChat.scrollTop = divChat.scrollHeight
-                
-                // 현재까지의 채팅 세션에 저장하기
-                fetch("http://"+connect_to+":5000/chatbot", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        "chat_list": chat_list,
-                        "last_chat": text
+                    divChat.innerHTML = chat_list
+                    divChat.scrollTop = divChat.scrollHeight
+
+                    // 현재까지의 채팅 세션에 저장하기
+                    fetch("http://" + connect_to + ":5000/chatbot", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            "chat_list": chat_list,
+                            "last_chat": text
+                        })
                     })
-                })
-            });
+                });
         }
 
-        function send_followed_chat(intent, ...args){
-            chat_list += chat_answer(args[0]+':+'+args[1])
+        function send_followed_chat(intent, ...args) {
+            chat_list += chat_answer(args[0] + ':+' + args[1])
             divChat.innerHTML = chat_list
             // console.log(args)
 
             // 답변 받아오기
-            fetch("http://"+connect_to+":5002/answer/follow?intent="+intent+"&args="+args)
-            .then((response) => response.json())
-            .then((data) => {
-                let answer = data['body'].split('|')
-                for(let i in answer){
-                    answer[i] = answer[i].trim()
-                    let tag     = answer[i].split(']')[0]
-                    let content = answer[i].split(']')[1] 
+            fetch("http://" + connect_to + ":5002/answer/follow?intent=" + intent + "&args=" + args)
+                .then((response) => response.json())
+                .then((data) => {
+                    let answer = data['body'].split('|')
+                    for (let i in answer) {
+                        answer[i] = answer[i].trim()
+                        let tag = answer[i].split(']')[0]
+                        let content = answer[i].split(']')[1]
 
-                    // 텍스트의 경우
-                    if(tag == "text"){
-                        chat_list += chat_answer(content)
-                    }
+                        // 텍스트의 경우
+                        if (tag == "text") {
+                            chat_list += chat_answer(content)
+                        }
 
-                    // 이미지가 첨부되었을 경우
-                    if(tag == "img"){
-                        // 이미지 추가
-                        chat_list += chat_answer(input_image("https://www.filmsnewsfeed.com/images/article/pokemon-why-pikachu-never-evolved-main.webp"))
-                    }
+                        // 이미지가 첨부되었을 경우
+                        if (tag == "img") {
+                            // 이미지 추가
+                            chat_list += chat_answer(input_image("https://www.filmsnewsfeed.com/images/article/pokemon-why-pikachu-never-evolved-main.webp"))
+                        }
 
-                    // 버튼이 첨부되었을 경우
-                    if(tag == "btn"){
-                        // 선택지 추가
-                        text = content.split('@')[0]
-                        callback_method = content.split('@')[1]
-                        chat_list += input_button(text, callback_method)
+                        // 버튼이 첨부되었을 경우
+                        if (tag == "btn") {
+                            // 선택지 추가
+                            text = content.split('@')[0]
+                            callback_method = content.split('@')[1]
+                            chat_list += input_button(text, callback_method)
+                        }
+
                     }
-                    
-                } 
-                divChat.innerHTML = chat_list
-                divChat.scrollTop = divChat.scrollHeight
-                
-                // 현재까지의 채팅 세션에 저장하기
-                fetch("http://"+connect_to+":5000/chatbot", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        "chat_list": chat_list,
-                        "last_chat": args[0]+':+'+args[1]
+                    divChat.innerHTML = chat_list
+                    divChat.scrollTop = divChat.scrollHeight
+
+                    // 현재까지의 채팅 세션에 저장하기
+                    fetch("http://" + connect_to + ":5000/chatbot", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            "chat_list": chat_list,
+                            "last_chat": args[0] + ':+' + args[1]
+                        })
                     })
-                })
-            });
+                });
         }
 
-        function followed_chat(text, intent, ...args){
+        function followed_chat(text, intent, ...args) {
             chat_list += chat_answer(text)
             divChat.innerHTML = chat_list
 
-            if (intent == 'recommend'){
-                if (args[0] == '시/군'){
+            if (intent == 'recommend') {
+                if (args[0] == '시/군') {
 
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
 
-                    tmp_regions = ['서울특별시', '강원도', '제주특별시', '충청남도', '충청북도']
-                    for(let region of tmp_regions){
+                    tmp_regions = ['수도권', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']
+                    for (let region of tmp_regions) {
                         chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
                     }
                 }
-                if (args[0] == '세부지역'){
+                if (args[0] == '세부지역') {
 
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
 
                     let _region = ''
-                    for(item of args[1].split("_")){
-                        if(item.split("=")[0] == '시/군')
+                    for (item of args[1].split("_")) {
+                        if (item.split("=")[0] == '시/군')
                             _region = item.split('=')[1]
                     }
-                    console.log(args[1], _region)
-                    tmp_regions = [_region+' 세부지역1', _region+' 세부지역2']
-                    for(let region of tmp_regions){
-                        chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+
+                    fetch("http://" + connect_to + ":5004/region", {
+                        method: "GET"
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            region_dict = data.body
+                        });
+                    // console.log(region_dict["강원도"][0])
+
+                    if (_region == "제주도") {
+                        tmp_regions = ['제주시', '서귀포시']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "수도권") {
+                        tmp_regions = ['서울특별시', '인천광역시', '부산광역시', '대구광역시', '광주광역시', '대전광역시', '울산광역시']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "경기도") {
+                        tmp_regions = ['가평군', '고양시 덕양구', '고양시 일산동구', '고양시 일산서구', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', '동두천시', '부천시', '성남시 분당구', '성남시 수정구', '성남시 중원구', '수원시 권선구', '수원시 영통구', '수원시 장안구', '수원시 팔달구', '시흥시', '안산시 단원구', '안산시 상록구', '안성시', '안양시 동안구', '안양시 만안구', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시 기흥구', '용인시 수지구', '용인시 처인구', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "강원도") {
+                        tmp_regions = ['강릉시', '고성군', '동해시', '삼척시', '속초시', '양구군', '양양군', '영월군', '원주시', '인제군', '정선군', '철원군', '춘천시', '태백시', '평창군', '홍천군', '화천군', '횡성군']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "충청북도") {
+                        tmp_regions = ['괴산군', '단양군', '보은군', '영동군', '옥천군', '음성군', '제천시', '증평군', '진천군', '청주시 상당구', '청주시 서원구', '청주시 청원구', '청주시 흥덕구', '충주시']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "충청남도") {
+                        tmp_regions = ['계룡시', '공주시', '금산군', '논산시', '당진시', '보령시', '부여군', '서산시', '서천군', '아산시', '예산군', '천안시 동남구', '천안시 서북구', '청양군', '태안군', '홍성군']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "경상북도") {
+                        tmp_regions = ['경산시', '경주시', '고령군', '구미시', '군위군', '김천시', '문경시', '봉화군', '상주시', '성주군', '안동시', '영덕군', '영양군', '영주시', '영천시', '예천군', '울릉군', '울진군', '의성군', '청도군', '청송군', '칠곡군', '포항시 남구', '포항시 북구']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "경상남도") {
+                        tmp_regions = ['거제시', '거창군', '고성군', '김해시', '남해군', '밀양시', '사천시', '산청군', '양산시', '의령군', '진주시', '창녕군', '창원시 마산합포구', '창원시 마산회원구', '창원시 성산구', '창원시 의창구', '창원시 진해구', '통영시', '하동군', '함안군', '함양군', '합천군']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "전라북도") {
+                        tmp_regions = ['고창군', '군산시', '김제시', '남원시', '무주군', '부안군', '순창군', '완주군', '익산시', '임실군', '장수군', '전주시 덕진구', '전주시 완산구', '정읍시', '진안군']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "전라남도") {
+                        tmp_regions = ['강진군', '고흥군', '곡성군', '광양시', '구례군', '나주시', '담양군', '목포시', '무안군', '보성군', '순천시', '신안군', '여수시', '영광군', '영암군', '완도군', '장성군', '장흥군', '진도군', '함평군', '해남군', '화순군']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
                     }
                 }
-                if (args[0] == '동반유형'){
+                if (args[0] == '출발지') {
+
+                    // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
+
+                    tmp_regions = ['수도권', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']
+                    for (let destination of tmp_regions) {
+                        chat_list += input_button(destination, `send_followed_chat('${intent}','${args[0]}','${destination}', '${args[1]}')`)
+                    }
+                }
+                if (args[0] == '세부출발지') {
+
+                    // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
+
+                    let _region = ''
+                    for (item of args[1].split("_")) {
+                        if (item.split("=")[0] == '출발지')
+                            _region = item.split('=')[1]
+                    }
+
+                    fetch("http://" + connect_to + ":5004/region", {
+                        method: "GET"
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            region_dict = data.body
+                        });
+                    console.log(region_dict["강원도"][0])
+
+                    if (_region == "제주도") {
+                        tmp_regions = ['제주시', '서귀포시']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "수도권") {
+                        tmp_regions = ['서울특별시', '인천광역시', '부산광역시', '대구광역시', '광주광역시', '대전광역시', '울산광역시']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "경기도") {
+                        tmp_regions = ['가평군', '고양시 덕양구', '고양시 일산동구', '고양시 일산서구', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', '동두천시', '부천시', '성남시 분당구', '성남시 수정구', '성남시 중원구', '수원시 권선구', '수원시 영통구', '수원시 장안구', '수원시 팔달구', '시흥시', '안산시 단원구', '안산시 상록구', '안성시', '안양시 동안구', '안양시 만안구', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시 기흥구', '용인시 수지구', '용인시 처인구', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "강원도") {
+                        tmp_regions = ['강릉시', '고성군', '동해시', '삼척시', '속초시', '양구군', '양양군', '영월군', '원주시', '인제군', '정선군', '철원군', '춘천시', '태백시', '평창군', '홍천군', '화천군', '횡성군']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "충청북도") {
+                        tmp_regions = ['괴산군', '단양군', '보은군', '영동군', '옥천군', '음성군', '제천시', '증평군', '진천군', '청주시 상당구', '청주시 서원구', '청주시 청원구', '청주시 흥덕구', '충주시']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "충청남도") {
+                        tmp_regions = ['계룡시', '공주시', '금산군', '논산시', '당진시', '보령시', '부여군', '서산시', '서천군', '아산시', '예산군', '천안시 동남구', '천안시 서북구', '청양군', '태안군', '홍성군']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "경상북도") {
+                        tmp_regions = ['경산시', '경주시', '고령군', '구미시', '군위군', '김천시', '문경시', '봉화군', '상주시', '성주군', '안동시', '영덕군', '영양군', '영주시', '영천시', '예천군', '울릉군', '울진군', '의성군', '청도군', '청송군', '칠곡군', '포항시 남구', '포항시 북구']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "경상남도") {
+                        tmp_regions = ['거제시', '거창군', '고성군', '김해시', '남해군', '밀양시', '사천시', '산청군', '양산시', '의령군', '진주시', '창녕군', '창원시 마산합포구', '창원시 마산회원구', '창원시 성산구', '창원시 의창구', '창원시 진해구', '통영시', '하동군', '함안군', '함양군', '합천군']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "전라북도") {
+                        tmp_regions = ['고창군', '군산시', '김제시', '남원시', '무주군', '부안군', '순창군', '완주군', '익산시', '임실군', '장수군', '전주시 덕진구', '전주시 완산구', '정읍시', '진안군']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                    if (_region == "전라남도") {
+                        tmp_regions = ['강진군', '고흥군', '곡성군', '광양시', '구례군', '나주시', '담양군', '목포시', '무안군', '보성군', '순천시', '신안군', '여수시', '영광군', '영암군', '완도군', '장성군', '장흥군', '진도군', '함평군', '해남군', '화순군']
+                        for (let region of tmp_regions) {
+                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        }
+                    }
+                }
+                if (args[0] == '동반유형') {
 
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
 
                     tmp_types = ['가족', '친구', '애견']
-                    for(let type of tmp_types){
+                    for (let type of tmp_types) {
                         chat_list += input_button(type, `send_followed_chat('${intent}','${args[0]}','${type}', '${args[1]}')`)
                     }
                 }
-                if (args[0] == '테마'){
+                if (args[0] == '테마') {
 
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
 
                     tmp_themes = ['힐링여행', '한달살기', '우정여행']
-                    for(let theme of tmp_themes){
+                    for (let theme of tmp_themes) {
                         chat_list += input_button(theme, `send_followed_chat('${intent}','${args[0]}','${theme}', '${args[1]}')`)
                     }
                 }
@@ -825,9 +981,9 @@
 
             divChat.innerHTML = chat_list
             divChat.scrollTop = divChat.scrollHeight
-            
+
             // 현재까지의 채팅 세션에 저장하기
-            fetch("http://"+connect_to+":5000/chatbot", {
+            fetch("http://" + connect_to + ":5000/chatbot", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

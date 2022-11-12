@@ -86,6 +86,7 @@ def answer_on_follow():
             더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
             |btn]결과<br>확인하기@location.href='/search?{query.replace('_','&').replace('_','&')}'\
             |btn]지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
+            |btn]출발지역<br>설정하기@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
             |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
             |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
 
@@ -95,6 +96,16 @@ def answer_on_follow():
                 |btn]결과<br>확인하기@location.href='/search?{query.replace('_','&').replace('_','&')}'\
                 |btn]다른 지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
                 |btn]세부 지역<br>설정하기@followed_chat('+세부지역', 'recommend', '세부지역', '{query}')\
+                |btn]출발지역<br>설정하기@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
+                |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
+                |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
+
+        if args[0] == "출발지":
+            answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
+                더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
+                |btn]결과<br>확인하기@location.href='/search?{query.replace('_','&').replace('_','&')}'\
+                |btn]다른 지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
+                |btn]세부 출발지역<br>설정하기@followed_chat('+세부출발지', 'recommend', '세부출발지', '{query}')\
                 |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
                 |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
 
@@ -103,6 +114,7 @@ def answer_on_follow():
                 더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
                 |btn]결과<br>확인하기@location.href='/search?{query.replace('_','&').replace('_','&')}'\
                 |btn]지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
+                |btn]출발지역<br>설정하기@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
                 |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
                 |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
 
@@ -111,6 +123,7 @@ def answer_on_follow():
                 더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
                 |btn]결과<br>확인하기@location.href='/search?{query.replace('_','&').replace('_','&')}'\
                 |btn]지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
+                |btn]출발지역<br>설정하기@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
                 |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
                 |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
 
@@ -196,6 +209,7 @@ def answer():
             더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
             |btn]결과<br>확인하기@location.href='/search?{query.replace('_','&')}'\
             |btn]지역<br>설정하기@followed_chat('+지역', 'recommend', '시/군', '{query}')\
+            |btn]출발지역<br>설정하기@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
             |btn]동반유형<br>결정하기@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
             |btn]테마<br>결정하기@followed_chat('+테마', 'recommend', '테마', '{query}')"
 
