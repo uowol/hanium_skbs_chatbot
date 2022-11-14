@@ -1,6 +1,8 @@
 import os
 
-credential_path = r"../trip-recommend-chatbot-9lcf-4861abc2d005.json"
+credential_path = (
+    r"../trip-recommend-chatbot-9lcf-4861abc2d005.json"
+)
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
 
 from google.cloud import dialogflow_v2beta1 as dialogflow
@@ -46,7 +48,7 @@ def Res_Verify(text):
             "구": res_list[3],
             "기간": res_list[4],
             "테마": res_list[5],
-            "동반 유형": res_list[6]
+            "동반 유형": res_list[6],
         }
         return res_dict, "recommend"
     return "잘 모르겠어요. 다시 질문해주세요. ", "empty"

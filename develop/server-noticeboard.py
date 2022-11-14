@@ -55,6 +55,7 @@ def get_dataset():
 def write_free():
     global max_index
     params = load_json(request.get_data())
+    print(params)
     title = params['title']
     content = params['content']
     image_list = params['image_list']
