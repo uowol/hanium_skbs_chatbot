@@ -223,13 +223,16 @@
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                <button class="rounded-circle border-0" id="sidebarToggle" onclick="
+                    if(sidebar.style.visibility=='hidden') sidebar.style.visibility='visible'
+                    else sidebar.style.visibility='hidden'
+                "></button>
             </div>
 
             <!-- Sidebar Message -->
-            <div class="sidebar-card d-none d-lg-flex">
+            <div id="sidebar" class="sidebar-card d-none d-lg-flex">
                 <img class="sidebar-card-illustration mb-2" src="/static/img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>{{params['site_name']}}</strong> is fun, cool and sexy.</p>
+                <p id="container_tip" style="color: #fff;" class="text-center mb-2"></p>
                 <!-- <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro"></a> -->
             </div>
 
@@ -469,6 +472,15 @@
         window.onkeydown = (e) => {
             if (e.key == 'Escape') hide_chatting();
         };
+
+
+        // tip random 제공
+        tips = [
+            "<strong>{{params['site_name']}}</strong> is<br><strong>fun</strong>, <strong>cool</strong> and <strong>sexy</strong>.",
+            "<strong>Chatbot</strong>을 이용하면<br>편리하게 여행지를<br>추천받을 수 있습니다.",
+            "<strong>Noticeboard</strong>에선<br>다른 사람들과 소중한<br>경험을 공유할 수 있습니다."
+        ]
+        container_tip.innerHTML = tips[Math.floor(Math.random()*tips.length)]
 
 
         // name_user = "bot"
