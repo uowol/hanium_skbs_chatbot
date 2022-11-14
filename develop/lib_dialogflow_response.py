@@ -54,5 +54,5 @@ def Res_Verify(text):
     return "잘 모르겠어요. 다시 질문해주세요. ", "empty"
 
 
-# print(Res_Verify("안녕"))
+# print(Res_Verify('안녕'))
 # print(Res_Verify('충북에 2개월 동안 여자친구랑 갈만한 여행지 추천해 줘'))

@@ -642,9 +642,9 @@
         function input_image(src) {
             return `<image style="max-width:100%; height:auto;" src='{0}'/>`.format(src)
         }
-        function input_button(text, callback_method) {
+        function input_button(text, callback_method, height = '24') {
             return `<button class="btn btn-light rounded-3"
-                            style="width:31%; height:33%; margin: 3px;"
+                            style="width:31%; height:{2}%; margin: 3px;"
                             onclick="{0}">
                             {1}</button>`.format(callback_method, text)
         }
@@ -784,11 +784,25 @@
                 if (args[0] == '시/군') {
 
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
-
                     tmp_regions = ['수도권', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']
                     for (let region of tmp_regions) {
                         chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
                     }
+
+                    divChat.innerHTML = chat_list
+                    divChat.scrollTop = divChat.scrollHeight
+
+                    // 현재까지의 채팅 세션에 저장하기
+                    fetch("http://" + connect_to + ":5000/chatbot", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            "chat_list": chat_list,
+                            "last_chat": text
+                        })
+                    })
                 }
                 if (args[0] == '세부지역') {
 
@@ -806,69 +820,86 @@
                         .then((response) => response.json())
                         .then((data) => {
                             region_dict = data.body
+
+                            if (_region == "제주도") {
+                                tmp_regions = ['제주시', '서귀포시']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "수도권") {
+                                tmp_regions = ['서울특별시', '인천광역시', '부산광역시', '대구광역시', '광주광역시', '대전광역시', '울산광역시']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "경기도") {
+                                tmp_regions = ['가평군', '고양시 덕양구', '고양시 일산동구', '고양시 일산서구', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', '동두천시', '부천시', '성남시 분당구', '성남시 수정구', '성남시 중원구', '수원시 권선구', '수원시 영통구', '수원시 장안구', '수원시 팔달구', '시흥시', '안산시 단원구', '안산시 상록구', '안성시', '안양시 동안구', '안양시 만안구', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시 기흥구', '용인시 수지구', '용인시 처인구', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "강원도") {
+                                tmp_regions = ['강릉시', '고성군', '동해시', '삼척시', '속초시', '양구군', '양양군', '영월군', '원주시', '인제군', '정선군', '철원군', '춘천시', '태백시', '평창군', '홍천군', '화천군', '횡성군']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "충청북도") {
+                                tmp_regions = ['괴산군', '단양군', '보은군', '영동군', '옥천군', '음성군', '제천시', '증평군', '진천군', '청주시 상당구', '청주시 서원구', '청주시 청원구', '청주시 흥덕구', '충주시']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "충청남도") {
+                                tmp_regions = ['계룡시', '공주시', '금산군', '논산시', '당진시', '보령시', '부여군', '서산시', '서천군', '아산시', '예산군', '천안시 동남구', '천안시 서북구', '청양군', '태안군', '홍성군']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "경상북도") {
+                                tmp_regions = ['경산시', '경주시', '고령군', '구미시', '군위군', '김천시', '문경시', '봉화군', '상주시', '성주군', '안동시', '영덕군', '영양군', '영주시', '영천시', '예천군', '울릉군', '울진군', '의성군', '청도군', '청송군', '칠곡군', '포항시 남구', '포항시 북구']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "경상남도") {
+                                tmp_regions = ['거제시', '거창군', '고성군', '김해시', '남해군', '밀양시', '사천시', '산청군', '양산시', '의령군', '진주시', '창녕군', '창원시 마산합포구', '창원시 마산회원구', '창원시 성산구', '창원시 의창구', '창원시 진해구', '통영시', '하동군', '함안군', '함양군', '합천군']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "전라북도") {
+                                tmp_regions = ['고창군', '군산시', '김제시', '남원시', '무주군', '부안군', '순창군', '완주군', '익산시', '임실군', '장수군', '전주시 덕진구', '전주시 완산구', '정읍시', '진안군']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "전라남도") {
+                                tmp_regions = ['강진군', '고흥군', '곡성군', '광양시', '구례군', '나주시', '담양군', '목포시', '무안군', '보성군', '순천시', '신안군', '여수시', '영광군', '영암군', '완도군', '장성군', '장흥군', '진도군', '함평군', '해남군', '화순군']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+
+                            divChat.innerHTML = chat_list
+                            divChat.scrollTop = divChat.scrollHeight
+
+                            // 현재까지의 채팅 세션에 저장하기
+                            fetch("http://" + connect_to + ":5000/chatbot", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    "chat_list": chat_list,
+                                    "last_chat": text
+                                })
+                            })
                         });
                     // console.log(region_dict["강원도"][0])
 
-                    if (_region == "제주도") {
-                        tmp_regions = ['제주시', '서귀포시']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "수도권") {
-                        tmp_regions = ['서울특별시', '인천광역시', '부산광역시', '대구광역시', '광주광역시', '대전광역시', '울산광역시']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "경기도") {
-                        tmp_regions = ['가평군', '고양시 덕양구', '고양시 일산동구', '고양시 일산서구', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', '동두천시', '부천시', '성남시 분당구', '성남시 수정구', '성남시 중원구', '수원시 권선구', '수원시 영통구', '수원시 장안구', '수원시 팔달구', '시흥시', '안산시 단원구', '안산시 상록구', '안성시', '안양시 동안구', '안양시 만안구', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시 기흥구', '용인시 수지구', '용인시 처인구', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "강원도") {
-                        tmp_regions = ['강릉시', '고성군', '동해시', '삼척시', '속초시', '양구군', '양양군', '영월군', '원주시', '인제군', '정선군', '철원군', '춘천시', '태백시', '평창군', '홍천군', '화천군', '횡성군']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "충청북도") {
-                        tmp_regions = ['괴산군', '단양군', '보은군', '영동군', '옥천군', '음성군', '제천시', '증평군', '진천군', '청주시 상당구', '청주시 서원구', '청주시 청원구', '청주시 흥덕구', '충주시']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "충청남도") {
-                        tmp_regions = ['계룡시', '공주시', '금산군', '논산시', '당진시', '보령시', '부여군', '서산시', '서천군', '아산시', '예산군', '천안시 동남구', '천안시 서북구', '청양군', '태안군', '홍성군']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "경상북도") {
-                        tmp_regions = ['경산시', '경주시', '고령군', '구미시', '군위군', '김천시', '문경시', '봉화군', '상주시', '성주군', '안동시', '영덕군', '영양군', '영주시', '영천시', '예천군', '울릉군', '울진군', '의성군', '청도군', '청송군', '칠곡군', '포항시 남구', '포항시 북구']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "경상남도") {
-                        tmp_regions = ['거제시', '거창군', '고성군', '김해시', '남해군', '밀양시', '사천시', '산청군', '양산시', '의령군', '진주시', '창녕군', '창원시 마산합포구', '창원시 마산회원구', '창원시 성산구', '창원시 의창구', '창원시 진해구', '통영시', '하동군', '함안군', '함양군', '합천군']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "전라북도") {
-                        tmp_regions = ['고창군', '군산시', '김제시', '남원시', '무주군', '부안군', '순창군', '완주군', '익산시', '임실군', '장수군', '전주시 덕진구', '전주시 완산구', '정읍시', '진안군']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "전라남도") {
-                        tmp_regions = ['강진군', '고흥군', '곡성군', '광양시', '구례군', '나주시', '담양군', '목포시', '무안군', '보성군', '순천시', '신안군', '여수시', '영광군', '영암군', '완도군', '장성군', '장흥군', '진도군', '함평군', '해남군', '화순군']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
+
                 }
                 if (args[0] == '출발지') {
 
@@ -878,6 +909,21 @@
                     for (let destination of tmp_regions) {
                         chat_list += input_button(destination, `send_followed_chat('${intent}','${args[0]}','${destination}', '${args[1]}')`)
                     }
+
+                    divChat.innerHTML = chat_list
+                    divChat.scrollTop = divChat.scrollHeight
+
+                    // 현재까지의 채팅 세션에 저장하기
+                    fetch("http://" + connect_to + ":5000/chatbot", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            "chat_list": chat_list,
+                            "last_chat": text
+                        })
+                    })
                 }
                 if (args[0] == '세부출발지') {
 
@@ -895,69 +941,85 @@
                         .then((response) => response.json())
                         .then((data) => {
                             region_dict = data.body
-                        });
-                    console.log(region_dict["강원도"][0])
 
-                    if (_region == "제주도") {
-                        tmp_regions = ['제주시', '서귀포시']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "수도권") {
-                        tmp_regions = ['서울특별시', '인천광역시', '부산광역시', '대구광역시', '광주광역시', '대전광역시', '울산광역시']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "경기도") {
-                        tmp_regions = ['가평군', '고양시 덕양구', '고양시 일산동구', '고양시 일산서구', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', '동두천시', '부천시', '성남시 분당구', '성남시 수정구', '성남시 중원구', '수원시 권선구', '수원시 영통구', '수원시 장안구', '수원시 팔달구', '시흥시', '안산시 단원구', '안산시 상록구', '안성시', '안양시 동안구', '안양시 만안구', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시 기흥구', '용인시 수지구', '용인시 처인구', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "강원도") {
-                        tmp_regions = ['강릉시', '고성군', '동해시', '삼척시', '속초시', '양구군', '양양군', '영월군', '원주시', '인제군', '정선군', '철원군', '춘천시', '태백시', '평창군', '홍천군', '화천군', '횡성군']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "충청북도") {
-                        tmp_regions = ['괴산군', '단양군', '보은군', '영동군', '옥천군', '음성군', '제천시', '증평군', '진천군', '청주시 상당구', '청주시 서원구', '청주시 청원구', '청주시 흥덕구', '충주시']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "충청남도") {
-                        tmp_regions = ['계룡시', '공주시', '금산군', '논산시', '당진시', '보령시', '부여군', '서산시', '서천군', '아산시', '예산군', '천안시 동남구', '천안시 서북구', '청양군', '태안군', '홍성군']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "경상북도") {
-                        tmp_regions = ['경산시', '경주시', '고령군', '구미시', '군위군', '김천시', '문경시', '봉화군', '상주시', '성주군', '안동시', '영덕군', '영양군', '영주시', '영천시', '예천군', '울릉군', '울진군', '의성군', '청도군', '청송군', '칠곡군', '포항시 남구', '포항시 북구']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "경상남도") {
-                        tmp_regions = ['거제시', '거창군', '고성군', '김해시', '남해군', '밀양시', '사천시', '산청군', '양산시', '의령군', '진주시', '창녕군', '창원시 마산합포구', '창원시 마산회원구', '창원시 성산구', '창원시 의창구', '창원시 진해구', '통영시', '하동군', '함안군', '함양군', '합천군']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "전라북도") {
-                        tmp_regions = ['고창군', '군산시', '김제시', '남원시', '무주군', '부안군', '순창군', '완주군', '익산시', '임실군', '장수군', '전주시 덕진구', '전주시 완산구', '정읍시', '진안군']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
-                    if (_region == "전라남도") {
-                        tmp_regions = ['강진군', '고흥군', '곡성군', '광양시', '구례군', '나주시', '담양군', '목포시', '무안군', '보성군', '순천시', '신안군', '여수시', '영광군', '영암군', '완도군', '장성군', '장흥군', '진도군', '함평군', '해남군', '화순군']
-                        for (let region of tmp_regions) {
-                            chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
-                        }
-                    }
+                            if (_region == "제주도") {
+                                tmp_regions = ['제주시', '서귀포시']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "수도권") {
+                                tmp_regions = ['서울특별시', '인천광역시', '부산광역시', '대구광역시', '광주광역시', '대전광역시', '울산광역시']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "경기도") {
+                                tmp_regions = ['가평군', '고양시 덕양구', '고양시 일산동구', '고양시 일산서구', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', '동두천시', '부천시', '성남시 분당구', '성남시 수정구', '성남시 중원구', '수원시 권선구', '수원시 영통구', '수원시 장안구', '수원시 팔달구', '시흥시', '안산시 단원구', '안산시 상록구', '안성시', '안양시 동안구', '안양시 만안구', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시 기흥구', '용인시 수지구', '용인시 처인구', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "강원도") {
+                                tmp_regions = ['강릉시', '고성군', '동해시', '삼척시', '속초시', '양구군', '양양군', '영월군', '원주시', '인제군', '정선군', '철원군', '춘천시', '태백시', '평창군', '홍천군', '화천군', '횡성군']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "충청북도") {
+                                tmp_regions = ['괴산군', '단양군', '보은군', '영동군', '옥천군', '음성군', '제천시', '증평군', '진천군', '청주시 상당구', '청주시 서원구', '청주시 청원구', '청주시 흥덕구', '충주시']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "충청남도") {
+                                tmp_regions = ['계룡시', '공주시', '금산군', '논산시', '당진시', '보령시', '부여군', '서산시', '서천군', '아산시', '예산군', '천안시 동남구', '천안시 서북구', '청양군', '태안군', '홍성군']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "경상북도") {
+                                tmp_regions = ['경산시', '경주시', '고령군', '구미시', '군위군', '김천시', '문경시', '봉화군', '상주시', '성주군', '안동시', '영덕군', '영양군', '영주시', '영천시', '예천군', '울릉군', '울진군', '의성군', '청도군', '청송군', '칠곡군', '포항시 남구', '포항시 북구']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "경상남도") {
+                                tmp_regions = ['거제시', '거창군', '고성군', '김해시', '남해군', '밀양시', '사천시', '산청군', '양산시', '의령군', '진주시', '창녕군', '창원시 마산합포구', '창원시 마산회원구', '창원시 성산구', '창원시 의창구', '창원시 진해구', '통영시', '하동군', '함안군', '함양군', '합천군']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "전라북도") {
+                                tmp_regions = ['고창군', '군산시', '김제시', '남원시', '무주군', '부안군', '순창군', '완주군', '익산시', '임실군', '장수군', '전주시 덕진구', '전주시 완산구', '정읍시', '진안군']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+                            if (_region == "전라남도") {
+                                tmp_regions = ['강진군', '고흥군', '곡성군', '광양시', '구례군', '나주시', '담양군', '목포시', '무안군', '보성군', '순천시', '신안군', '여수시', '영광군', '영암군', '완도군', '장성군', '장흥군', '진도군', '함평군', '해남군', '화순군']
+                                for (let region of tmp_regions) {
+                                    chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                                }
+                            }
+
+                            divChat.innerHTML = chat_list
+                            divChat.scrollTop = divChat.scrollHeight
+
+                            // 현재까지의 채팅 세션에 저장하기
+                            fetch("http://" + connect_to + ":5000/chatbot", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    "chat_list": chat_list,
+                                    "last_chat": text
+                                })
+                            })
+                        });
+
+
                 }
                 if (args[0] == '동반유형') {
 
@@ -967,6 +1029,21 @@
                     for (let type of tmp_types) {
                         chat_list += input_button(type, `send_followed_chat('${intent}','${args[0]}','${type}', '${args[1]}')`)
                     }
+
+                    divChat.innerHTML = chat_list
+                    divChat.scrollTop = divChat.scrollHeight
+
+                    // 현재까지의 채팅 세션에 저장하기
+                    fetch("http://" + connect_to + ":5000/chatbot", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            "chat_list": chat_list,
+                            "last_chat": text
+                        })
+                    })
                 }
                 if (args[0] == '테마') {
 
@@ -976,6 +1053,21 @@
                     for (let theme of tmp_themes) {
                         chat_list += input_button(theme, `send_followed_chat('${intent}','${args[0]}','${theme}', '${args[1]}')`)
                     }
+
+                    divChat.innerHTML = chat_list
+                    divChat.scrollTop = divChat.scrollHeight
+
+                    // 현재까지의 채팅 세션에 저장하기
+                    fetch("http://" + connect_to + ":5000/chatbot", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            "chat_list": chat_list,
+                            "last_chat": text
+                        })
+                    })
                 }
             }
 
