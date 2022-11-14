@@ -33,7 +33,7 @@ col_region_test = use(db, "region_test")
 # ㄴ 시/군/구
 @app.route("/region", methods=["GET"])
 def get_region_list():
-    df = pd.read_csv("./data_process/output/region_dict.csv")
+    df = pd.read_csv("../data_process/output/region_dict.csv")
     answer = df.to_dict()
     return _result(STATUS_SUCCESS, answer)
 
@@ -42,7 +42,7 @@ def get_region_list():
 # [계곡, 바다, ...]
 @app.route("/theme", methods=["GET"])
 def get_theme_list():
-    df = pd.read_csv("./data_process/output/theme.csv")
+    df = pd.read_csv("../data_process/output/theme.csv")
     answer = df.to_dict()
     return _result(STATUS_SUCCESS, answer)
 
@@ -52,7 +52,7 @@ def get_theme_list():
 # * 지역은 기존에 '지역' 변수에 포함
 @app.route("/dest", methods=["GET"])
 def get_dest_list():
-    df = pd.read_csv("./data_process/output/data_theme_plus.csv")
+    df = pd.read_csv("../data_process/output/data_theme_plus.csv")
     answer = df.to_dict()
     return _result(STATUS_SUCCESS, answer)
 
@@ -62,7 +62,7 @@ def get_dest_list():
 # ㄴ 관광지명
 @app.route("/region/dest", methods=["GET"])
 def get_region_dest_list():
-    df = pd.read_csv("./data_process/output/dest_dict.csv")
+    df = pd.read_csv("../data_process/output/dest_dict.csv")
     answer = df.to_dict()
     return _result(STATUS_SUCCESS, answer)
 
@@ -72,8 +72,8 @@ def get_region_dest_list():
 # ㄴ 관광지명
 @app.route("/theme/dest", methods=["GET"])
 def get_theme_dest_list():
-    df = pd.read_csv("./data_process/output/data_theme_plus.csv")
-    theme = pd.read_csv("./data_process/output/theme.csv").title
+    df = pd.read_csv("../data_process/output/data_theme_plus.csv")
+    theme = pd.read_csv("../data_process/output/theme.csv").title
     answer = dict()
     for t in theme:
         answer[t] = df.관광지명[df.theme.apply(lambda x: t in x)].to_list()

@@ -609,7 +609,7 @@
         function send_followed_chat(intent, ...args) {
             chat_list += chat_answer(args[0] + ':+' + args[1])
             divChat.innerHTML = chat_list
-            // console.log(args)
+            console.log(args)
 
             // 답변 받아오기
             fetch("http://" + connect_to + ":5002/answer/follow?intent=" + intent + "&args=" + args)
@@ -668,7 +668,7 @@
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
                     tmp_regions = ['수도권', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']
                     for (let region of tmp_regions) {
-                        chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
+                        chat_list += input_button(region, `send_followed_chat('${intent}','${'도'}','${region}', '')`)
                     }
 
                     divChat.innerHTML = chat_list
@@ -787,7 +787,7 @@
 
                     tmp_regions = ['수도권', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']
                     for (let destination of tmp_regions) {
-                        chat_list += input_button(destination, `send_followed_chat('${intent}','${args[0]}','${destination}', '${args[1]}')`)
+                        chat_list += input_button(destination, `send_followed_chat('${intent}','${args[0]}','${destination}', '')`)
                     }
 
                     divChat.innerHTML = chat_list

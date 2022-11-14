@@ -1,7 +1,7 @@
 import os
 
 credential_path = (
-    r"/Users/songjs/projects/myproject/hanium/trip-recommend-chatbot-9lcf-4861abc2d005.json"
+    r"../trip-recommend-chatbot-9lcf-4861abc2d005.json"
 )
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
 

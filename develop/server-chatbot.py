@@ -33,7 +33,7 @@ CORS(app)
 
 ##### 업데이트 할 내용
 # 데이터는 데이터베이스에 접근해서 가져오기
-df_region = pd.read_csv(r"/Users/songjs/projects/myproject/hanium/지역 전체.csv")
+df_region = pd.read_csv(r"../storage/지역 전체.csv")
 
 
 # # 대화 내용 저장: 내용 / 시간 / 유저 nick(익명일 수도)
@@ -66,13 +66,14 @@ def answer_on_follow():
     if intent == "recommend":
         query = ""
         is_changed = False
-        for q in args[2].split("_"):
-            print("!!!" + q)
-            key, val = q.split("=")
-            if key == args[0]:  # 이미 쿼리 안에 존재하면 변경
-                val = args[1]
-                is_changed = True
-            query += f"{key}={val}_"
+        if args[2]:
+            for q in args[2].split("_"):
+                print("!!!" + q)
+                key, val = q.split("=")
+                if key == args[0]:  # 이미 쿼리 안에 존재하면 변경
+                    val = args[1]
+                    is_changed = True
+                query += f"{key}={val}_"
         if not is_changed:
             query += args[0] + "=" + args[1] + "_"  # 존재하지 않으면 추가
         query = query[0:-1]
