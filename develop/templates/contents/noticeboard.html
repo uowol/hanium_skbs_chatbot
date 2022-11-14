@@ -41,7 +41,7 @@
                         </li>
                     </ul>
                     <span class="navbar-text">
-                        <a href="/noticeboard/write" class="nav-link">새 글쓰기</a>
+                        <a id="a_write" href="/noticeboard/write" class="nav-link">새 글쓰기</a>
                     </span>
 
                 </div>
@@ -84,6 +84,8 @@
 </div>
 <!-- /.container-fluid -->
 <script>    
+    a_write.href = a_write.href+"?type="+window.location.href.split('/')[window.location.href.split('/').length-1]
+
     content = 'notice board'
     index = 0
     i = 0

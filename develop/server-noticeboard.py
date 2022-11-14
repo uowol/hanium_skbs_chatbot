@@ -9,7 +9,7 @@ from flask import Flask, request, redirect, jsonify
 import datetime as dt
 
 connect_to = '127.0.0.1'
-dataset = []
+global_dataset = []
 
 app = Flask(__name__)
 CORS(app)
@@ -20,25 +20,25 @@ db_posts = use(db, "posts")
 # 게시글 업데이트
 @app.route("/noticeboard/init", methods=["GET"])
 def update_dataset_list():
-    global dataset
+    global global_dataset
     try:
-        dataset = list(find(db_posts, {}))
-        dataset.reverse()
+        global_dataset = list(find(db_posts, {}))
+        global_dataset.reverse()
         status = STATUS_SUCCESS
     except e:
         status = STATUS_FAIL
     finally:
         print(f"init_dataset/result: {status}")
-        return _result(status, parse_json(dataset))
+        return _result(status, parse_json(global_dataset))
 
 
 # 게시글 개수 리턴
 @app.route("/noticeboard/length", methods=["GET"])
 def get_length():
-    if len(dataset) == 0:
+    if len(global_dataset) == 0:
         update_dataset_list()
     try:
-        return _result(STATUS_SUCCESS, len(dataset))
+        return _result(STATUS_SUCCESS, len(global_dataset))
     except:
         return _result(STATUS_FAIL, 0)
 
@@ -46,9 +46,9 @@ def get_length():
 # 게시판 데이터 불러오기
 @app.route("/noticeboard/raw", methods=["GET"])
 def get_dataset():
-    if len(dataset) == 0:
+    if len(global_dataset) == 0:
         update_dataset_list()
-    return _result(STATUS_SUCCESS, parse_json(dataset))
+    return _result(STATUS_SUCCESS, parse_json(global_dataset))
 
 
 @app.route("/noticeboard/free", methods=["POST"])
@@ -74,6 +74,7 @@ def write_free():
                     "post_view": 0,
                     "post_time": dt.datetime.now().strftime("%Y/%m/%d"),
                     "post_comment": 0,
+                    "type":"free"
                 }
             ],
         )
@@ -109,7 +110,9 @@ def recommend_free(num):
     
 @app.route("/noticeboard/free", methods=["GET"])
 def get_list_free():
-    update_dataset_list()
+    dataset = list(find(db_posts, {"type":"free"}))
+    dataset.reverse()
+    # update_dataset_list()
     return _result(STATUS_SUCCESS, parse_json(dataset))
 
 
@@ -135,6 +138,7 @@ def write_review():
                     "post_view": 0,
                     "post_time": dt.datetime.now().strftime("%Y/%m/%d"),
                     "post_comment": 0,
+                    "type": "review"
                 }
             ],
         )
@@ -158,7 +162,9 @@ def recommend_review(num):
     
 @app.route("/noticeboard/review", methods=["GET"])
 def get_list_review():
-    update_dataset_list()
+    dataset = list(find(db_posts, {"type":"review"}))
+    dataset.reverse()
+    # update_dataset_list()
     return _result(STATUS_SUCCESS, parse_json(dataset))
 
 
@@ -184,6 +190,7 @@ def write_tip():
                     "post_view": 0,
                     "post_time": dt.datetime.now().strftime("%Y/%m/%d"),
                     "post_comment": 0,
+                    "type": "tip"
                 }
             ],
         )
@@ -207,14 +214,16 @@ def recommend_tip(num):
     
 @app.route("/noticeboard/tip", methods=["GET"])
 def get_list_tip():
-    update_dataset_list()
+    dataset = list(find(db_posts, {"type":"tip"}))
+    dataset.reverse()
+    # update_dataset_list()
     return _result(STATUS_SUCCESS, parse_json(dataset))
 
 # App Start
 if __name__ == "__main__":
     global max_index
     update_dataset_list()
-    max_index = len(dataset)
+    max_index = len(global_dataset)
 
     app.secret_key = "여행 de Gaja"
     # app.config['SESSION_TYPE'] = 'filesystem'
