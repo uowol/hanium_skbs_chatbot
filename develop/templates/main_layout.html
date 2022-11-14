@@ -675,8 +675,7 @@
             divChat.innerHTML = chat_list
 
             if (intent == 'recommend') {
-                if (args[0] == '시/군') {
-
+                if (args[0] == '도') {
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
                     tmp_regions = ['특별/광역시', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']
                     for (let region of tmp_regions) {
@@ -704,7 +703,7 @@
 
                     let _region = ''
                     for (item of args[1].split("_")) {
-                        if (item.split("=")[0] == '시/군')
+                        if (item.split("=")[0] == '도')
                             _region = item.split('=')[1]
                     }
 
