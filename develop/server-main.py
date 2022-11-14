@@ -296,6 +296,7 @@ def noticeboard_write():
         "main_layout.html",
         params=params,
         chatbot_talk="",
+        type=dict(request.args)['type'],
         content="contents/noticeboard_write.html",
         tag="free",
     )
@@ -306,12 +307,13 @@ def noticeboard_write():
 def noticeboard_callback():
     title = request.form.get("title")
     contents = request.form.get("contents")
+    type = request.form.get("type")
     # image_list = request.form.get("inputPassword")
     user_nick = session["user_nick"] if session["user_nick"] else "익명"
     try:
         query = {"title": title, "content": contents, "image_list": [], "user_nick": user_nick}
         res = post(
-            f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/free", data=parse_json(query)
+            f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/{type}", data=parse_json(query)
         )
         if res.status_code == 200:  # 서버와 통신
             print("/noticeboard/write: DONE")
@@ -320,7 +322,7 @@ def noticeboard_callback():
     except:
         pass
 
-    return redirect("/noticeboard")
+    return redirect(f"/noticeboard/{type}")
 
 
 @app.route("/noticeboard/free", methods=["GET"])

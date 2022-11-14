@@ -111,6 +111,7 @@ def recommend_free(num):
 @app.route("/noticeboard/free", methods=["GET"])
 def get_list_free():
     dataset = list(find(db_posts, {"type":"free"}))
+    dataset.reverse()
     # update_dataset_list()
     return _result(STATUS_SUCCESS, parse_json(dataset))
 
@@ -162,6 +163,7 @@ def recommend_review(num):
 @app.route("/noticeboard/review", methods=["GET"])
 def get_list_review():
     dataset = list(find(db_posts, {"type":"review"}))
+    dataset.reverse()
     # update_dataset_list()
     return _result(STATUS_SUCCESS, parse_json(dataset))
 
@@ -213,6 +215,7 @@ def recommend_tip(num):
 @app.route("/noticeboard/tip", methods=["GET"])
 def get_list_tip():
     dataset = list(find(db_posts, {"type":"tip"}))
+    dataset.reverse()
     # update_dataset_list()
     return _result(STATUS_SUCCESS, parse_json(dataset))
 
