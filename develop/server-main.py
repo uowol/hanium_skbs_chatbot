@@ -1,18 +1,21 @@
 from flask import Flask, render_template, request, Markup, redirect, flash, session, jsonify
-from flask_login import LoginManager, login_user, logout_user, UserMixin, login_required, current_user
-from requests import get, post 
+from flask_login import (
+    LoginManager,
+    login_user,
+    logout_user,
+    UserMixin,
+    login_required,
+    current_user,
+)
+from requests import get, post
 from flask_cors import CORS
 from global_methods import _result, parse_json, load_json
 from global_consts import *
 
 import pandas as pd
 
-connect_to = '127.0.0.1'
-params = {
-    "site_name": "Tour-List",
-    "session": session,
-    "current_user": current_user
-}
+connect_to = "127.0.0.1"
+params = {"site_name": "Tour-List", "session": session, "current_user": current_user}
 
 
 # Flask 객체 인스턴스 생성
@@ -22,7 +25,7 @@ lm = LoginManager()
 lm.init_app(app)
 
 
-@app.route('/init', methods=['GET'])
+@app.route("/init", methods=["GET"])
 def init_chat_list():
     session["chat_list"] = ""
     return redirect("/")
@@ -38,17 +41,16 @@ def index():
     )
 
 
-
 #%% Detail
-@app.route('/detail', methods=['GET'])
+@app.route("/detail", methods=["GET"])
 def detail():
     req = request.args.to_dict()
     dest = None
 
-    if 'dest' in req : dest = req['dest']
+    if "dest" in req:
+        dest = req["dest"]
 
     print(f"detail/dest: {dest}")
-
 
     # 대충 여행지 DB 상호작용하는 서버에게 요청보내고 받은 여행지 데이터를 활용하여 관련 정보 시각화하기
 
@@ -65,7 +67,12 @@ def detail():
     # else:
     #     return redirect('/register/error')
 
-    return render_template('main_layout.html', params=params, chatbot_talk="여행지 세부 정보 페이지입니다.", content="contents/detail.html")
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="여행지 세부 정보 페이지입니다.",
+        content="contents/detail.html",
+    )
 
 
 #%% Login
@@ -256,19 +263,22 @@ def mk_card_view(src, title, context, href):
             </div>
         </div>"""
 
+
 # 가장 정상으로 만든 부분인 것 같음
 # 여기서 해당 서버로 요청을 보내 데이터 불러오고 사이트를 띄운다. 끗 깔끔
 @app.route("/concept", methods=["GET"])
 def concept():
     try:
-        res = get(f"http://{connect_to}:{PORT_DEST}/theme")  # 통으로 데이터 받고 여기서 처리? 너무 더러워져서 해당 서버에서 처리하는걸로
+        res = get(
+            f"http://{connect_to}:{PORT_DEST}/theme"
+        )  # 통으로 데이터 받고 여기서 처리? 너무 더러워져서 해당 서버에서 처리하는걸로
         if res.status_code == 200:  # 서버와 통신
-            theme = res.json()['body']
+            theme = res.json()["body"]
 
             print(theme)
     except:
         print(f"error: concept()")
-    
+
     return render_template(
         "main_layout.html", params=params, chatbot_talk="", content="contents/concept.html"
     )
@@ -280,85 +290,158 @@ def noticeboard():
     return redirect("/noticeboard/free")
 
 
-# 게시판 서버로 보낼 것
+# 게시판 화면 보이기
 @app.route("/noticeboard/write", methods=["GET"])
 def noticeboard_write():
     return render_template(
         "main_layout.html",
         params=params,
         chatbot_talk="",
+        type=dict(request.args)['type'],
         content="contents/noticeboard_write.html",
         tag="free",
     )
 
 
+# 게시물 작성하기
 @app.route("/noticeboard/write", methods=["POST"])
 def noticeboard_callback():
+    title = request.form.get("title")
+    contents = request.form.get("contents")
+    type = request.form.get("type")
+    # image_list = request.form.get("inputPassword")
+    user_nick = session["user_nick"] if session["user_nick"] else "익명"
+    try:
+        query = {"title": title, "content": contents, "image_list": [], "user_nick": user_nick}
+        res = post(
+            f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/{type}", data=parse_json(query)
+        )
+        if res.status_code == 200:  # 서버와 통신
+            print("/noticeboard/write: DONE")
+        else:
+            print("/noticeboard/write: FAIL")
+    except:
+        pass
 
-    # 글 쓰기: 게시판 서버와 통신
-
-    return render_template(
-        "main_layout.html",
-        params=params,
-        chatbot_talk="",
-        content="contents/noticeboard_write.html",
-        table_contents=[],
-        tag="free",
-    )
+    return redirect(f"/noticeboard/{type}")
 
 
-# 게시판 서버로 보낼 것
 @app.route("/noticeboard/free", methods=["GET"])
 def noticeboard_free():
-
-    # 게시판 서버로부터 데이터 받아오기
     try:
-        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard")  # 통으로 데이터 받고 여기서 처리? 너무 더러워져서 해당 서버에서 처리하는걸로
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/free")
         if res.status_code == 200:  # 서버와 통신
-            data = res.json()['body']
-
-            print(data)
+            table_contents = load_json(res.json()["body"])
     except:
-        print(f"error: concept()")
-
+        pass
 
     return render_template(
         "main_layout.html",
         params=params,
         chatbot_talk="",
         content="contents/noticeboard.html",
-        table_contents=[],
+        table_contents=table_contents,
         tag="free",
     )
 
 
-# 게시판 서버로 보낼 것
+# 게시물 내용 받아오기
 @app.route("/noticeboard/free/<int:i>", methods=["GET"])
 def noticeboard_free_content(i):
 
-    # 게시판 서버로부터 데이터 받아오기
+    try:
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/free/{i}")
+        if res.status_code == 200:  # 서버와 통신
+            post = load_json(res.json()["body"])
+    except:
+        pass
 
     return render_template(
         "main_layout.html",
         params=params,
         chatbot_talk="",
         content="contents/noticeboard_content.html",
-        title=str(i) + "번째 게시물",
-        noticeboard_content=str(i) + "번째 본문",
+        post=post,
     )
 
 
-# 게시판 서버로 보낼 것
-# @app.route('/noticeboard/review', methods=['GET'])
-# def noticeboard_review():
-#     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard.html",
-#         table_contents=[], tag="review")
+@app.route("/noticeboard/review", methods=["GET"])
+def noticeboard_review():
+    try:
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/review")
+        if res.status_code == 200:  # 서버와 통신
+            table_contents = load_json(res.json()["body"])
+    except:
+        pass
 
-# # 게시판 서버로 보낼 것
-# @app.route('/noticeboard/tip', methods=['GET'])
-# def noticeboard_tip():
-#     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/noticeboard.html",
-#         table_contents=[], tag="tip")
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="",
+        content="contents/noticeboard.html",
+        table_contents=table_contents,
+        tag="review",
+    )
+
+
+# 게시물 내용 받아오기
+@app.route("/noticeboard/review/<int:i>", methods=["GET"])
+def noticeboard_review_content(i):
+
+    try:
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/review/{i}")
+        if res.status_code == 200:  # 서버와 통신
+            post = load_json(res.json()["body"])
+    except:
+        pass
+
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="",
+        content="contents/noticeboard_content.html",
+        post=post,
+    )
+
+
+@app.route("/noticeboard/tip", methods=["GET"])
+def noticeboard_tip():
+    try:
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/tip")
+        if res.status_code == 200:  # 서버와 통신
+            table_contents = load_json(res.json()["body"])
+    except:
+        pass
+
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="",
+        content="contents/noticeboard.html",
+        table_contents=table_contents,
+        tag="tip",
+    )
+
+
+# 게시물 내용 받아오기
+@app.route("/noticeboard/tip/<int:i>", methods=["GET"])
+def noticeboard_tip_content(i):
+
+    try:
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/tip/{i}")
+        if res.status_code == 200:  # 서버와 통신
+            post = load_json(res.json()["body"])
+    except:
+        pass
+
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="",
+        content="contents/noticeboard_content.html",
+        post=post,
+    )
+
 
 #%% Region
 @app.route("/region", methods=["GET"])
@@ -438,8 +521,14 @@ def chatbot_delete():
 
 #%% App Start
 if __name__ == "__main__":
-    # oauth()    # 사용자 정보 인증
-    # app.run(debug=True)
     app.secret_key = "여행 de Gaja"
-    # app.config['SESSION_TYPE'] = 'filesystem'
+    try:
+        # 서버 시작 시 게시판 데이터 불러오기
+        res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/init")
+        if res.status_code == 200:  # 서버와 통신
+            theme = res.json()["body"]
+            print("init-noticeboard: DONE")
+    except:
+        print(f"init-noticeboard: FALSE")
+
     app.run(host=f"{connect_to}", port=PORT_BROWSING, debug=True)
