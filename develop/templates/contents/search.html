@@ -26,12 +26,12 @@
                     <thead>
                         <tr>
                             {% for column in data_columns %}
-                            <th data-field="{{column}}" data-filter-control="select" data-sortable="true">{{column}}</th>
+                            <th data-field="{{column}}">{{column}}</th>
                             {% endfor %}
-                            <!-- <th data-field="where" data-filter-control="input" data-sortable="true">지역</th>
-                            <th data-field="address" data-filter-control="select" data-sortable="true">주소</th>
-                            <th data-field="region" data-filter-control="select" data-sortable="true">지역</th>
-                            <th data-field="time" data-sortable="true">평균 체류시간</th> -->
+                            <!-- <th data-field="destination" data-filter-control="input" data-sortable="true">관광지명</th>
+                            <th data-field="address" data-filter-control="input">주소</th>
+                            <th data-field="type" data-filter-control="select" data-sortable="true">분류</th>
+                            <th data-field="search_num" data-sortable="true">검색수</th> -->
                         </tr>
                     </thead>
                     <tbody id="container">
@@ -42,6 +42,7 @@
                             {% endfor %}
                         </tr>
                         {% endfor %}
+                        <!-- {{elements_data_values}} -->
                     </tbody>
                 </table>
             </div>
@@ -53,7 +54,7 @@
 <script>   
     $('#table').bootstrapTable({
         pagination: true,
-        pageSize: 5, //your page size here
+        pageSize: 10, //your page size here
     });
 
     content = 'search'
@@ -70,18 +71,18 @@
     lists[index].setAttribute("class", "nav-item active")
 
     //exporte les données sélectionnées
-    var $table = $('#table');
-    $(function () {
-        $('#toolbar').find('select').change(function () {
-            $table.bootstrapTable('refreshOptions', {
-                exportDataType: $(this).val()
-            });
-        });
-    })
+    // var $table = $('#table');
+    // $(function () {
+    //     $('#toolbar').find('select').change(function () {
+    //         $table.bootstrapTable('refreshOptions', {
+    //             exportDataType: $(this).val()
+    //         });
+    //     });
+    // })
 
-    var trBoldBlue = $("table");
+    // var trBoldBlue = $("table");
 
-    $(trBoldBlue).on("click", "tr", function () {
-        $(this).toggleClass("bold-blue");
-    });
+    // $(trBoldBlue).on("click", "tr", function () {
+    //     $(this).toggleClass("bold-blue");
+    // });
 </script>
