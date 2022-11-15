@@ -2,6 +2,71 @@
 <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 
+<style>
+/* The toast_view - position it at the bottom and in the middle of the screen */
+#toast_view {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  min-width: 250px; /* Set a default minimum width */
+  margin-left: -125px; /* Divide value of min-width by 2 */
+  background-color: #333; /* Black background color */
+  color: #fff; /* White text color */
+  text-align: center; /* Centered text */
+  border-radius: 2px; /* Rounded borders */
+  padding: 16px; /* Padding */
+  position: fixed; /* Sit on top of the screen */
+  z-index: 1; /* Add a z-index if needed */
+  left: 50%; /* Center the toast_view */
+  bottom: 30px; /* 30px from the bottom */
+}
+
+/* Show the toast_view when clicking on a button (class added with JavaScript) */
+#toast_view.show {
+  visibility: visible; /* Show the toast_view */
+  /* Add animation: Take 0.5 seconds to fade in and out the toast_view.
+  However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the toast_view in and out */
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+</style>
+
+<!-- Toast View -->
+<div id="toast_view">관광 데이터를 불러오는 중입니다. 잠시만 기다려주세요...</div>
+
+<script>   
+    // Add the "show" class to DIV
+    toast_view.className = "show";
+
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function(){
+        toast_view.className = toast_view.className.replace("show", ""); 
+        $('#table').bootstrapTable({
+            pagination: true,
+            pageSize: 5, //your page size here
+        });
+    }, 3000);
+</script>
+
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
@@ -25,13 +90,14 @@
                     data-click-to-select="true" data-toolbar="#toolbar" class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            {% for column in data_columns %}
-                            <th data-field="{{column}}">{{column}}</th>
-                            {% endfor %}
-                            <!-- <th data-field="destination" data-filter-control="input" data-sortable="true">관광지명</th>
-                            <th data-field="address" data-filter-control="input">주소</th>
-                            <th data-field="type" data-filter-control="select" data-sortable="true">분류</th>
-                            <th data-field="search_num" data-sortable="true">검색수</th> -->
+                            <!-- {% for column in data_columns %}
+                            <th data-field="{{column}}" data-filter-control="input" data-sortable="true">{{column}}</th>
+                            {% endfor %} -->
+                            <th class="text-center col-md-2" data-field="destination" data-filter-control="input" data-sortable="true">관광지명</th>
+                            <th class="text-center col-md-4" data-field="address" data-filter-control="input">주소</th>
+                            <th class="text-center col-md-2" data-field="region" data-filter-control="select">지역</th>
+                            <th class="text-center col-md-2" data-field="search_num" data-sortable="true">합산 검색 수</th>
+                            <th class="text-center col-md-2" data-field="tag" data-filter-control="select">태그</th>
                         </tr>
                     </thead>
                     <tbody id="container">
@@ -52,10 +118,8 @@
 </div>
 <!-- /.container-fluid -->
 <script>   
-    $('#table').bootstrapTable({
-        pagination: true,
-        pageSize: 10, //your page size here
-    });
+
+    
 
     content = 'search'
     index = 0
