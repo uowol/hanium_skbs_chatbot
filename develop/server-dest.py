@@ -52,10 +52,13 @@ def get_theme_list():
 # * 지역은 기존에 '지역' 변수에 포함
 @app.route("/dest", methods=["GET"])
 def get_dest_list():
-    df = pd.read_csv("../data_process/output/data_theme_plus.csv")
-    answer = df.to_dict()
-    return _result(STATUS_SUCCESS, answer)
-
+    df = pd.read_csv('../data_process/output/data_theme_plus.csv')
+    answer = df[[
+        "시군구명", "체류유형", "기준연월", "지역명", "검색량(건)", "방문자 수", '여행유형/트렌드_빈도수', 
+        '여행유형/트렌드', '여행유형/트렌드 관련 키워드', '동반유형_빈도수', '동반유형', '동반유형 관련 키워드', 
+        "순위", "관광지명", "주소", "분류", "외지인 검색 수", "현지인 검색 수", "합산 검색 수", "지역"
+    ]].drop_duplicates().to_dict()
+    return _result(STATUS_SUCCESS, answer);
 
 # 지역별 관광지 dictionary 가져오기
 # 지역명(도/시/군/구)

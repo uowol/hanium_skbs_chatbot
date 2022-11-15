@@ -25,37 +25,24 @@
                     data-click-to-select="true" data-toolbar="#toolbar" class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th data-field="where" data-filter-control="input" data-sortable="true">여행지</th>
-                            <th data-field="address" data-filter-control="select" data-sortable="true">주소</th>
-                            <th data-field="region" data-filter-control="select" data-sortable="true">지역</th>
-                            <th data-field="time" data-sortable="true">평균 체류시간</th>
+                            {% for column in data_columns %}
+                            <th data-field="{{column}}">{{column}}</th>
+                            {% endfor %}
+                            <!-- <th data-field="destination" data-filter-control="input" data-sortable="true">관광지명</th>
+                            <th data-field="address" data-filter-control="input">주소</th>
+                            <th data-field="type" data-filter-control="select" data-sortable="true">분류</th>
+                            <th data-field="search_num" data-sortable="true">검색수</th> -->
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="container">
+                        {% for items in data_values %}
                         <tr>
-                            <td>서촌마을</td>
-                            <td>서울특별시 종로구</td>
-                            <td>서울</td>
-                            <td>1시간 19분</td>
+                            {% for item in items %}
+                            <td>{{item}}</td>
+                            {% endfor %}
                         </tr>
-                        <tr>
-                            <td>서촌마을</td>
-                            <td>서울특별시 종로구</td>
-                            <td>서울</td>
-                            <td>1시간 19분</td>
-                        </tr>
-                        <tr>
-                            <td>서촌마을</td>
-                            <td>서울특별시 종로구</td>
-                            <td>서울</td>
-                            <td>1시간 19분</td>
-                        </tr>
-                        <tr>
-                            <td>서촌마을</td>
-                            <td>서울특별시 종로구</td>
-                            <td>서울</td>
-                            <td>1시간 19분</td>
-                        </tr>
+                        {% endfor %}
+                        <!-- {{elements_data_values}} -->
                     </tbody>
                 </table>
             </div>
@@ -64,7 +51,12 @@
 
 </div>
 <!-- /.container-fluid -->
-<script>
+<script>   
+    $('#table').bootstrapTable({
+        pagination: true,
+        pageSize: 10, //your page size here
+    });
+
     content = 'search'
     index = 0
     i = 0
@@ -79,18 +71,18 @@
     lists[index].setAttribute("class", "nav-item active")
 
     //exporte les données sélectionnées
-    var $table = $('#table');
-    $(function () {
-        $('#toolbar').find('select').change(function () {
-            $table.bootstrapTable('refreshOptions', {
-                exportDataType: $(this).val()
-            });
-        });
-    })
+    // var $table = $('#table');
+    // $(function () {
+    //     $('#toolbar').find('select').change(function () {
+    //         $table.bootstrapTable('refreshOptions', {
+    //             exportDataType: $(this).val()
+    //         });
+    //     });
+    // })
 
-    var trBoldBlue = $("table");
+    // var trBoldBlue = $("table");
 
-    $(trBoldBlue).on("click", "tr", function () {
-        $(this).toggleClass("bold-blue");
-    });
+    // $(trBoldBlue).on("click", "tr", function () {
+    //     $(this).toggleClass("bold-blue");
+    // });
 </script>

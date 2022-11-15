@@ -12,6 +12,7 @@ from flask_cors import CORS
 from global_methods import _result, parse_json, load_json
 from global_consts import *
 
+import pandas as pd
 
 connect_to = "127.0.0.1"
 params = {"site_name": "Tour-List", "session": session, "current_user": current_user}
@@ -451,11 +452,51 @@ def region():
 
 
 #%% Search
+def init_search():
+    global df_search, df_search_total1, df_search_total2, df_search_total3
+    global html_data_values1, html_data_total2, html_data_total3
+    df_search = pd.read_csv('../data_process/output/data_theme_plus.csv')
+    df_search_total1 = df_search[["관광지명", "주소", "분류", "합산 검색 수"]].drop_duplicates().dropna()
+    df_search_total2 = df_search[["관광지명", "주소", "분류", "외지인 검색 수"]].drop_duplicates().dropna()
+    df_search_total3 = df_search[["관광지명", "주소", "분류", "현지인 검색 수"]].drop_duplicates().dropna()
+
+    # html_data_values1 = ""
+    # for dest, address, type, search_num in df_search_total1.values.tolist():
+    #     html_data_values1 += f"""<tr>
+    #         <td>{dest}</td>
+    #         <td>{address}</td>
+    #         <td>{type}</td>
+    #         <td>{search_num}</td>
+    #     </tr>"""
+    print("="*20+"init:search is done."+"="*20)
+
+init_search()
+
 @app.route("/search", methods=["GET"])
-def search():
-    return render_template(
-        "main_layout.html", params=params, chatbot_talk="", content="contents/search.html"
-    )
+def init_search():
+    # try:
+    #     res = get(f"http://{connect_to}:{PORT_DEST}/dest")
+    #     if res.status_code == 200:  # 서버와 통신
+    #         dest_data = res.json()['body']
+    #         df = pd.DataFrame.from_dict(dest_data)
+    #         df1 = df[["관광지명", "주소", "분류", "합산 검색 수"]].drop_duplicates().dropna()
+    #         dest_data_values = df1.values.tolist()
+    #         dest_data_columns = df1.columns.tolist()
+    #         # print(dest_data)
+    # except:
+    #     print(f"error: concept()")
+
+    return redirect("/search/1")
+
+
+@app.route("/search/<int:i>", methods=["GET"])
+def search(i):
+    dest_data_values    = df_search_total1.values.tolist()
+    dest_data_columns   = df_search_total1.columns.tolist()
+    # print(html_data_values1)
+    return render_template('main_layout.html', params=params, chatbot_talk="", 
+        data_values=dest_data_values, data_columns=dest_data_columns,
+        content="contents/search.html")
 
 
 @app.route("/chatbot", methods=["POST"])
