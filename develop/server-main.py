@@ -42,36 +42,41 @@ def index():
 
 
 #%% Detail
+def init_detail():
+    global df_detail
+    df_detail = pd.read_csv('../data_process/output/dest_id.csv')
+
+init_detail()
+
 @app.route("/detail", methods=["GET"])
 def detail():
     req = request.args.to_dict()
-    dest = None
+    id = None
 
     if "dest" in req:
         dest = req["dest"]
+        # print(df_detail['destination'])
+        tmp = df_detail[df_detail['destination'] == dest]
+        print("*"*20,len(tmp))
+        if len(tmp):
+            id = list(df_detail[df_detail['destination'] == dest]['id'])[0]
 
-    print(f"detail/dest: {dest}")
+    print("="*20+f"detail/dest: {dest}\tid: {id}"+"="*20)
 
-    # 대충 여행지 DB 상호작용하는 서버에게 요청보내고 받은 여행지 데이터를 활용하여 관련 정보 시각화하기
-
-    # params = {
-    #     "dest": dest
-    # }
-
-    # res = post("http://0.0.0.0:5004/dests", data=parse_json(params))
-
-    # if res.status_code == 200:
-    #     print(f"register_callback/res: {res.json()}")
-    #     if res.json()['status'] == STATUS_FAIL: return redirect('/register/error')
-    #     return redirect('/login')
-    # else:
-    #     return redirect('/register/error')
-
+    if id:
+        return render_template(
+            "main_layout.html",
+            params=params,
+            chatbot_talk="여행지 세부 정보 페이지입니다.",
+            content="contents/detail.html",
+            dest_id = id
+        )
     return render_template(
         "main_layout.html",
         params=params,
-        chatbot_talk="여행지 세부 정보 페이지입니다.",
+        chatbot_talk="관련 정보가 없습니다.",
         content="contents/detail.html",
+        dest_id = id
     )
 
 

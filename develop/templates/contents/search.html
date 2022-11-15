@@ -93,19 +93,21 @@
                             <!-- {% for column in data_columns %}
                             <th data-field="{{column}}" data-filter-control="input" data-sortable="true">{{column}}</th>
                             {% endfor %} -->
-                            <th class="text-center col-md-2" data-field="destination" data-filter-control="input" data-sortable="true">관광지명</th>
+                            <th class="text-center col-md-3" data-field="destination" data-filter-control="input" data-sortable="true">관광지명</th>
                             <th class="text-center col-md-4" data-field="address" data-filter-control="input">주소</th>
                             <th class="text-center col-md-2" data-field="region" data-filter-control="select">지역</th>
-                            <th class="text-center col-md-2" data-field="search_num" data-sortable="true">합산 검색 수</th>
+                            <th class="text-center col-md-1" data-field="search_num" data-sortable="true">합산 검색 수</th>
                             <th class="text-center col-md-2" data-field="tag" data-filter-control="select">태그</th>
                         </tr>
                     </thead>
                     <tbody id="container">
                         {% for items in data_values %}
                         <tr>
-                            {% for item in items %}
-                            <td>{{item}}</td>
-                            {% endfor %}
+                            <td id="td_dest">{{items[0]}}</td>
+                            <td>{{items[1]}}</td>
+                            <td>{{items[2]}}</td>
+                            <td>{{items[3]}}</td>
+                            <td>{{items[4]}}</td>
                         </tr>
                         {% endfor %}
                         <!-- {{elements_data_values}} -->
@@ -118,8 +120,6 @@
 </div>
 <!-- /.container-fluid -->
 <script>   
-
-    
 
     content = 'search'
     index = 0
@@ -146,7 +146,10 @@
 
     // var trBoldBlue = $("table");
 
-    // $(trBoldBlue).on("click", "tr", function () {
-    //     $(this).toggleClass("bold-blue");
-    // });
+    $("table").on("click", "td", function () {
+        // $(this).toggleClass("bold-blue");
+        // window.location.href = '/'+td_dest.innerText;
+        let target = $(this).parent().children()[0].innerText
+        location.href = '/detail?dest='+target
+    });
 </script>
