@@ -30,8 +30,8 @@ CORS(app)
 
 ##### 업데이트 할 내용
 # 데이터는 데이터베이스에 접근해서 가져오기
-df_region = pd.read_csv(r"C:\Users\alllh\Documents\카카오톡 받은 파일\지역 전체.csv")
-
+#df_region = pd.read_csv(r"C:\Users\alllh\Documents\카카오톡 받은 파일\지역 전체.csv")
+df_region = pd.read_csv(r"C:\Users\삼성\Desktop\재성\한이음 챗봇\데이터\합친파일\지역 전체.csv")
 
 # # 대화 내용 저장: 내용 / 시간 / 유저 nick(익명일 수도)
 # @app.route("/chat", methods=["POST"])
