@@ -44,9 +44,11 @@ def index():
 #%% Detail
 def init_detail():
     global df_detail
-    df_detail = pd.read_csv('../data_process/output/dest_id.csv')
+    df_detail = pd.read_csv("../data_process/output/dest_id.csv")
+
 
 init_detail()
+
 
 @app.route("/detail", methods=["GET"])
 def detail():
@@ -56,12 +58,12 @@ def detail():
     if "dest" in req:
         dest = req["dest"]
         # print(df_detail['destination'])
-        tmp = df_detail[df_detail['destination'] == dest]
-        print("*"*20,len(tmp))
+        tmp = df_detail[df_detail["destination"] == dest]
+        print("*" * 20, len(tmp))
         if len(tmp):
-            id = list(df_detail[df_detail['destination'] == dest]['id'])[0]
+            id = list(df_detail[df_detail["destination"] == dest]["id"])[0]
 
-    print("="*20+f"detail/dest: {dest}\tid: {id}"+"="*20)
+    print("=" * 20 + f"detail/dest: {dest}\tid: {id}" + "=" * 20)
 
     if id:
         return render_template(
@@ -69,14 +71,14 @@ def detail():
             params=params,
             chatbot_talk="여행지 세부 정보 페이지입니다.",
             content="contents/detail.html",
-            dest_id = id
+            dest_id=id,
         )
     return render_template(
         "main_layout.html",
         params=params,
         chatbot_talk="관련 정보가 없습니다.",
         content="contents/detail.html",
-        dest_id = id
+        dest_id=id,
     )
 
 
@@ -302,7 +304,7 @@ def noticeboard_write():
         "main_layout.html",
         params=params,
         chatbot_talk="",
-        type=dict(request.args)['type'],
+        type=dict(request.args)["type"],
         content="contents/noticeboard_write.html",
         tag="free",
     )
@@ -458,9 +460,9 @@ def region():
 
 #%% Search
 def init_search():
-    global df_search#, df_search_total1, df_search_total2, df_search_total3
-    #global html_data_values1, html_data_total2, html_data_total3
-    df_search = pd.read_csv('../data_process/output/data.csv').iloc[:,1:]
+    global df_search  # , df_search_total1, df_search_total2, df_search_total3
+    # global html_data_values1, html_data_total2, html_data_total3
+    df_search = pd.read_csv("../data_process/output/data.csv").iloc[:, 1:]
     # df_search_total1 = df_search[["관광지명", "주소", "분류", "합산 검색 수"]].drop_duplicates().dropna()
     # df_search_total2 = df_search[["관광지명", "주소", "분류", "외지인 검색 수"]].drop_duplicates().dropna()
     # df_search_total3 = df_search[["관광지명", "주소", "분류", "현지인 검색 수"]].drop_duplicates().dropna()
@@ -473,9 +475,11 @@ def init_search():
     #         <td>{type}</td>
     #         <td>{search_num}</td>
     #     </tr>"""
-    print("="*20+"init:search is done."+"="*20)
+    print("=" * 20 + "init:search is done." + "=" * 20)
+
 
 init_search()
+
 
 @app.route("/search", methods=["GET"])
 def search():
@@ -490,12 +494,17 @@ def search():
     #         # print(dest_data)
     # except:
     #     print(f"error: concept()")
-    dest_data_values    = df_search.values.tolist()
-    dest_data_columns   = df_search.columns.tolist()
+    dest_data_values = df_search.values.tolist()
+    dest_data_columns = df_search.columns.tolist()
     # print(html_data_values1)
-    return render_template('main_layout.html', params=params, chatbot_talk="", 
-        data_values=dest_data_values, data_columns=dest_data_columns,
-        content="contents/search.html")
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="",
+        data_values=dest_data_values,
+        data_columns=dest_data_columns,
+        content="contents/search.html",
+    )
 
 
 # @app.route("/search/<int:i>", methods=["GET"])
@@ -503,7 +512,7 @@ def search():
 #     dest_data_values    = df_search.values.tolist()
 #     dest_data_columns   = df_search.columns.tolist()
 #     # print(html_data_values1)
-#     return render_template('main_layout.html', params=params, chatbot_talk="", 
+#     return render_template('main_layout.html', params=params, chatbot_talk="",
 #         data_values=dest_data_values, data_columns=dest_data_columns,
 #         content="contents/search.html")
 

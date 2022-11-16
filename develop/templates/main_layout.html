@@ -677,7 +677,7 @@
             if (intent == 'recommend') {
                 if (args[0] == '도') {
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
-                    tmp_regions = ['특별/광역시', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']
+                    tmp_regions = ['특별시 및 광역시', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']
                     for (let region of tmp_regions) {
                         chat_list += input_button(region, `send_followed_chat('${intent}','${'도'}','${region}', '')`)
                     }
@@ -720,7 +720,7 @@
                                     chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
                                 }
                             }
-                            if (_region == "특별/광역시") {
+                            if (_region == "특별시 및 광역시") {
                                 tmp_regions = ['서울특별시', '인천광역시', '부산광역시', '대구광역시', '광주광역시', '대전광역시', '울산광역시', '세종특별자치시']
                                 for (let region of tmp_regions) {
                                     chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
@@ -796,7 +796,7 @@
 
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
 
-                    tmp_regions = ['특별/광역시', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']
+                    tmp_regions = ['특별시 및 광역시', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']
                     for (let destination of tmp_regions) {
                         chat_list += input_button(destination, `send_followed_chat('${intent}','${args[0]}','${destination}', '')`)
                     }
@@ -839,7 +839,7 @@
                                     chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
                                 }
                             }
-                            if (_region == "특별/광역시") {
+                            if (_region == "특별시 및 광역시") {
                                 tmp_regions = ['서울특별시', '인천광역시', '부산광역시', '대구광역시', '광주광역시', '대전광역시', '울산광역시', '세종특별자치시']
                                 for (let region of tmp_regions) {
                                     chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
@@ -940,7 +940,60 @@
 
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
 
-                    tmp_themes = ['힐링여행', '한달살기', '우정여행']
+                    tmp_themes = ["박물관",
+                        "촬영지",
+                        "수목원,휴양림",
+                        "스쿠버다이빙",
+                        "시장",
+                        "공방",
+                        "골프",
+                        "극장",
+                        "기타 전시시설",
+                        "과학관",
+                        "교육시설",
+                        "계곡",
+                        "바다",
+                        "기타_하천,해양",
+                        "농어촌체험",
+                        "아트홀",
+                        "등산",
+                        "야구",
+                        "늪",
+                        "역사유적지",
+                        "동계스포츠",
+                        "호수",
+                        "수상레포츠",
+                        "기타육상스포츠",
+                        "유교",
+                        "서핑",
+                        "문화센터",
+                        "불교",
+                        "낚시",
+                        "데이트",
+                        "폭포",
+                        "미술관",
+                        "워터파크",
+                        "종합체육관",
+                        "유원지",
+                        "힐링",
+                        "전망대",
+                        "동굴",
+                        "테마파크",
+                        "요트,보트",
+                        "리조트,온천",
+                        "축제",
+                        "랜드마크",
+                        "자동차극장",
+                        "기타레저스포츠",
+                        "기타 수상레저",
+                        "캠핑",
+                        "항공레저",
+                        "축구",
+                        "종합전시센터",
+                        "영화관",
+                        "무당",
+                        "공원"
+                    ]
                     for (let theme of tmp_themes) {
                         chat_list += input_button(theme, `send_followed_chat('${intent}','${args[0]}','${theme}', '${args[1]}')`)
                     }
