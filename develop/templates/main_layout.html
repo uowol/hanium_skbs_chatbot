@@ -916,7 +916,7 @@
 
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
 
-                    tmp_types = ['가족', '친구', '애견']
+                    tmp_types = ['친구', '배우자', '학생', '기타가족', '회사동료', '자녀', '부모님', '연인', '싱글']
                     for (let type of tmp_types) {
                         chat_list += input_button(type, `send_followed_chat('${intent}','${args[0]}','${type}', '${args[1]}')`)
                     }
