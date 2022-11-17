@@ -41,7 +41,9 @@
                         </li>
                     </ul>
                     <span class="navbar-text">
+                        {% if session['user_nick'] %}
                         <a id="a_write" href="/noticeboard/write" class="nav-link">새 글쓰기</a>
+                        {% endif %}
                     </span>
 
                 </div>
@@ -83,8 +85,9 @@
 
 </div>
 <!-- /.container-fluid -->
-<script>    
-    a_write.href = a_write.href+"?type="+window.location.href.split('/')[window.location.href.split('/').length-1]
+<script>
+    if("{{session['user_nick']}}" != "None")
+        a_write.href = a_write.href+"?type="+window.location.href.split('/')[window.location.href.split('/').length-1]
 
     content = 'notice board'
     index = 0
