@@ -14,7 +14,7 @@ from global_consts import *
 
 import pandas as pd
 
-connect_to = "127.0.0.1"
+connect_to = "0.0.0.0"
 params = {"site_name": "Tour-List", "session": session, "current_user": current_user}
 
 
