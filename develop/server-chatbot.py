@@ -14,7 +14,7 @@ from flask_cors import CORS, cross_origin
 
 # from flask_session import Session
 
-connect_to = "127.0.0.1"
+connect_to = "0.0.0.0"
 
 app = Flask(__name__)
 app.secret_key = "여행 de Gaja"
