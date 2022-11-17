@@ -5,7 +5,7 @@ from flask import Flask, request, redirect, jsonify
 from flask_cors import CORS
 
 
-connect_to = 'ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com'
+connect_to = '127.0.0.1'
 
 
 app = Flask(__name__)
