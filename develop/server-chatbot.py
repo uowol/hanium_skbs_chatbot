@@ -33,6 +33,8 @@ CORS(app)
 
 ##### 업데이트 할 내용
 # 데이터는 데이터베이스에 접근해서 가져오기
+
+### todo: 체류유형은 data.csv 파일에 존재하지 않음. 처리하고 server-chatbot.py 파일에서 지역_전체.csv파일 사용하는 파트를 수정해야.
 df_region = pd.read_csv(r"../storage/지역 전체.csv")
 
 

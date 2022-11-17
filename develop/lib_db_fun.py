@@ -231,6 +231,9 @@ def recommend_day(df, text):
         sub_df = sub_df.loc[sub_df['분류'] != '호텔']
         sub_df = sub_df.loc[sub_df['분류'] != '콘도미니엄']
         sub_df = sub_df.loc[sub_df['분류'] != '모텔']
+
+        ### todo: 체류유형은 data.csv 파일에 존재하지 않음. 처리하고 server-chatbot.py 파일에서 지역_전체.csv파일 사용하는 파트를 수정해야.
+
         target_df_a = main_df.loc[main_df['체류유형'] == "경유형"]
         target_df_b = main_df.loc[main_df['체류유형'] == "체험형"]
         target_df = pd.concat([target_df_a, target_df_b], ignore_index = True)

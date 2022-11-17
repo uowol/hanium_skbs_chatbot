@@ -70,14 +70,14 @@ def detail():
         return render_template(
             "main_layout.html",
             params=params,
-            chatbot_talk="여행지 세부 정보 페이지입니다.",
+            chatbot_talk="여행지 세부 정보<br>페이지입니다.",
             content="contents/detail.html",
             dest_id=id,
         )
     return render_template(
         "main_layout.html",
         params=params,
-        chatbot_talk="관련 정보가 없습니다.",
+        chatbot_talk="관련 정보가 없습니다.<br>다시 시도해주세요.",
         content="contents/detail.html",
         dest_id=id,
     )
@@ -484,6 +484,10 @@ init_search()
 
 @app.route("/search", methods=["GET"])
 def search():
+    req = request.args.to_dict()
+    df = df_search.copy()
+    if '관광지명' in req:
+        df = df[df['관광지명'] == req['관광지명']]
     # try:
     #     res = get(f"http://{connect_to}:{PORT_DEST}/dest")
     #     if res.status_code == 200:  # 서버와 통신
@@ -495,8 +499,8 @@ def search():
     #         # print(dest_data)
     # except:
     #     print(f"error: concept()")
-    dest_data_values = df_search.values.tolist()
-    dest_data_columns = df_search.columns.tolist()
+    dest_data_values = df.values.tolist()
+    dest_data_columns = df.columns.tolist()
     # print(html_data_values1)
     return render_template(
         "main_layout.html",
