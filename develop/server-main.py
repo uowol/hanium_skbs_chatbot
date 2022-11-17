@@ -14,7 +14,8 @@ from global_consts import *
 
 import pandas as pd
 
-connect_to = 'ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com'
+# connect_to = 'ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com'
+connect_to = '127.0.0.1'
 params = {"site_name": "Tour-List", "session": session, "current_user": current_user}
 
 
