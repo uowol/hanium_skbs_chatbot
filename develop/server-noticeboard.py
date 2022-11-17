@@ -8,7 +8,7 @@ from flask_cors import CORS
 from flask import Flask, request, redirect, jsonify
 import datetime as dt
 
-connect_to = '0.0.0.0'
+connect_to = 'ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com'
 global_dataset = []
 
 app = Flask(__name__)
