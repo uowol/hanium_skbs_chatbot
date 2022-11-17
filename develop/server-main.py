@@ -486,8 +486,16 @@ init_search()
 def search():
     req = request.args.to_dict()
     df = df_search.copy()
+    m_filter = [True for _ in range(len(df))]
     if '관광지명' in req:
-        df = df[df['관광지명'] == req['관광지명']]
+        m_filter = m_filter & (df['관광지명'] == req['관광지명'])
+    if '주소' in req:
+        m_filter = m_filter & (df['주소'].str.contains(req['주소']))
+    if '지역' in req:
+        m_filter = m_filter & (df['지역'].str.contains(req['지역']))
+    if '태그' in req:
+        m_filter = m_filter & (df['태그'] == req['태그'])
+    df = df[m_filter]
     # try:
     #     res = get(f"http://{connect_to}:{PORT_DEST}/dest")
     #     if res.status_code == 200:  # 서버와 통신
