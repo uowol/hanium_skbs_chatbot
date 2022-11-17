@@ -1,3 +1,3 @@
 title SERVER_NOTICEBOARD
-python ../server-noticeboard.py
+python3 ../server-noticeboard.py
 PAUSE
