@@ -1,3 +1,3 @@
 title SERVER_MAIN
-python ../server-main.py
+python3 ../server-main.py
 PAUSE

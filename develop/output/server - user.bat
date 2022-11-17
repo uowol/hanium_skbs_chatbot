@@ -1,3 +1,3 @@
 title SERVER_USER
-python ../server-user.py
+python3../server-user.py
 PAUSE
