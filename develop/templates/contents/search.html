@@ -60,10 +60,6 @@
     // After 3 seconds, remove the show class from DIV
     setTimeout(function(){
         toast_view.className = toast_view.className.replace("show", ""); 
-        $('#table').bootstrapTable({
-            pagination: true,
-            pageSize: 10, //your page size here
-        });
     }, 3000);
 </script>
 
@@ -145,6 +141,11 @@
     // })
 
     // var trBoldBlue = $("table");
+
+    $('#table').bootstrapTable({
+        pagination: true,
+        pageSize: 10, //your page size here
+    });
 
     $("table").on("click", "td", function () {
         // $(this).toggleClass("bold-blue");
