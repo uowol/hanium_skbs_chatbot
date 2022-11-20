@@ -7,7 +7,7 @@ from flask_cors import CORS
 
 is_test = False
 
-connect_to = "127.0.0.1" if is_test else "3.115.15.84"
+connect_to = "127.0.0.1" if is_test else "ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com"
 
 
 app = Flask(__name__)

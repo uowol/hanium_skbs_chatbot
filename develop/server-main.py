@@ -17,7 +17,7 @@ import pandas as pd
 # connect_to = 'ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com'
 is_test = False
 
-connect_to = "127.0.0.1" if is_test else "3.115.15.84"
+connect_to = "127.0.0.1" if is_test else "ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com"
 
 params = {"site_name": "Tour-List", "session": session, "current_user": current_user}
 
