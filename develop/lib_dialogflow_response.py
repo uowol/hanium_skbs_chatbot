@@ -1,8 +1,6 @@
 import os
 
-credential_path = (
-    r"../trip-recommend-chatbot-9lcf-4861abc2d005.json"
-)
+credential_path = r"../trip-recommend-chatbot-9lcf-4861abc2d005.json"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
 
 from google.cloud import dialogflow_v2beta1 as dialogflow
@@ -56,3 +54,4 @@ def Res_Verify(text):
 
 # print(Res_Verify('안녕'))
 # print(Res_Verify('충북에 2개월 동안 여자친구랑 갈만한 여행지 추천해 줘'))
+print(Res_Verify("alsds"))

@@ -14,7 +14,7 @@ from flask_cors import CORS, cross_origin
 
 # from flask_session import Session
 
-connect_to = '127.0.0.1'
+connect_to = "127.0.0.1"
 
 app = Flask(__name__)
 app.secret_key = "여행 de Gaja"
@@ -174,7 +174,10 @@ def callback_followed_chat(target, query):
 def answer():
     req = request.args.to_dict()
     question = req["question"]
-    user_say_logger.log.info(f"[user_id][{datetime.now()}] > " + question)
+    if len(session.keys()) == 0:
+        user_say_logger.log.info(f"[비회원][{datetime.now()}] > " + question)
+    else:
+        user_say_logger.log.info(f"[{session['user_nick']}][{datetime.now()}] > " + question)
 
     print("answer/question: " + question)  # 질문이 무엇이었는지 출력
 
@@ -208,7 +211,6 @@ def answer():
         # print(query)
 
         # 위 정보로 관광지 데이터베이스 필터링, 개수 반환 #
-
         answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
             더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
             |btn]결과 <br>확인@location.href='/search?{query.replace('_','&')}'\
@@ -222,6 +224,7 @@ def answer():
             response["지역"] += response["도"] + " "
         if response["시/군"] != None:
             response["지역"] += response["시/군"]
+        response["timestamp"] = str(datetime.now())
         res_logger.log.info(str(response).replace("'", '"'))
 
         # answer = (
