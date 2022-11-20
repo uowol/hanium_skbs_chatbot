@@ -1,0 +1,36 @@
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <!-- <h1 class="h3 mb-4 text-gray-800">Blank Page</h1> -->
+    <!-- Basic Card Example -->
+    <div class="row">
+        {% for theme in theme_list %}
+        <div class="card shadow mr-3 mb-4" style="width: 18rem; padding-right:0; padding-left:0;">
+            <img class="card-img-top" src="{{theme.image}}" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{theme.title}}</h5>
+                <p class="card-text">{{theme.info}}</p>
+                <a href="/search?태그={{theme.title}}" class="btn btn-primary">Go</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+<script>
+    content = 'theme'
+    index = 0
+    i = 0
+    lists = document.getElementsByClassName('nav-item')
+    for(item of lists){
+        item.setAttribute("class", "nav-item")
+        if(item.innerText.trim().toLowerCase() == content){
+            index = i
+        }
+        i++
+    }
+    lists[index].setAttribute("class", "nav-item active")
+</script>

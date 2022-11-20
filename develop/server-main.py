@@ -260,7 +260,9 @@ def blank():
 # def charts():
 #     return render_template('main_layout.html', params=params, chatbot_talk="", content="contents/charts.html")
 
-#%% Concept
+#%% theme
+import numpy as np
+
 def mk_card_view(src, title, context, href):
     return f"""<div class="card shadow mr-3 mb-4" style="width: 18rem;padding-right:0; padding-left:0;">
             <img class="card-img-top" src="{src}" alt="Card image cap">
@@ -274,21 +276,40 @@ def mk_card_view(src, title, context, href):
 
 # 가장 정상으로 만든 부분인 것 같음
 # 여기서 해당 서버로 요청을 보내 데이터 불러오고 사이트를 띄운다. 끗 깔끔
-@app.route("/concept", methods=["GET"])
-def concept():
-    try:
-        res = get(
-            f"http://{connect_to}:{PORT_DEST}/theme"
-        )  # 통으로 데이터 받고 여기서 처리? 너무 더러워져서 해당 서버에서 처리하는걸로
-        if res.status_code == 200:  # 서버와 통신
-            theme = res.json()["body"]
+@app.route("/theme", methods=["GET"])
+def theme():
+    # try:
+    #     res = get(
+    #         f"http://{connect_to}:{PORT_DEST}/theme"
+    #     )  # 통으로 데이터 받고 여기서 처리? 너무 더러워져서 해당 서버에서 처리하는걸로
+    #     if res.status_code == 200:  # 서버와 통신
+    #         theme = res.json()["body"]
 
-            print(theme)
-    except:
-        print(f"error: concept()")
+    #         print(theme)
+    # except:
+    #     print(f"error: theme()")
+    theme_list = []
+    theme_info = {
+        ""
+    }
+    def template(title):
+        n = np.random.randint(5)
+        return [
+            f"{title}은 정말 완벽한 여행지에요!",
+            f"힐링이 필요할 때, {title}은 어떤가요?",
+            f"오늘같이 훌쩍 떠나고 싶을 때 {title}로 가보는 것은 어떤가요?",
+            f"요즘 핫한 그곳! {title}로 떠나요!",
+            f"이번 휴가엔 {title}에서 즐거운 시간 어떤가요?"
+        ][n]
+    for theme in df_search.iloc[:,-2].unique():
+        theme_list.append({
+            "title": theme,
+            "info": template(theme),
+            "image": "https://404catfound.com/wp-content/uploads/2021/02/404catfound-03.png"
+        })
 
     return render_template(
-        "main_layout.html", params=params, chatbot_talk="", content="contents/concept.html"
+        "main_layout.html", params=params, chatbot_talk="", content="contents/theme.html", theme_list=theme_list
     )
 
 
@@ -463,22 +484,13 @@ def region():
 import json
 
 def init_search():
-    global df_search  # , df_search_total1, df_search_total2, df_search_total3
-    # global html_data_values1, html_data_total2, html_data_total3
+    global df_search, set_with  # , df_search_total1, df_search_total2, df_search_total3
     df_search = pd.read_csv("../data_process/output/data.csv")
-    # df_search_total1 = df_search[["관광지명", "주소", "분류", "합산 검색 수"]].drop_duplicates().dropna()
-    # df_search_total2 = df_search[["관광지명", "주소", "분류", "외지인 검색 수"]].drop_duplicates().dropna()
-    # df_search_total3 = df_search[["관광지명", "주소", "분류", "현지인 검색 수"]].drop_duplicates().dropna()
-
-    # html_data_values1 = ""
-    # for dest, address, type, search_num in df_search_total1.values.tolist():
-    #     html_data_values1 += f"""<tr>
-    #         <td>{dest}</td>
-    #         <td>{address}</td>
-    #         <td>{type}</td>
-    #         <td>{search_num}</td>
-    #     </tr>"""
+    df_search.iloc[:,-1] = df_search.iloc[:,-1].apply(lambda x: json.loads(x.replace("'", '"')))
+    set_with = set()
+    df_search.iloc[:,-1].map(lambda x: set_with.update(x))
     print("=" * 20 + "init:search is done." + "=" * 20)
+    print(set_with)
 
 
 init_search()
@@ -510,8 +522,7 @@ def search():
     #         dest_data_columns = df1.columns.tolist()
     #         # print(dest_data)
     # except:
-    #     print(f"error: concept()")
-    df.iloc[:,-1] = df.iloc[:,-1].apply(lambda x: json.loads(x.replace("'", '"')))
+    #     print(f"error: theme()")
     dest_data_values = df.values.tolist()
     dest_data_columns = df.columns.tolist()
     # print(html_data_values1)
@@ -521,6 +532,7 @@ def search():
         chatbot_talk="",
         data_values=dest_data_values,
         data_columns=dest_data_columns,
+        set_with=list(set_with),
         content="contents/search.html",
     )
 
@@ -572,7 +584,6 @@ if __name__ == "__main__":
         # 서버 시작 시 게시판 데이터 불러오기
         res = get(f"http://{connect_to}:{PORT_NOTICEBOARD}/noticeboard/init")
         if res.status_code == 200:  # 서버와 통신
-            theme = res.json()["body"]
             print("init-noticeboard: DONE")
     except:
         print(f"init-noticeboard: FALSE")

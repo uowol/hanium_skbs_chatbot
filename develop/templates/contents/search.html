@@ -54,17 +54,19 @@
 <div id="toast_view">관광 데이터를 불러오는 중입니다. 잠시만 기다려주세요...</div>
 
 <script>   
-    var options = {
-        "기타가족" : "기타가족",
-        "친구" : "친구",
-        "연인" : "연인",
-        "자녀" : "자녀",
-        "부모님" : "부모님",
-        "회사동료" : "회사동료",
-        "학생" : "학생",
-        "싱글" : "싱글",
-        "배우자" : "배우자",
-    }
+    var set_with = JSON.parse("{{set_with|safe}}".replaceAll("'", '"'))
+    // console.log("{{set_with|safe}}".replace("'", '"'))
+    // var options = {
+    //     "기타가족" : "기타가족",
+    //     "친구" : "친구",
+    //     "연인" : "연인",
+    //     "자녀" : "자녀",
+    //     "부모님" : "부모님",
+    //     "회사동료" : "회사동료",
+    //     "학생" : "학생",
+    //     "싱글" : "싱글",
+    //     "배우자" : "배우자",
+    // }
 
     // Add the "show" class to DIV
     toast_view.className = "show";
@@ -106,7 +108,7 @@
                             <th class="text-center col-md-2" data-field="region" data-filter-control="select">지역</th>
                             <th class="text-center col-md-1" data-field="search_num" data-sortable="true">합산 검색 수</th>
                             <th class="text-center col-md-1" data-field="tag" data-filter-control="select">태그</th>
-                            <th class="text-center col-md-1" data-field="with" data-filter-control="select" data-filter-data="var:options" >동반유형</th>
+                            <th class="text-center col-md-1" data-field="with" data-filter-control="select" data-filter-data="var:set_with" >동반유형</th>
                         </tr>
                     </thead>
                     <tbody id="container">
