@@ -460,10 +460,12 @@ def region():
 
 
 #%% Search
+import json
+
 def init_search():
     global df_search  # , df_search_total1, df_search_total2, df_search_total3
     # global html_data_values1, html_data_total2, html_data_total3
-    df_search = pd.read_csv("../data_process/output/data.csv").iloc[:, 1:]
+    df_search = pd.read_csv("../data_process/output/data.csv")
     # df_search_total1 = df_search[["관광지명", "주소", "분류", "합산 검색 수"]].drop_duplicates().dropna()
     # df_search_total2 = df_search[["관광지명", "주소", "분류", "외지인 검색 수"]].drop_duplicates().dropna()
     # df_search_total3 = df_search[["관광지명", "주소", "분류", "현지인 검색 수"]].drop_duplicates().dropna()
@@ -495,6 +497,8 @@ def search():
         m_filter = m_filter & (df['지역'].str.contains(req['지역']))
     if '태그' in req:
         m_filter = m_filter & (df['태그'] == req['태그'])
+    if '동반유형' in req:
+        m_filter = m_filter & (df['동반유형'].str.contains(req['동반유형']))
     df = df[m_filter]
     # try:
     #     res = get(f"http://{connect_to}:{PORT_DEST}/dest")
@@ -507,6 +511,7 @@ def search():
     #         # print(dest_data)
     # except:
     #     print(f"error: concept()")
+    df.iloc[:,-1] = df.iloc[:,-1].apply(lambda x: json.loads(x.replace("'", '"')))
     dest_data_values = df.values.tolist()
     dest_data_columns = df.columns.tolist()
     # print(html_data_values1)

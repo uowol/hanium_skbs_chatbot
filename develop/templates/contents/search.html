@@ -54,6 +54,18 @@
 <div id="toast_view">관광 데이터를 불러오는 중입니다. 잠시만 기다려주세요...</div>
 
 <script>   
+    var options = {
+        "기타가족" : "기타가족",
+        "친구" : "친구",
+        "연인" : "연인",
+        "자녀" : "자녀",
+        "부모님" : "부모님",
+        "회사동료" : "회사동료",
+        "학생" : "학생",
+        "싱글" : "싱글",
+        "배우자" : "배우자",
+    }
+
     // Add the "show" class to DIV
     toast_view.className = "show";
 
@@ -90,10 +102,11 @@
                             <th data-field="{{column}}" data-filter-control="input" data-sortable="true">{{column}}</th>
                             {% endfor %} -->
                             <th class="text-center col-md-3" data-field="destination" data-filter-control="input" data-sortable="true">관광지명</th>
-                            <th class="text-center col-md-4" data-field="address" data-filter-control="input">주소</th>
+                            <th class="text-center col-md-3" data-field="address" data-filter-control="input">주소</th>
                             <th class="text-center col-md-2" data-field="region" data-filter-control="select">지역</th>
                             <th class="text-center col-md-1" data-field="search_num" data-sortable="true">합산 검색 수</th>
-                            <th class="text-center col-md-2" data-field="tag" data-filter-control="select">태그</th>
+                            <th class="text-center col-md-1" data-field="tag" data-filter-control="select">태그</th>
+                            <th class="text-center col-md-1" data-field="with" data-filter-control="select" data-filter-data="var:options" >동반유형</th>
                         </tr>
                     </thead>
                     <tbody id="container">
@@ -104,6 +117,7 @@
                             <td>{{items[2]}}</td>
                             <td>{{items[3]}}</td>
                             <td>{{items[4]}}</td>
+                            <td style="text-align:center;">{{items[5][0]}}<br>{{items[5][1]}}<br>{{items[5][2]}}</td>
                         </tr>
                         {% endfor %}
                         <!-- {{elements_data_values}} -->
@@ -116,7 +130,6 @@
 </div>
 <!-- /.container-fluid -->
 <script>   
-
     content = 'search'
     index = 0
     i = 0
@@ -141,10 +154,17 @@
     // })
 
     // var trBoldBlue = $("table");
-
+    
+    let isChange = false
     $('#table').bootstrapTable({
         pagination: true,
         pageSize: 10, //your page size here
+        onPostBody: (e)=>{
+            // if(isChange) return false
+            // e_with_list = document.querySelector("#table > thead > tr > th:nth-child(6) > div.fht-cell > div > select")
+            // e_with_list.innerHTML = ''
+            // isChange = true
+        }
     });
 
     $("table").on("click", "td", function () {
@@ -153,4 +173,5 @@
         let target = $(this).parent().children()[0].innerText
         location.href = '/detail?dest='+target
     });
+
 </script>

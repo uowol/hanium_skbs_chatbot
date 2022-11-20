@@ -86,7 +86,7 @@
 </div>
 <!-- /.container-fluid -->
 <script>
-    if("{{session['user_nick']}}" != "None")
+    if("{{session['user_nick']}}" != "")
         a_write.href = a_write.href+"?type="+window.location.href.split('/')[window.location.href.split('/').length-1]
 
     content = 'notice board'
