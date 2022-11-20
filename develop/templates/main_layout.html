@@ -496,8 +496,10 @@
                 name = "anonymous"
             }
             let now = new Date();
-            let dateFormat = now.getFullYear() + "/" + (now.getMonth() + 1) + "/" + now.getDate()
-                + " " + now.getHours() + ":" + now.getMinutes()
+            let year = now.getFullYear()
+            let month = now.getMonth() + 1
+            let date = now.getDate()
+            let dateFormat = `${year}/${month >= 10 ? month : '0' + month}/${date >= 10 ? date : '0' + date} ${now.getHours() >= 10 ? now.getHours() : '0'+now.getHours()} : ${now.getMinutes() >= 10 ? now.getMinutes() : '0'+now.getMinutes()}`
 
             return `<div class="d-flex justify-content-between">
                         <p class="small mb-1 text-muted">{0}</p>
@@ -523,8 +525,11 @@
                 name = "anonymous"
             }
             let now = new Date();
-            let dateFormat = now.getFullYear() + "/" + (now.getMonth() + 1) + "/" + now.getDate()
-                + " " + now.getHours() + ":" + now.getMinutes()
+            let year = now.getFullYear()
+            let month = now.getMonth() + 1
+            let date = now.getDate()
+            let dateFormat = `${year}/${month >= 10 ? month : '0' + month}/${date >= 10 ? date : '0' + date} ${now.getHours() >= 10 ? now.getHours() : '0'+now.getHours()}:${now.getMinutes() >= 10 ? now.getMinutes() : '0'+now.getMinutes()}`
+
 
             return `<div class="d-flex justify-content-between">
                         <p class="small mb-1">{0}</p>
@@ -567,6 +572,32 @@
                     divChat.innerHTML = ''
                 }
             });
+        }
+
+        function save_chatting(chat_list, text1, text2) {
+            if (text2)
+                fetch("http://" + connect_to + ":5000/chatbot", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        "chat_list": chat_list,
+                        "last_chat": text1,
+                        "last_chat_user": text2
+                    })
+                })
+            else 
+                fetch("http://" + connect_to + ":5000/chatbot", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        "chat_list": chat_list,
+                        "last_chat": text1
+                    })
+                })
         }
 
         let last_chat = ''
@@ -925,7 +956,7 @@
 
 
                 }
-                if (args[0] == '동반유형') {
+                if (args[0] == '동반 유형') {
 
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
 

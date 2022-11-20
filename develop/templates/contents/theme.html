@@ -7,11 +7,11 @@
     <div class="row">
         {% for theme in theme_list %}
         <div class="card shadow mr-3 mb-4" style="width: 18rem; padding-right:0; padding-left:0;">
-            <img class="card-img-top" src="{{theme.image}}" alt="Card image cap">
-            <div class="card-body">
+            <img class="card-img-top" src="{{theme.image}}" style="max-height: 300px; min-height: 200px;"alt="Card image cap">
+            <div class="card-body d-flex flex-column">
                 <h5 class="card-title">{{theme.title}}</h5>
                 <p class="card-text">{{theme.info}}</p>
-                <a href="/search?태그={{theme.title}}" class="btn btn-primary">Go</a>
+                <a href="/search?태그={{theme.title}}" class="btn btn-primary mt-auto">Go</a>
             </div>
         </div>
         {% endfor %}

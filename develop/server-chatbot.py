@@ -11,6 +11,7 @@ from datetime import datetime
 
 # 세션 다루는 파트, 나중에 업데이트 할 때 유용하게 사용할 것으로 보임.
 from flask_cors import CORS, cross_origin
+import json
 
 # from flask_session import Session
 
@@ -35,7 +36,16 @@ CORS(app)
 # 데이터는 데이터베이스에 접근해서 가져오기
 
 ### todo: 체류유형은 data.csv 파일에 존재하지 않음. 처리하고 server-chatbot.py 파일에서 지역_전체.csv파일 사용하는 파트를 수정해야.
-df_region = pd.read_csv(r"../storage/지역 전체.csv")
+
+def init_search():
+    global df_search, df_region
+    df_region = pd.read_csv(r"../storage/지역 전체.csv")
+    df_search = pd.read_csv("../data_process/output/data.csv")
+    df_search.iloc[:,-1] = df_search.iloc[:,-1].apply(lambda x: json.loads(x.replace("'", '"')))
+    print("=" * 20 + "init:search is done." + "=" * 20)
+
+
+init_search()
 
 
 # # 대화 내용 저장: 내용 / 시간 / 유저 nick(익명일 수도)
@@ -83,56 +93,82 @@ def answer_on_follow():
         print("answer_on_follow/query: " + query)
 
         # 위 정보로 관광지 데이터베이스 필터링, 개수 반환 #
-        cnt = 1987
+        print("="*20, query, "="*20)
+        list_query = query.split('_')
+        tmp_filter = [True for _ in range(len(df_search))]
+        new_query = ''
+        for item in list_query:
+            key, value = item.split('=')
+            if key == "도": 
+                new_query += f'지역={value}'.replace('·',',')
+                if value=="특별시·광역시": 
+                    tmp_filter = tmp_filter & (df_search['지역'].str.contains("특별시") | df_search['지역'].str.contains("광역시"))
+                else: tmp_filter = tmp_filter & (df_search['지역'].str.contains(value))
+            if key == "시/군": 
+                new_query += f' {value}'
+                tmp_filter = tmp_filter & (df_search['지역'].str.contains(value))
+            if key == '출발지':
+                pass
+            if key == '세부출발지':
+                pass
+            if key == '동반 유형':
+                new_query += f'&동반 유형={value}'
+                tmp_filter = tmp_filter & (df_search['동반유형'].astype(str).str.contains(value))
+            if key == '테마':
+                new_query += f'&태그={value}'
+                tmp_filter = tmp_filter & (df_search['태그'].str.contains(value))
+        df = df_search[tmp_filter]            
+                
+        cnt = len(df)
 
-        answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
+        answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{new_query.replace('_',', ')} <br>\
             더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
-            |btn]결과 <br>확인@location.href='/search?{query.replace('_','&').replace('_','&')}'\
+            |btn]결과 <br>확인@save_chatting(chat_list,'');location.href='/search?{new_query.replace('_','&').replace('_','&')}'\
             |btn]목적지 <br>설정@followed_chat('+지역', 'recommend', '도', '{query}')\
             |btn]출발지 <br>설정@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
-            |btn]동반유형 <br>결정@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
+            |btn]동반 유형 <br>결정@followed_chat('+동반 유형', 'recommend', '동반 유형', '{query}')\
             |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')\
             |btn]다시<br>질문하기@followed_chat('+다시 질문하기', 'recommend', 'reset', '')"
 
         if args[0] == "도" or args[0] == "세부지역":
-            answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
+            answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{new_query.replace('_',', ')} <br>\
                 더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
-                |btn]결과<br>확정@location.href='/search?{query.replace('_','&').replace('_','&')}'\
+                |btn]결과<br>확정@save_chatting(chat_list,'');location.href='/search?{new_query.replace('_','&').replace('_','&')}'\
                 |btn]다른 목적지 <br>설정@followed_chat('+지역', 'recommend', '도', '{query}')\
                 |btn]세부 목적지 <br>설정@followed_chat('+시/군', 'recommend', '시/군', '{query}')\
                 |btn]출발지 <br>설정@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
-                |btn]동반유형 <br>결정@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
+                |btn]동반 유형 <br>결정@followed_chat('+동반 유형', 'recommend', '동반 유형', '{query}')\
                 |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')\
             |btn]다시<br>질문하기@followed_chat('+다시 질문하기', 'recommend', 'reset', '')"
 
         if args[0] == "출발지" or args[0] == "세부출발지":
-            answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
+            answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{new_query.replace('_',', ')} <br>\
                 더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
-                |btn]결과 <br>확정@location.href='/search?{query.replace('_','&').replace('_','&')}'\
+                |btn]결과 <br>확정@save_chatting(chat_list,'');location.href='/search?{new_query.replace('_','&').replace('_','&')}'\
                 |btn]목적지 <br>설정@followed_chat('+지역', 'recommend', '도', '{query}')\
                 |btn]다른 출발지 <br>설정@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
                 |btn]세부 출발지<br>설정@followed_chat('+세부출발지', 'recommend', '세부출발지', '{query}')\
-                |btn]동반유형 <br>결정@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
+                |btn]동반 유형 <br>결정@followed_chat('+동반 유형', 'recommend', '동반 유형', '{query}')\
                 |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')\
             |btn]다시<br>질문하기@followed_chat('+다시 질문하기', 'recommend', 'reset', '')"
 
-        if args[0] == "동반유형":
-            answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
+        if args[0] == "동반 유형":
+            answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{new_query.replace('_',', ')} <br>\
                 더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
-                |btn]결과 <br>확정@location.href='/search?{query.replace('_','&').replace('_','&')}'\
+                |btn]결과 <br>확정@save_chatting(chat_list,'');location.href='/search?{new_query.replace('_','&').replace('_','&')}'\
                 |btn]목적지 <br>설정@followed_chat('+지역', 'recommend', '도', '{query}')\
                 |btn]출발지 <br>설정@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
-                |btn]동반유형 <br>결정@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
+                |btn]동반 유형 <br>결정@followed_chat('+동반 유형', 'recommend', '동반 유형', '{query}')\
                 |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')\
             |btn]다시<br>질문하기@followed_chat('+다시 질문하기', 'recommend', 'reset', '')"
 
         if args[0] == "테마":
-            answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
+            answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{new_query.replace('_',', ')} <br>\
                 더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
-                |btn]결과 <br>확정@location.href='/search?{query.replace('_','&').replace('_','&')}'\
+                |btn]결과 <br>확정@save_chatting(chat_list,'');location.href='/search?{new_query.replace('_','&').replace('_','&')}'\
                 |btn]목적지 <br>설정@followed_chat('+지역', 'recommend', '도', '{query}')\
                 |btn]출발지 <br>설정@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
-                |btn]동반유형 <br>결정@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
+                |btn]동반 유형 <br>결정@followed_chat('+동반 유형', 'recommend', '동반 유형', '{query}')\
                 |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')\
             |btn]다시<br>질문하기@followed_chat('+다시 질문하기', 'recommend', 'reset', '')"
 
@@ -202,8 +238,6 @@ def answer():
         # gue = response['구']
         theme = response["테마"]
 
-        cnt = 1987
-
         if due != None and (type, region, region_detail, theme) == (None, None, None, None):
             answer_df = recommend_day(df_region, question)
             cnt = len(answer_df["관광지명"].unique())
@@ -216,12 +250,44 @@ def answer():
         # print(query)
 
         # 위 정보로 관광지 데이터베이스 필터링, 개수 반환 #
-        answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
+        print("="*20, query, "="*20)
+        list_query = query.split('_')
+        tmp_filter = [True for _ in range(len(df_search))]
+        new_query = ''
+        for item in list_query:
+            key, value = item.split('=')
+            print("*"*20, key, value)
+            if key == "도": 
+                new_query += f'지역={value}'.replace('·',',')
+                if value=="특별시·광역시": 
+                    tmp_filter = tmp_filter & (df_search['지역'].str.contains("특별시") | df_search['지역'].str.contains("광역시"))
+                else: tmp_filter = tmp_filter & (df_search['지역'].str.contains(value))
+            if key == "시/군": 
+                new_query += f' {value}'
+                tmp_filter = tmp_filter & (df_search['지역'].str.contains(value))
+            if key == '출발지':
+                pass
+            if key == '세부출발지':
+                pass
+            if key == '동반 유형':
+                if new_query: new_query += f'&동반 유형={value}' 
+                else: new_query += f'동반 유형={value}'
+                tmp_filter = tmp_filter & (df_search['동반유형'].astype(str).str.contains(value))
+            if key == '테마':
+                if new_query: new_query += f'&태그={value}' 
+                else: new_query += f'태그={value}'
+                tmp_filter = tmp_filter & (df_search['태그'].str.contains(value))
+        df = df_search[tmp_filter]         
+                
+        cnt = len(df)
+
+        # 위 정보로 관광지 데이터베이스 필터링, 개수 반환 #
+        answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{new_query.replace('_',', ')} <br>\
             더 자세한 결과를 원하신다면 아래 선택지를 클릭하거나 더 자세하게 질문해주세요.\
-            |btn]결과 <br>확인@location.href='/search?{query.replace('_','&')}'\
+            |btn]결과 <br>확인@save_chatting(chat_list,'');location.href='/search?{new_query}'\
             |btn]목적지 <br>설정@followed_chat('+지역', 'recommend', '도', '{query}')\
             |btn]출발지 <br>설정@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
-            |btn]동반유형 <br>결정@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
+            |btn]동반 유형 <br>결정@followed_chat('+동반 유형', 'recommend', '동반 유형', '{query}')\
             |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')\
             |btn]다시<br>질문하기@followed_chat('+다시 질문하기', 'recommend', 'reset', '')"
 
@@ -251,7 +317,7 @@ def answer():
         #     + add_separator()
         #     + convert_button("지역" + add_enter() + "설정", callback_followed_chat("지역", query))
         #     + add_separator()
-        #     + convert_button("동반유형" + add_enter() + "설정", callback_followed_chat("동반유형", query))
+        #     + convert_button("동반 유형" + add_enter() + "설정", callback_followed_chat("동반 유형", query))
         #     + add_separator()
         #     + convert_button("테마" + add_enter() + "설정", callback_followed_chat("테마", query))
         # )

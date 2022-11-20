@@ -278,16 +278,6 @@ def mk_card_view(src, title, context, href):
 # 여기서 해당 서버로 요청을 보내 데이터 불러오고 사이트를 띄운다. 끗 깔끔
 @app.route("/theme", methods=["GET"])
 def theme():
-    # try:
-    #     res = get(
-    #         f"http://{connect_to}:{PORT_DEST}/theme"
-    #     )  # 통으로 데이터 받고 여기서 처리? 너무 더러워져서 해당 서버에서 처리하는걸로
-    #     if res.status_code == 200:  # 서버와 통신
-    #         theme = res.json()["body"]
-
-    #         print(theme)
-    # except:
-    #     print(f"error: theme()")
     theme_list = []
     theme_info = {
         ""
@@ -302,10 +292,14 @@ def theme():
             f"이번 휴가엔 {title}에서 즐거운 시간 어떤가요?"
         ][n]
     for theme in df_search.iloc[:,-2].unique():
+        if theme=='수목원/휴양림': theme = '수목원휴양림'
+        if theme=='기타_하천/해양': theme = '기타하천해양'
+        if theme=='요트/보트': theme = '요트보트'
+        if theme=='리조트/온천': theme = '리조트온천'
         theme_list.append({
             "title": theme,
             "info": template(theme),
-            "image": "https://404catfound.com/wp-content/uploads/2021/02/404catfound-03.png"
+            "image": f"../../static/img/tags/{theme}.jpg"
         })
 
     return render_template(
@@ -503,15 +497,42 @@ def search():
     df = df_search.copy()
     m_filter = [True for _ in range(len(df))]
     if '관광지명' in req:
-        m_filter = m_filter & (df['관광지명'] == req['관광지명'])
+        tmp_filter = [False for _ in range(len(df))]
+        res = req['관광지명'].split(',')
+        for r in res:
+            tmp_filter = tmp_filter | (df['관광지명'] == r)
+        m_filter = m_filter & tmp_filter
     if '주소' in req:
-        m_filter = m_filter & (df['주소'].str.contains(req['주소']))
+        tmp_filter = [False for _ in range(len(df))]
+        res = req['주소'].split(',')
+        for r in res:
+            tmp_filter = tmp_filter | (df['주소'].str.contains(r))
+        m_filter = m_filter & tmp_filter
+        # m_filter = m_filter & (df['주소'].str.contains(req['주소']))
     if '지역' in req:
-        m_filter = m_filter & (df['지역'].str.contains(req['지역']))
+        tmp_filter = [False for _ in range(len(df))]
+        if '특별시,광역시' in req['지역']: 
+            print(req['지역'])
+            if ' ' in req['지역']: req['지역'] = req['지역'].split(' ')[1]
+        res = req['지역'].split(',')
+        for r in res:
+            tmp_filter = tmp_filter | (df['지역'].str.contains(r))
+        m_filter = m_filter & tmp_filter
+        # m_filter = m_filter & (df['지역'].str.contains(req['지역']))
     if '태그' in req:
-        m_filter = m_filter & (df['태그'] == req['태그'])
-    if '동반유형' in req:
-        m_filter = m_filter & (df['동반유형'].str.contains(req['동반유형']))
+        tmp_filter = [False for _ in range(len(df))]
+        res = req['태그'].split(',')
+        for r in res:
+            tmp_filter = tmp_filter | (df['태그'] == r)
+        m_filter = m_filter & tmp_filter
+        # m_filter = m_filter & (df['태그'] == req['태그'])
+    if '동반 유형' in req:
+        tmp_filter = [False for _ in range(len(df))]
+        res = req['동반 유형'].split(',')
+        for r in res:
+            tmp_filter = tmp_filter | (df['동반유형'].astype(str).str.contains(r))
+        m_filter = m_filter & tmp_filter
+        # m_filter = m_filter & (df['동반유형'].str.contains(req['동반유형']))
     df = df[m_filter]
     # try:
     #     res = get(f"http://{connect_to}:{PORT_DEST}/dest")
@@ -557,7 +578,6 @@ def chatbot_callback():
     last_chat = request.json["last_chat"]
     print(f"chatbot_callback/last_chat: {last_chat}")
 
-    print(request.json)
     if "last_chat_user" in request.json:
         session['last_chat'] = request.json["last_chat_user"]
         print(f"chatbot_callback/last_chat_user: {session['last_chat']}")
