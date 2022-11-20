@@ -15,7 +15,7 @@
             <!-- 리스트 객체 -->
             제목 : {{post.post_title}}
             <hr>
-            {{post.post_text}}
+            {{post.post_text|safe}}
             <div class="text-center">
                 <a onclick="recommend({{post._id}})" href="#" class="btn btn-success btn-icon-split btn-sm">
                     <span class="icon text-white-50">

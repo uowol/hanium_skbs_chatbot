@@ -337,6 +337,7 @@ def noticeboard_write():
 def noticeboard_callback():
     title = request.form.get("title")
     contents = request.form.get("contents")
+    contents = contents.replace("\n", "<br>")
     type = request.form.get("type")
     # image_list = request.form.get("inputPassword")
     user_nick = session["user_nick"] if session["user_nick"] else "익명"
