@@ -569,7 +569,7 @@
             });
         }
 
-
+        let last_chat = ''
         // 서버와 통신 파트
         function send_chat(text) {
             if (text == "" || text == undefined) return false;
@@ -601,15 +601,14 @@
                         // 버튼이 첨부되었을 경우
                         if (tag == "btn") {
                             // 선택지 추가
-                            text = content.split('@')[0]
+                            btn_text = content.split('@')[0]
                             callback_method = content.split('@')[1]
-                            chat_list += input_button(text, callback_method)
+                            chat_list += input_button(btn_text, callback_method)
                         }
 
                     }
                     divChat.innerHTML = chat_list
                     divChat.scrollTop = divChat.scrollHeight
-
                     // 현재까지의 채팅 세션에 저장하기
                     fetch("http://" + connect_to + ":5000/chatbot", {
                         method: "POST",
@@ -618,9 +617,11 @@
                         },
                         body: JSON.stringify({
                             "chat_list": chat_list,
-                            "last_chat": text
+                            "last_chat": text,
+                            "last_chat_user": text
                         })
                     })
+                    last_chat = text
                 });
         }
 
@@ -679,8 +680,14 @@
         function followed_chat(text, intent, ...args) {
             chat_list += chat_answer(text)
             divChat.innerHTML = chat_list
-
             if (intent == 'recommend') {
+                if (args[0] == 'reset'){
+                    console.log("요청에 따라 처음 질문으로 돌아갑니다.\n",last_chat)
+                    if(last_chat)
+                        send_chat(last_chat)    
+                    else
+                        send_chat("{{session['last_chat']}}")
+                }
                 if (args[0] == '도') {
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
                     tmp_regions = ['특별시·광역시', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']

@@ -91,7 +91,8 @@ def answer_on_follow():
             |btn]목적지 <br>설정@followed_chat('+지역', 'recommend', '도', '{query}')\
             |btn]출발지 <br>설정@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
             |btn]동반유형 <br>결정@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
-            |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')"
+            |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')\
+            |btn]다시<br>질문하기@followed_chat('+다시 질문하기', 'recommend', 'reset', '')"
 
         if args[0] == "도" or args[0] == "세부지역":
             answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
@@ -101,7 +102,8 @@ def answer_on_follow():
                 |btn]세부 목적지 <br>설정@followed_chat('+시/군', 'recommend', '시/군', '{query}')\
                 |btn]출발지 <br>설정@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
                 |btn]동반유형 <br>결정@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
-                |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')"
+                |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')\
+            |btn]다시<br>질문하기@followed_chat('+다시 질문하기', 'recommend', 'reset', '')"
 
         if args[0] == "출발지" or args[0] == "세부출발지":
             answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
@@ -111,7 +113,8 @@ def answer_on_follow():
                 |btn]다른 출발지 <br>설정@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
                 |btn]세부 출발지<br>설정@followed_chat('+세부출발지', 'recommend', '세부출발지', '{query}')\
                 |btn]동반유형 <br>결정@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
-                |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')"
+                |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')\
+            |btn]다시<br>질문하기@followed_chat('+다시 질문하기', 'recommend', 'reset', '')"
 
         if args[0] == "동반유형":
             answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
@@ -120,7 +123,8 @@ def answer_on_follow():
                 |btn]목적지 <br>설정@followed_chat('+지역', 'recommend', '도', '{query}')\
                 |btn]출발지 <br>설정@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
                 |btn]동반유형 <br>결정@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
-                |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')"
+                |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')\
+            |btn]다시<br>질문하기@followed_chat('+다시 질문하기', 'recommend', 'reset', '')"
 
         if args[0] == "테마":
             answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{query.replace('_',', ')} <br>\
@@ -129,7 +133,8 @@ def answer_on_follow():
                 |btn]목적지 <br>설정@followed_chat('+지역', 'recommend', '도', '{query}')\
                 |btn]출발지 <br>설정@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
                 |btn]동반유형 <br>결정@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
-                |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')"
+                |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')\
+            |btn]다시<br>질문하기@followed_chat('+다시 질문하기', 'recommend', 'reset', '')"
 
     return _result(STATUS_SUCCESS, answer)
 
@@ -217,7 +222,8 @@ def answer():
             |btn]목적지 <br>설정@followed_chat('+지역', 'recommend', '도', '{query}')\
             |btn]출발지 <br>설정@followed_chat('+출발지', 'recommend', '출발지', '{query}')\
             |btn]동반유형 <br>결정@followed_chat('+동반유형', 'recommend', '동반유형', '{query}')\
-            |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')"
+            |btn]테마 <br>결정@followed_chat('+테마', 'recommend', '테마', '{query}')\
+            |btn]다시<br>질문하기@followed_chat('+다시 질문하기', 'recommend', 'reset', '')"
 
         response["지역"] = ""
         if response["도"] != None:

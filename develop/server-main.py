@@ -544,6 +544,11 @@ def chatbot_callback():
     last_chat = request.json["last_chat"]
     print(f"chatbot_callback/last_chat: {last_chat}")
 
+    print(request.json)
+    if "last_chat_user" in request.json:
+        session['last_chat'] = request.json["last_chat_user"]
+        print(f"chatbot_callback/last_chat_user: {session['last_chat']}")
+
     return _result(STATUS_SUCCESS, "")
 
 
@@ -551,6 +556,11 @@ def chatbot_callback():
 def chatbot_delete():
     # chatbot 채팅 상황 제거
     session.pop("chat_list")
+    if "last_chat" in session: session.pop("last_chat")
+    if "last_chat_user" in session: session.pop("last_chat_user")
+    session['chat_list'] = ''
+    session['last_chat'] = ''
+    session['last_chat_user'] = ''
     print(f"chatbot_delete/chat_list: deleted")
     return _result(STATUS_SUCCESS, "")
 
