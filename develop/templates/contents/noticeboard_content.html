@@ -1,3 +1,10 @@
+<script>
+    const is_test = false
+
+    if (is_test) connect_to = "127.0.0.1" 
+    else connect_to = "3.115.15.84"
+</script>
+
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
@@ -32,7 +39,6 @@
 <!-- /.container-fluid -->
 <script>
     // let connect_to = 'ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com'
-    let connect_to = "127.0.0.1"
     let address
     function recommend(id){
         address = "http://"+connect_to+":5003/noticeboard/free/"+id+"/recommend"

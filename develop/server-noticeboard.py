@@ -8,7 +8,10 @@ from flask_cors import CORS
 from flask import Flask, request, redirect, jsonify
 import datetime as dt
 
-connect_to = '127.0.0.1'
+is_test = False
+
+connect_to = "127.0.0.1" if is_test else "3.115.15.84"
+
 global_dataset = []
 
 app = Flask(__name__)

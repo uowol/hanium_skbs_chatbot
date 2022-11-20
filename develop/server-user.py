@@ -5,7 +5,9 @@ from flask import Flask, request, redirect, jsonify
 from flask_cors import CORS
 
 
-connect_to = '127.0.0.1'
+is_test = False
+
+connect_to = "127.0.0.1" if is_test else "3.115.15.84"
 
 
 app = Flask(__name__)
