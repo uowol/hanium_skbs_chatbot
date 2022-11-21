@@ -232,6 +232,10 @@ def answer():
     if intent == "empty":
         answer = "text]" + response
         return _result(STATUS_SUCCESS, answer)
+    if intent == "error":
+        error_logger.log.info(f"(질문: {question})----(응답: {response})----(시간: {datetime.now()})")
+        answer = "text]" + response
+        return _result(STATUS_SUCCESS, answer)
     if intent == "recommend":
         due = response["기간"]
         type = response["동반 유형"]

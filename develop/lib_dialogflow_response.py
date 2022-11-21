@@ -34,6 +34,9 @@ def Res_Verify(text):
     if res_list[0] == "없음":
         return res_list[1], "empty"
 
+    if res_list[0] == "에러":
+        return res_list[1], "error"
+
     elif res_list[0] == "추천":
         for i in range(len(res_list)):
             if "None" in res_list[i]:
@@ -54,4 +57,4 @@ def Res_Verify(text):
 
 # print(Res_Verify('안녕'))
 # print(Res_Verify('충북에 2개월 동안 여자친구랑 갈만한 여행지 추천해 줘'))
-print(Res_Verify("alsds"))
+# print(Res_Verify("alsds"))
