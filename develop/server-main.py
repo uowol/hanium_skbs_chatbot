@@ -55,6 +55,19 @@ def visualization():
     )
 
 
+@app.route("/participant", methods=["GET"])
+def participant():
+    # 다른 모든 route에 추가해야 할 것으로 예상
+    if not "chat_list" in session:
+        return redirect("/init")
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="개발 참여자 목록입니다.",
+        content="contents/participant.html",
+    )
+
+
 #%% Detail
 def init_detail():
     global df_detail
