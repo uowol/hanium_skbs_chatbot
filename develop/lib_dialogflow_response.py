@@ -54,4 +54,4 @@ def Res_Verify(text):
 
 # print(Res_Verify('안녕'))
 # print(Res_Verify('충북에 2개월 동안 여자친구랑 갈만한 여행지 추천해 줘'))
-print(Res_Verify("alsds"))
+# print(Res_Verify("alsds"))
