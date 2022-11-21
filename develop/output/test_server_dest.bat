@@ -1,3 +1,3 @@
 title SERVER_DESTINATION
-python ../server-dest.py
+python ../server-dest.py True
 PAUSE                          

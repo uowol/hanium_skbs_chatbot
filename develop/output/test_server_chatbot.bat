@@ -1,3 +1,3 @@
 title SERVER_CHATBOT
-python ../server-chatbot.py
+python ../server-chatbot.py True
 PAUSE                      
