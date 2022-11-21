@@ -16,8 +16,11 @@ import json
 import sys
 
 from functools import reduce
+
+
 def add(a, b):
-    return a|b
+    return a | b
+
 
 # from flask_session import Session
 
@@ -48,11 +51,12 @@ CORS(app)
 
 ### todo: 체류유형은 data.csv 파일에 존재하지 않음. 처리하고 server-chatbot.py 파일에서 지역_전체.csv파일 사용하는 파트를 수정해야.
 
+
 def init_dataset():
     global df_search, df_region
     df_region = pd.read_csv(r"../storage/지역 전체.csv")
     df_search = pd.read_csv("../data_process/output/data.csv")
-    df_search.iloc[:,-1] = df_search.iloc[:,-1].apply(lambda x: json.loads(x.replace("'", '"')))
+    df_search.iloc[:, -1] = df_search.iloc[:, -1].apply(lambda x: json.loads(x.replace("'", '"')))
     print("=" * 20 + "{:^30s}".format("init:search is done.") + "=" * 20)
 
     global df_start_region, df_start_region_detail
@@ -60,10 +64,8 @@ def init_dataset():
     df_start_region_detail = pd.read_csv("../data_process/output/시군구출발.csv")
     print("=" * 20 + "{:^30s}".format("init:start_region is done.") + "=" * 20)
 
+
 init_dataset()
-
-
-
 
 
 # # 대화 내용 저장: 내용 / 시간 / 유저 nick(익명일 수도)
@@ -111,47 +113,74 @@ def answer_on_follow():
         print("answer_on_follow/query: " + query)
 
         # 위 정보로 관광지 데이터베이스 필터링, 개수 반환 #
-        print("="*20, query, "="*20)
-        list_query = query.split('_')
+        print("=" * 20, query, "=" * 20)
+        list_query = query.split("_")
         tmp_filter = [True for _ in range(len(df_search))]
-        new_query = ''
+        new_query = ""
         for item in list_query:
-            key, value = item.split('=')
-            if key == "도": 
-                new_query += f'지역={value}'.replace('·',',')
-                if value=="특별시·광역시": 
-                    tmp_filter = tmp_filter & (df_search['지역'].str.contains("특별") | df_search['지역'].str.contains("광역시"))
-                else: tmp_filter = tmp_filter & (df_search['지역'].str.contains(value))
-            if key == "시/군": 
-                new_query += f' {value}'
-                tmp_filter = tmp_filter & (df_search['지역'].str.contains(value))
-            if key == '출발지':
-                if new_query: new_query += f'&출발지={value}' 
-                else: new_query += f'출발지={value}'
-                if value == '특별시·광역시':
-                    start_set = set(df_start_region.columns[df_start_region.columns.str.contains('특별') | df_start_region.columns.str.contains('광역시')])
+            key, value = item.split("=")
+            if key == "도":
+                new_query += f"지역={value}".replace("·", ",")
+                if value == "특별시·광역시":
+                    tmp_filter = tmp_filter & (
+                        df_search["지역"].str.contains("특별") | df_search["지역"].str.contains("광역시")
+                    )
+                else:
+                    tmp_filter = tmp_filter & (df_search["지역"].str.contains(value))
+            if key == "시/군":
+                new_query += f" {value}"
+                tmp_filter = tmp_filter & (df_search["지역"].str.contains(value))
+            if key == "출발지":
+                if new_query:
+                    new_query += f"&출발지={value}"
+                else:
+                    new_query += f"출발지={value}"
+                if value == "특별시·광역시":
+                    start_set = set(
+                        df_start_region.columns[
+                            df_start_region.columns.str.contains("특별")
+                            | df_start_region.columns.str.contains("광역시")
+                        ]
+                    )
                     start_set.discard("제주특별자치도")
-                    start_list = list(set(np.concatenate(df_start_region[list(start_set)].iloc[:len(df_start_region[list(start_set)])//4].values).tolist()))
-                else: start_list = df_start_region[value].iloc[:len(df_start_region[value])//2].to_list()
-                
+                    start_list = list(
+                        set(
+                            np.concatenate(
+                                df_start_region[list(start_set)]
+                                .iloc[: len(df_start_region[list(start_set)]) // 4]
+                                .values
+                            ).tolist()
+                        )
+                    )
+                else:
+                    start_list = (
+                        df_start_region[value].iloc[: len(df_start_region[value]) // 2].to_list()
+                    )
+
                 for col in df_start_region.columns:
                     if col in start_list:
                         start_list.remove(col)
 
-                tmp_filter = tmp_filter & reduce(add, [df_search['지역'].str.contains(x) for x in start_list])
+                tmp_filter = tmp_filter & reduce(
+                    add, [df_search["지역"].str.contains(x) for x in start_list]
+                )
 
-            if key == '세부출발지':
+            if key == "세부출발지":
                 pass
-            if key == '동반 유형':
-                if new_query: new_query += f'&동반 유형={value}' 
-                else: new_query += f'동반 유형={value}'
-                tmp_filter = tmp_filter & (df_search['동반유형'].astype(str).str.contains(value))
-            if key == '테마':
-                if new_query: new_query += f'&태그={value}' 
-                else: new_query += f'태그={value}'
-                tmp_filter = tmp_filter & (df_search['태그'].str.contains(value))
-        df = df_search[tmp_filter]            
-                
+            if key == "동반 유형":
+                if new_query:
+                    new_query += f"&동반 유형={value}"
+                else:
+                    new_query += f"동반 유형={value}"
+                tmp_filter = tmp_filter & (df_search["동반유형"].astype(str).str.contains(value))
+            if key == "테마":
+                if new_query:
+                    new_query += f"&태그={value}"
+                else:
+                    new_query += f"태그={value}"
+                tmp_filter = tmp_filter & (df_search["태그"].str.contains(value))
+        df = df_search[tmp_filter]
+
         cnt = len(df)
 
         answer = f"text]관련 관광지가 <strong>{cnt}</strong>개 있습니다. <br>{new_query.replace('_',', ')} <br>\
@@ -287,47 +316,74 @@ def answer():
         # print(query)
 
         # 위 정보로 관광지 데이터베이스 필터링, 개수 반환 #
-        print("="*20, query, "="*20)
-        list_query = query.split('_')
+        print("=" * 20, query, "=" * 20)
+        list_query = query.split("_")
         tmp_filter = [True for _ in range(len(df_search))]
-        new_query = ''
+        new_query = ""
         for item in list_query:
-            key, value = item.split('=')
-            print("*"*20, key, value)
-            if key == "도": 
-                new_query += f'지역={value}'.replace('·',',')
-                if value=="특별시·광역시": 
-                    tmp_filter = tmp_filter & (df_search['지역'].str.contains("특별시") | df_search['지역'].str.contains("광역시"))
-                else: tmp_filter = tmp_filter & (df_search['지역'].str.contains(value))
-            if key == "시/군": 
-                new_query += f' {value}'
-                tmp_filter = tmp_filter & (df_search['지역'].str.contains(value))
-            if key == '출발지':
-                if new_query: new_query += f'&출발지={value}' 
-                else: new_query += f'출발지={value}'
-                if value == '특별시·광역시':
-                    start_set = set(df_start_region.columns[df_start_region.columns.str.contains('특별') | df_start_region.columns.str.contains('광역시')])
+            key, value = item.split("=")
+            print("*" * 20, key, value)
+            if key == "도":
+                new_query += f"지역={value}".replace("·", ",")
+                if value == "특별시·광역시":
+                    tmp_filter = tmp_filter & (
+                        df_search["지역"].str.contains("특별시") | df_search["지역"].str.contains("광역시")
+                    )
+                else:
+                    tmp_filter = tmp_filter & (df_search["지역"].str.contains(value))
+            if key == "시/군":
+                new_query += f" {value}"
+                tmp_filter = tmp_filter & (df_search["지역"].str.contains(value))
+            if key == "출발지":
+                if new_query:
+                    new_query += f"&출발지={value}"
+                else:
+                    new_query += f"출발지={value}"
+                if value == "특별시·광역시":
+                    start_set = set(
+                        df_start_region.columns[
+                            df_start_region.columns.str.contains("특별")
+                            | df_start_region.columns.str.contains("광역시")
+                        ]
+                    )
                     start_set.discard("제주특별자치도")
-                    start_list = list(set(np.concatenate(df_start_region[list(start_set)].iloc[:len(df_start_region[list(start_set)])//4].values).tolist()))
-                else: start_list = df_start_region[value].iloc[:len(df_start_region[value])//2].to_list()
-                
+                    start_list = list(
+                        set(
+                            np.concatenate(
+                                df_start_region[list(start_set)]
+                                .iloc[: len(df_start_region[list(start_set)]) // 4]
+                                .values
+                            ).tolist()
+                        )
+                    )
+                else:
+                    start_list = (
+                        df_start_region[value].iloc[: len(df_start_region[value]) // 2].to_list()
+                    )
+
                 for col in df_start_region.columns:
                     if col in start_list:
                         start_list.remove(col)
 
-                tmp_filter = tmp_filter & reduce(add, [df_search['지역'].str.contains(x) for x in start_list])
-            if key == '세부출발지':
+                tmp_filter = tmp_filter & reduce(
+                    add, [df_search["지역"].str.contains(x) for x in start_list]
+                )
+            if key == "세부출발지":
                 pass
-            if key == '동반 유형':
-                if new_query: new_query += f'&동반 유형={value}' 
-                else: new_query += f'동반 유형={value}'
-                tmp_filter = tmp_filter & (df_search['동반유형'].astype(str).str.contains(value))
-            if key == '테마':
-                if new_query: new_query += f'&태그={value}' 
-                else: new_query += f'태그={value}'
-                tmp_filter = tmp_filter & (df_search['태그'].str.contains(value))
-        df = df_search[tmp_filter]         
-                
+            if key == "동반 유형":
+                if new_query:
+                    new_query += f"&동반 유형={value}"
+                else:
+                    new_query += f"동반 유형={value}"
+                tmp_filter = tmp_filter & (df_search["동반유형"].astype(str).str.contains(value))
+            if key == "테마":
+                if new_query:
+                    new_query += f"&태그={value}"
+                else:
+                    new_query += f"태그={value}"
+                tmp_filter = tmp_filter & (df_search["태그"].str.contains(value))
+        df = df_search[tmp_filter]
+
         cnt = len(df)
 
         # 위 정보로 관광지 데이터베이스 필터링, 개수 반환 #
