@@ -20,7 +20,7 @@ class MyLogger:
         return self.log
 
     def file_handler(self, file_name):
-        fileHandler = logging.FileHandler(file_name)
+        fileHandler = logging.FileHandler(file_name, encoding="utf-8")
         fileHandler.setFormatter(self.formatter)
         self.log.addHandler(fileHandler)
         return self.log
@@ -35,3 +35,8 @@ res_logger = MyLogger("response")
 res_logger.stream_handler("INFO")
 res_logger.file_handler("./logs/response.log")
 res_logger.log.setLevel(logging.INFO)
+
+error_logger = MyLogger("error")
+error_logger.stream_handler("INFO")
+error_logger.file_handler("./logs/error.log")
+user_say_logger.log.setLevel(logging.INFO)

@@ -2,7 +2,7 @@ import re
 from lib_database import *
 from lib_dialogflow_response import *
 from lib_db_fun import *
-from lib_flask_logging import user_say_logger, res_logger
+from lib_flask_logging import user_say_logger, res_logger, error_logger
 from global_methods import _result, parse_json, load_json
 from global_consts import *
 from flask import Flask, request, redirect, jsonify, session
@@ -298,8 +298,10 @@ def answer():
             response["지역"] += response["도"] + " "
         if response["시/군"] != None:
             response["지역"] += response["시/군"]
+        if response["도"] == "특별시·광역시":
+            response["지역"] = response["시/군"]
         response["timestamp"] = str(datetime.now())
-        res_logger.log.info(str(response).replace("'", '"'))
+        res_logger.log.info(str(response).replace("'", '"').replace("None", "null"))
 
         # answer = (
         #     convert_text(
