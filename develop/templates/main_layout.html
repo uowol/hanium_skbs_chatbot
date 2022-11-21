@@ -3,7 +3,7 @@
 
 <head>
     <script>
-        const is_test = "{{params[is_test]}}"
+        const is_test = "{{params['is_test']}}"
 
         if (is_test == "True") connect_to = "127.0.0.1" 
 
@@ -726,7 +726,7 @@
                 }
                 if (args[0] == '도') {
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
-                    tmp_regions = ['특별시·광역시', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']
+                    tmp_regions = ['특별시·광역시', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주특별자치도']
                     for (let region of tmp_regions) {
                         chat_list += input_button(region, `send_followed_chat('${intent}','${'도'}','${region}', '')`)
                     }
@@ -763,7 +763,7 @@
                         .then((data) => {
                             region_dict = data.body
 
-                            if (_region == "제주도") {
+                            if (_region == "제주특별자치도") {
                                 tmp_regions = ['제주시', '서귀포시']
                                 for (let region of tmp_regions) {
                                     chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)
@@ -845,7 +845,7 @@
 
                     // 여행지 데이터베이스 관리 서버에 여행지 정보 요청
 
-                    tmp_regions = ['특별시·광역시', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주도']
+                    tmp_regions = ['특별시·광역시', '경기도', '강원도', '충청북도', '충청남도', '경상북도', '경상남도', '전라북도', '전라남도', '제주특별자치도']
                     for (let destination of tmp_regions) {
                         chat_list += input_button(destination, `send_followed_chat('${intent}','${args[0]}','${destination}', '')`)
                     }
@@ -882,7 +882,7 @@
                         .then((data) => {
                             region_dict = data.body
 
-                            if (_region == "제주도") {
+                            if (_region == "제주특별자치도") {
                                 tmp_regions = ['제주시', '서귀포시']
                                 for (let region of tmp_regions) {
                                     chat_list += input_button(region, `send_followed_chat('${intent}','${args[0]}','${region}', '${args[1]}')`)

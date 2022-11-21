@@ -14,6 +14,7 @@ from global_consts import *
 
 import pandas as pd
 import sys
+import json
 
 
 # connect_to = 'ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com'
@@ -34,6 +35,27 @@ lm = LoginManager()
 lm.init_app(app)
 
 
+def init_dataset():
+    global df_search, set_with  # , df_search_total1, df_search_total2, df_search_total3
+    df_search = pd.read_csv("../data_process/output/data.csv")
+    df_search.iloc[:,-1] = df_search.iloc[:,-1].apply(lambda x: json.loads(x.replace("'", '"')))
+    set_with = set()
+    df_search.iloc[:,-1].map(lambda x: set_with.update(x))
+    print("=" * 20 + "{:^30s}".format("init:search is done.") + "=" * 20)
+
+    global df_detail
+    df_detail = pd.read_csv("../data_process/output/dest_id.csv")
+    print("=" * 20 + "{:^30s}".format("init:detail is done.") + "=" * 20)
+
+    # global df_start_region, df_start_region_detail
+    # df_start_region = pd.read_csv("../data_process/output/도시출발.csv")
+    # df_start_region_detail = pd.read_csv("../data_process/output/시군구출발.csv")
+    # print("=" * 20 + "{:^30s}".format("init:start_region is done.") + "=" * 20)
+
+
+init_dataset()
+
+
 @app.route("/init", methods=["GET"])
 def init_chat_list():
     session["chat_list"] = ""
@@ -51,14 +73,6 @@ def index():
 
 
 #%% Detail
-def init_detail():
-    global df_detail
-    df_detail = pd.read_csv("../data_process/output/dest_id.csv")
-
-
-init_detail()
-
-
 @app.route("/detail", methods=["GET"])
 def detail():
     req = request.args.to_dict()
@@ -484,21 +498,6 @@ def region():
 
 
 #%% Search
-import json
-
-def init_search():
-    global df_search, set_with  # , df_search_total1, df_search_total2, df_search_total3
-    df_search = pd.read_csv("../data_process/output/data.csv")
-    df_search.iloc[:,-1] = df_search.iloc[:,-1].apply(lambda x: json.loads(x.replace("'", '"')))
-    set_with = set()
-    df_search.iloc[:,-1].map(lambda x: set_with.update(x))
-    print("=" * 20 + "init:search is done." + "=" * 20)
-    print(set_with)
-
-
-init_search()
-
-
 @app.route("/search", methods=["GET"])
 def search():
     req = request.args.to_dict()
