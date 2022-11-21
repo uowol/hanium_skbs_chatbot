@@ -25,7 +25,12 @@ else:
 
 connect_to = "127.0.0.1" if is_test else "ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com"
 
-params = {"site_name": "Tour-List", "session": session, "current_user": current_user, "is_test":is_test}
+params = {
+    "site_name": "Tour-List",
+    "session": session,
+    "current_user": current_user,
+    "is_test": is_test,
+}
 
 
 # Flask 객체 인스턴스 생성
@@ -38,9 +43,9 @@ lm.init_app(app)
 def init_dataset():
     global df_search, set_with  # , df_search_total1, df_search_total2, df_search_total3
     df_search = pd.read_csv("../data_process/output/data.csv")
-    df_search.iloc[:,-1] = df_search.iloc[:,-1].apply(lambda x: json.loads(x.replace("'", '"')))
+    df_search.iloc[:, -1] = df_search.iloc[:, -1].apply(lambda x: json.loads(x.replace("'", '"')))
     set_with = set()
-    df_search.iloc[:,-1].map(lambda x: set_with.update(x))
+    df_search.iloc[:, -1].map(lambda x: set_with.update(x))
     print("=" * 20 + "{:^30s}".format("init:search is done.") + "=" * 20)
 
     global df_detail
@@ -69,6 +74,32 @@ def index():
         return redirect("/init")
     return render_template(
         "main_layout.html", params=params, chatbot_talk="메인 페이지입니다.", content="contents/main.html"
+    )
+
+
+@app.route("/visualization", methods=["GET"])
+def visualization():
+    # 다른 모든 route에 추가해야 할 것으로 예상
+    if not "chat_list" in session:
+        return redirect("/init")
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="시각화 페이지입니다.",
+        content="contents/visualization.html",
+    )
+
+
+@app.route("/participant", methods=["GET"])
+def participant():
+    # 다른 모든 route에 추가해야 할 것으로 예상
+    if not "chat_list" in session:
+        return redirect("/init")
+    return render_template(
+        "main_layout.html",
+        params=params,
+        chatbot_talk="개발 참여자 목록입니다.",
+        content="contents/participant.html",
     )
 
 
@@ -285,6 +316,7 @@ def blank():
 #%% theme
 import numpy as np
 
+
 def mk_card_view(src, title, context, href):
     return f"""<div class="card shadow mr-3 mb-4" style="width: 18rem;padding-right:0; padding-left:0;">
             <img class="card-img-top" src="{src}" alt="Card image cap">
@@ -301,9 +333,8 @@ def mk_card_view(src, title, context, href):
 @app.route("/theme", methods=["GET"])
 def theme():
     theme_list = []
-    theme_info = {
-        ""
-    }
+    theme_info = {""}
+
     def template(title):
         n = np.random.randint(5)
         return [
@@ -311,21 +342,28 @@ def theme():
             f"힐링이 필요할 때, {title}은 어떤가요?",
             f"오늘같이 훌쩍 떠나고 싶을 때 {title}로 가보는 것은 어떤가요?",
             f"요즘 핫한 그곳! {title}로 떠나요!",
-            f"이번 휴가엔 {title}에서 즐거운 시간 어떤가요?"
+            f"이번 휴가엔 {title}에서 즐거운 시간 어떤가요?",
         ][n]
-    for theme in df_search.iloc[:,-2].unique():
-        if theme=='수목원/휴양림': theme = '수목원휴양림'
-        if theme=='기타_하천/해양': theme = '기타하천해양'
-        if theme=='요트/보트': theme = '요트보트'
-        if theme=='리조트/온천': theme = '리조트온천'
-        theme_list.append({
-            "title": theme,
-            "info": template(theme),
-            "image": f"../../static/img/tags/{theme}.jpg"
-        })
+
+    for theme in df_search.iloc[:, -2].unique():
+        if theme == "수목원/휴양림":
+            theme = "수목원휴양림"
+        if theme == "기타_하천/해양":
+            theme = "기타하천해양"
+        if theme == "요트/보트":
+            theme = "요트보트"
+        if theme == "리조트/온천":
+            theme = "리조트온천"
+        theme_list.append(
+            {"title": theme, "info": template(theme), "image": f"../../static/img/tags/{theme}.jpg"}
+        )
 
     return render_template(
-        "main_layout.html", params=params, chatbot_talk="", content="contents/theme.html", theme_list=theme_list
+        "main_layout.html",
+        params=params,
+        chatbot_talk="",
+        content="contents/theme.html",
+        theme_list=theme_list,
     )
 
 
@@ -498,48 +536,68 @@ def region():
 
 
 #%% Search
+
+import json
+
+
+def init_search():
+    global df_search, set_with  # , df_search_total1, df_search_total2, df_search_total3
+    df_search = pd.read_csv("../data_process/output/data.csv")
+    df_search.iloc[:, -1] = df_search.iloc[:, -1].apply(lambda x: json.loads(x.replace("'", '"')))
+    set_with = set()
+    df_search.iloc[:, -1].map(lambda x: set_with.update(x))
+    print("=" * 20 + "init:search is done." + "=" * 20)
+    print(set_with)
+
+
+init_search()
+
+
 @app.route("/search", methods=["GET"])
 def search():
     req = request.args.to_dict()
     df = df_search.copy()
     m_filter = [True for _ in range(len(df))]
-    if '관광지명' in req:
+
+    if "관광지명" in req:
         tmp_filter = [False for _ in range(len(df))]
-        res = req['관광지명'].split(',')
+        res = req["관광지명"].split(",")
         for r in res:
-            tmp_filter = tmp_filter | (df['관광지명'] == r)
+            tmp_filter = tmp_filter | (df["관광지명"] == r)
         m_filter = m_filter & tmp_filter
-    if '주소' in req:
+    if "주소" in req:
         tmp_filter = [False for _ in range(len(df))]
-        res = req['주소'].split(',')
+        res = req["주소"].split(",")
         for r in res:
-            tmp_filter = tmp_filter | (df['주소'].str.contains(r))
+            tmp_filter = tmp_filter | (df["주소"].str.contains(r))
         m_filter = m_filter & tmp_filter
         # m_filter = m_filter & (df['주소'].str.contains(req['주소']))
-    if '지역' in req:
+    if "지역" in req:
         tmp_filter = [False for _ in range(len(df))]
-        if '특별시,광역시' in req['지역']: 
-            print(req['지역'])
-            if ' ' in req['지역']: req['지역'] = req['지역'].split(' ')[1]
-        res = req['지역'].split(',')
+        if "특별시,광역시" in req["지역"]:
+            print(req["지역"])
+            if " " in req["지역"]:
+                req["지역"] = req["지역"].split(" ")[1]
+        res = req["지역"].split(",")
         for r in res:
-            tmp_filter = tmp_filter | (df['지역'].str.contains(r))
+            tmp_filter = tmp_filter | (df["지역"].str.contains(r))
         m_filter = m_filter & tmp_filter
         # m_filter = m_filter & (df['지역'].str.contains(req['지역']))
-    if '태그' in req:
+    if "태그" in req:
         tmp_filter = [False for _ in range(len(df))]
-        res = req['태그'].split(',')
+        res = req["태그"].split(",")
         for r in res:
-            tmp_filter = tmp_filter | (df['태그'] == r)
+            tmp_filter = tmp_filter | (df["태그"] == r)
         m_filter = m_filter & tmp_filter
         # m_filter = m_filter & (df['태그'] == req['태그'])
-    if '동반 유형' in req:
+    if "동반 유형" in req:
         tmp_filter = [False for _ in range(len(df))]
-        res = req['동반 유형'].split(',')
+        res = req["동반 유형"].split(",")
         for r in res:
-            tmp_filter = tmp_filter | (df['동반유형'].astype(str).str.contains(r))
+            tmp_filter = tmp_filter | (df["동반유형"].astype(str).str.contains(r))
         m_filter = m_filter & tmp_filter
         # m_filter = m_filter & (df['동반유형'].str.contains(req['동반유형']))
+
     df = df[m_filter]
     # try:
     #     res = get(f"http://{connect_to}:{PORT_DEST}/dest")
@@ -586,7 +644,7 @@ def chatbot_callback():
     print(f"chatbot_callback/last_chat: {last_chat}")
 
     if "last_chat_user" in request.json:
-        session['last_chat'] = request.json["last_chat_user"]
+        session["last_chat"] = request.json["last_chat_user"]
         print(f"chatbot_callback/last_chat_user: {session['last_chat']}")
 
     return _result(STATUS_SUCCESS, "")
@@ -596,11 +654,13 @@ def chatbot_callback():
 def chatbot_delete():
     # chatbot 채팅 상황 제거
     session.pop("chat_list")
-    if "last_chat" in session: session.pop("last_chat")
-    if "last_chat_user" in session: session.pop("last_chat_user")
-    session['chat_list'] = ''
-    session['last_chat'] = ''
-    session['last_chat_user'] = ''
+    if "last_chat" in session:
+        session.pop("last_chat")
+    if "last_chat_user" in session:
+        session.pop("last_chat_user")
+    session["chat_list"] = ""
+    session["last_chat"] = ""
+    session["last_chat_user"] = ""
     print(f"chatbot_delete/chat_list: deleted")
     return _result(STATUS_SUCCESS, "")
 
