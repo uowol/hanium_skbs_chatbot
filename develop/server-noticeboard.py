@@ -7,10 +7,16 @@ from global_consts import *
 from flask_cors import CORS
 from flask import Flask, request, redirect, jsonify
 import datetime as dt
+import sys
 
-is_test = False
+
+if len(sys.argv) > 1:
+    is_test = sys.argv[1]
+else:
+    is_test = False
 
 connect_to = "127.0.0.1" if is_test else "ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com"
+
 
 global_dataset = []
 

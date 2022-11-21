@@ -1,8 +1,8 @@
 <script>
-    const is_test = false
+    // const is_test = "{{is_test}}"
 
-    if (is_test) connect_to = "127.0.0.1" 
-    else connect_to = "ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com"
+    // if (is_test == "True") connect_to = "127.0.0.1" 
+    // else connect_to = "ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com"
 </script>
 
 <!-- Begin Page Content -->
@@ -176,7 +176,7 @@
         
         res = ''
         for(dest of dest_list){
-            res += `<li class="list-group-item">`+dest+`</li> `
+            res += `<li class="list-group-item" onClick="window.location.href='/detail?dest=${dest}'">`+dest+`</li> `
         }
         
         container_list.innerHTML = res

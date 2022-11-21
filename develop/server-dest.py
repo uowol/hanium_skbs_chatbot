@@ -5,12 +5,16 @@ from global_methods import _result, parse_json, load_json
 from global_consts import *
 from flask import Flask, request, redirect, jsonify, session
 import pandas as pd
-
+import sys
 from flask_cors import CORS, cross_origin
 
 # from flask_session import Session
 
 is_test = False
+if len(sys.argv) > 1:
+    is_test = sys.argv[1]
+else:
+    is_test = False
 
 connect_to = "127.0.0.1" if is_test else "ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com"
 

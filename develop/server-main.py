@@ -13,13 +13,18 @@ from global_methods import _result, parse_json, load_json
 from global_consts import *
 
 import pandas as pd
+import sys
+
 
 # connect_to = 'ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com'
-is_test = False
+if len(sys.argv) > 1:
+    is_test = sys.argv[1]
+else:
+    is_test = False
 
 connect_to = "127.0.0.1" if is_test else "ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com"
 
-params = {"site_name": "Tour-List", "session": session, "current_user": current_user}
+params = {"site_name": "Tour-List", "session": session, "current_user": current_user, "is_test":is_test}
 
 
 # Flask 객체 인스턴스 생성

@@ -12,10 +12,14 @@ from datetime import datetime
 # 세션 다루는 파트, 나중에 업데이트 할 때 유용하게 사용할 것으로 보임.
 from flask_cors import CORS, cross_origin
 import json
+import sys
 
 # from flask_session import Session
 
-is_test = False
+if len(sys.argv) > 1:
+    is_test = sys.argv[1]
+else:
+    is_test = False
 
 connect_to = "127.0.0.1" if is_test else "ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com"
 
