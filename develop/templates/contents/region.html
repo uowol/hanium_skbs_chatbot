@@ -176,7 +176,7 @@
         
         res = ''
         for(dest of dest_list){
-            res += `<li class="list-group-item">`+dest+`</li> `
+            res += `<li class="list-group-item" onClick="window.location.href='/detail?dest=${dest}'">`+dest+`</li> `
         }
         
         container_list.innerHTML = res
