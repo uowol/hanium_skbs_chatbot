@@ -73,7 +73,7 @@ def index():
     if not "chat_list" in session:
         return redirect("/init")
     return render_template(
-        "main_layout.html", params=params, chatbot_talk="메인 페이지입니다.", content="contents/main.html"
+        "main_layout.html", params=params, chatbot_talk="", content="contents/main.html"
     )
 
 
@@ -85,7 +85,7 @@ def visualization():
     return render_template(
         "main_layout.html",
         params=params,
-        chatbot_talk="시각화 페이지입니다.",
+        chatbot_talk="검색 데이터에 대한<br>시각화 페이지입니다.",
         content="contents/visualization.html",
     )
 
@@ -217,7 +217,7 @@ def logout():
 @app.route("/login/error")
 def login_error():
     return render_template(
-        "main_layout.html", params=params, chatbot_talk="", content="login.html", retry=True
+        "main_layout.html", params=params, chatbot_talk="로그인 페이지입니다.", content="login.html", retry=True
     )
 
 
@@ -231,7 +231,7 @@ def register():
 @app.route("/register/error")
 def register_error():
     return render_template(
-        "main_layout.html", params=params, chatbot_talk="", content="register.html", retry=True
+        "main_layout.html", params=params, chatbot_talk="회원가입 페이지입니다.", content="register.html", retry=True
     )
 
 
@@ -361,7 +361,7 @@ def theme():
     return render_template(
         "main_layout.html",
         params=params,
-        chatbot_talk="",
+        chatbot_talk="요즘 뜨는 테마를<br>추천해드려요!",
         content="contents/theme.html",
         theme_list=theme_list,
     )
@@ -379,7 +379,7 @@ def noticeboard_write():
     return render_template(
         "main_layout.html",
         params=params,
-        chatbot_talk="",
+        chatbot_talk="소중한 경험을 모두와<br>공유하는건 언제나 즐거운<br>일이죠!",
         type=dict(request.args)["type"],
         content="contents/noticeboard_write.html",
         tag="free",
@@ -422,7 +422,7 @@ def noticeboard_free():
     return render_template(
         "main_layout.html",
         params=params,
-        chatbot_talk="",
+        chatbot_talk="자유롭게 이야기를<br>나누는 공간이에요.",
         content="contents/noticeboard.html",
         table_contents=table_contents,
         tag="free",
@@ -443,7 +443,7 @@ def noticeboard_free_content(i):
     return render_template(
         "main_layout.html",
         params=params,
-        chatbot_talk="",
+        chatbot_talk="도움이 되셨다면 추천을<br>눌러 작성자에게 감사를<br>표시할 수 있어요!",
         content="contents/noticeboard_content.html",
         post=post,
     )
@@ -461,7 +461,7 @@ def noticeboard_review():
     return render_template(
         "main_layout.html",
         params=params,
-        chatbot_talk="",
+        chatbot_talk="여행지를 다녀오고 느낀<br>소중한 경험을 모두와<br>공유하는 공간이에요.",
         content="contents/noticeboard.html",
         table_contents=table_contents,
         tag="review",
@@ -482,7 +482,7 @@ def noticeboard_review_content(i):
     return render_template(
         "main_layout.html",
         params=params,
-        chatbot_talk="",
+        chatbot_talk="도움이 되셨다면 추천을<br>눌러 작성자에게 감사를<br>표시할 수 있어요!",
         content="contents/noticeboard_content.html",
         post=post,
     )
@@ -500,7 +500,7 @@ def noticeboard_tip():
     return render_template(
         "main_layout.html",
         params=params,
-        chatbot_talk="",
+        chatbot_talk="여행 전반적으로 도움이<br>되는 정보를 공유하는<br>공간이에요.",
         content="contents/noticeboard.html",
         table_contents=table_contents,
         tag="tip",
@@ -521,7 +521,7 @@ def noticeboard_tip_content(i):
     return render_template(
         "main_layout.html",
         params=params,
-        chatbot_talk="",
+        chatbot_talk="도움이 되셨다면 추천을<br>눌러 작성자에게 감사를<br>표시할 수 있어요!",
         content="contents/noticeboard_content.html",
         post=post,
     )
@@ -531,7 +531,7 @@ def noticeboard_tip_content(i):
 @app.route("/region", methods=["GET"])
 def region():
     return render_template(
-        "main_layout.html", params=params, chatbot_talk="", content="contents/region.html"
+        "main_layout.html", params=params, chatbot_talk="관심있는 지역을<br>선택하시면 해당 지역의<br>주요 관광지를 추천받을<br>수 있어요!", content="contents/region.html"
     )
 
 
@@ -616,7 +616,7 @@ def search():
     return render_template(
         "main_layout.html",
         params=params,
-        chatbot_talk="",
+        chatbot_talk="모든 관광지에 대한<br>데이터가 담겨 있어요.<br>정렬, 검색, 필터링 기능을<br>사용해보세요!",
         data_values=dest_data_values,
         data_columns=dest_data_columns,
         set_with=list(set_with),

@@ -117,6 +117,12 @@
 <!-- /.container-fluid -->
 
 <script>
+    $(".list-group").mouseover(function(e){
+        $(e.target).css({'backgroundColor':'#00000044'});
+    });
+    $(".list-group").mouseout(function(e){
+        $(e.target).css({'backgroundColor':'#fff'});
+    });
     let region_dict
     let dest_dict
 
