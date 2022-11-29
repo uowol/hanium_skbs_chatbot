@@ -29,7 +29,7 @@ if len(sys.argv) > 1:
 else:
     is_test = False
 
-connect_to = "127.0.0.1" if is_test else "ec2-3-115-15-84.ap-northeast-1.compute.amazonaws.com"
+connect_to = "127.0.0.1" if is_test else "tour-list.net"
 
 app = Flask(__name__)
 app.secret_key = "여행 de Gaja"
