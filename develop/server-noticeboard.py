@@ -15,7 +15,7 @@ if len(sys.argv) > 1:
 else:
     is_test = False
 
-connect_to = "127.0.0.1" if is_test else "tour-list.net"
+connect_to = "127.0.0.1" if is_test else "www.tour-list.net"
 
 
 global_dataset = []
