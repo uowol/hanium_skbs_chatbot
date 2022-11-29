@@ -55,7 +55,7 @@ CORS(app)
 def init_dataset():
     global df_search, df_region
     df_region = pd.read_csv(r"../storage/지역 전체.csv")
-    df_search = pd.read_csv("../data_process/output/data.csv")
+    df_search = pd.read_csv("../data_process/output/찐찐막.csv")
     df_search.iloc[:, -1] = df_search.iloc[:, -1].apply(lambda x: json.loads(x.replace("'", '"')))
     print("=" * 20 + "{:^30s}".format("init:search is done.") + "=" * 20)
 

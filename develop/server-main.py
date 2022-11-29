@@ -42,7 +42,7 @@ lm.init_app(app)
 
 def init_dataset():
     global df_search, set_with  # , df_search_total1, df_search_total2, df_search_total3
-    df_search = pd.read_csv("../data_process/output/data.csv")
+    df_search = pd.read_csv("../data_process/output/찐찐막.csv")
     df_search.iloc[:, -1] = df_search.iloc[:, -1].apply(lambda x: json.loads(x.replace("'", '"')))
     set_with = set()
     df_search.iloc[:, -1].map(lambda x: set_with.update(x))
@@ -536,22 +536,6 @@ def region():
 
 
 #%% Search
-
-import json
-
-
-def init_search():
-    global df_search, set_with  # , df_search_total1, df_search_total2, df_search_total3
-    df_search = pd.read_csv("../data_process/output/data.csv")
-    df_search.iloc[:, -1] = df_search.iloc[:, -1].apply(lambda x: json.loads(x.replace("'", '"')))
-    set_with = set()
-    df_search.iloc[:, -1].map(lambda x: set_with.update(x))
-    print("=" * 20 + "init:search is done." + "=" * 20)
-    print(set_with)
-
-
-init_search()
-
 
 @app.route("/search", methods=["GET"])
 def search():
